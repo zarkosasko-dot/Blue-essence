@@ -872,54 +872,6 @@
 
 
 <script>
-// Local storage handling for offline mode
-window.measurements = JSON.parse(localStorage.getItem('measurements') || '{}');
-
-function saveMeasurement() {
-  const date = document.getElementById('dateInput').value || new Date().toISOString().slice(0,10);
-  const params = ['no3','po4','kh','ca','mg','ph','temp','salinity'];
-  const entry = { date: date };
-  params.forEach(id => entry[id.toUpperCase()] = document.getElementById(id).value);
-
-  // Save to localStorage
-  window.measurements[date] = entry;
-  localStorage.setItem('measurements', JSON.stringify(window.measurements));
-
-  alert('Mjerenje spremljeno lokalno! (offline ready)');
-  closePopup('input-popup');
-  renderDashboard();
-}
-
-function renderDashboard() {
-  const dashboard = document.getElementById('dashboard');
-  dashboard.innerHTML = '';
-  const lastValues = {};
-  Object.values(window.measurements).forEach(entry => {
-    Object.keys(entry).forEach(k => {
-      if (k !== 'date') lastValues[k] = {value: entry[k], date: entry.date};
-    });
-  });
-  window.lastValues = lastValues;
-
-  Object.keys(lastValues).forEach(p => {
-    const val = lastValues[p].value;
-    const date = lastValues[p].date;
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.setAttribute('onclick', `openGraph('${p}')`);
-    card.innerHTML = `
-      <span class="info-icon" onclick="event.stopPropagation(); openInfo('${p}')">ℹ️</span>
-      ${val}<br>${p}
-      <small>${date}</small>
-    `;
-    dashboard.appendChild(card);
-  });
-}
-
-// On load
-document.addEventListener('DOMContentLoaded', renderDashboard);
-
-// Service Worker registration
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js')
     .then(() => console.log('Service Worker registered!'));
