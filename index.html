@@ -872,7 +872,19 @@
 
 
 <script>
-// Load or initialize localStorage measurements
+// Global parameter ranges
+window.paramRanges = {
+  NO3: {min: 0, max: 20},
+  PO4: {min: 0.02, max: 0.1},
+  KH: {min: 7, max: 10},
+  Ca: {min: 400, max: 450},
+  Mg: {min: 1250, max: 1350},
+  pH: {min: 8.1, max: 8.4},
+  Temp: {min: 24, max: 26},
+  Salinity: {min: 1.023, max: 1.026}
+};
+
+// Load measurements from localStorage
 window.measurements = JSON.parse(localStorage.getItem('measurements') || '{}');
 
 function saveMeasurement() {
@@ -896,40 +908,66 @@ function renderDashboard() {
   const dashboard = document.getElementById('dashboard');
   dashboard.innerHTML = '';
 
-  const entries = Object.values(window.measurements).sort((a,b) => a.date.localeCompare(b.date));
-  const lastEntry = entries[entries.length - 1] || {};
-
+  // Sort entries by date (newest first)
+  const entries = Object.values(window.measurements).sort((a,b) => b.date.localeCompare(a.date));
   const lastValues = {};
-  Object.keys(lastEntry).forEach(k => {
-    if (k !== 'date') lastValues[k] = {value: lastEntry[k], date: lastEntry.date};
-  });
+  if (entries.length > 0) {
+    Object.keys(entries[0]).forEach(k => {
+      if (k !== 'date') lastValues[k] = {value: entries[0][k], date: entries[0].date};
+    });
+  }
   window.lastValues = lastValues;
 
-  Object.keys(lastValues).forEach(p => {
-    const val = lastValues[p].value || '';
-    const date = lastValues[p].date || '';
-    let icon = "";
-    const range = window.paramRanges && window.paramRanges[p];
-    const valNum = parseFloat(val);
-    if (range && !isNaN(valNum)) {
-      icon = (valNum < range.min || valNum > range.max) ? " ⚠️" : " ✅";
-    }
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.setAttribute('onclick', `openGraph('${p}')`);
-    card.innerHTML = `
-      <span class="info-icon" onclick="event.stopPropagation(); openInfo('${p}')">ℹ️</span>
-      ${val}<br>${p}${icon}
-      <small>${date}</small>
-    `;
-    dashboard.appendChild(card);
+  // Display all measurements as cards
+  entries.forEach(entry => {
+    Object.keys(entry).forEach(p => {
+      if (p === 'date') return;
+      const val = entry[p] || '';
+      const date = entry.date || '';
+      let icon = "";
+      const range = window.paramRanges[p];
+      const valNum = parseFloat(val);
+      if (range && !isNaN(valNum)) {
+        icon = (valNum < range.min || valNum > range.max) ? " ⚠️" : " ✅";
+      }
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.setAttribute('onclick', `openGraph('${p}')`);
+      card.innerHTML = `
+        <span class="info-icon" onclick="event.stopPropagation(); openInfo('${p}')">ℹ️</span>
+        ${val}<br>${p}${icon}
+        <small>${date}</small>
+      `;
+      dashboard.appendChild(card);
+    });
   });
 }
 window.renderDashboard = renderDashboard;
 
+// ℹ️ popup info
+function openInfo(param) {
+  document.getElementById('info-title').innerText = param;
+  document.getElementById('info-text').innerText =
+    (param + " - provjerite vrijednosti i prilagodite prema potrebi.");
+  const value = parseFloat(window.lastValues[param]?.value || 0);
+  const range = window.paramRanges[param];
+  let advice = "";
+  if (!range) {
+    advice = "Nema posebnih uputa.";
+  } else if (value < range.min) {
+    advice = "Vrijednost je preniska – razmotrite povećanje.";
+  } else if (value > range.max) {
+    advice = "Vrijednost je previsoka – razmotrite smanjenje.";
+  } else {
+    advice = "Vrijednost je u optimalnom rasponu – sve super! ✅";
+  }
+  document.getElementById('info-action').innerText = "Savjet: " + advice;
+  openPopup('info-popup');
+}
+
 document.addEventListener('DOMContentLoaded', renderDashboard);
 
-// Ensure SW registration for PWA
+// Service Worker registration
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js')
     .then(() => console.log('Service Worker registered!'));
