@@ -870,5 +870,71 @@
   </div>
 </div>
 
+
+<script>
+// Load or initialize localStorage measurements
+window.measurements = JSON.parse(localStorage.getItem('measurements') || '{}');
+
+function saveMeasurement() {
+  let dateRaw = document.getElementById('dateInput').value;
+  const date = dateRaw ? new Date(dateRaw).toISOString().slice(0,10) : new Date().toISOString().slice(0,10);
+
+  const params = ['no3','po4','kh','ca','mg','ph','temp','salinity'];
+  const entry = { date: date };
+  params.forEach(id => entry[id.toUpperCase()] = document.getElementById(id).value);
+
+  window.measurements[date] = entry;
+  localStorage.setItem('measurements', JSON.stringify(window.measurements));
+
+  alert('Mjerenje spremljeno lokalno! (offline ready)');
+  closePopup('input-popup');
+  renderDashboard();
+}
+window.saveMeasurement = saveMeasurement;
+
+function renderDashboard() {
+  const dashboard = document.getElementById('dashboard');
+  dashboard.innerHTML = '';
+
+  const entries = Object.values(window.measurements).sort((a,b) => a.date.localeCompare(b.date));
+  const lastEntry = entries[entries.length - 1] || {};
+
+  const lastValues = {};
+  Object.keys(lastEntry).forEach(k => {
+    if (k !== 'date') lastValues[k] = {value: lastEntry[k], date: lastEntry.date};
+  });
+  window.lastValues = lastValues;
+
+  Object.keys(lastValues).forEach(p => {
+    const val = lastValues[p].value || '';
+    const date = lastValues[p].date || '';
+    let icon = "";
+    const range = window.paramRanges && window.paramRanges[p];
+    const valNum = parseFloat(val);
+    if (range && !isNaN(valNum)) {
+      icon = (valNum < range.min || valNum > range.max) ? " ⚠️" : " ✅";
+    }
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.setAttribute('onclick', `openGraph('${p}')`);
+    card.innerHTML = `
+      <span class="info-icon" onclick="event.stopPropagation(); openInfo('${p}')">ℹ️</span>
+      ${val}<br>${p}${icon}
+      <small>${date}</small>
+    `;
+    dashboard.appendChild(card);
+  });
+}
+window.renderDashboard = renderDashboard;
+
+document.addEventListener('DOMContentLoaded', renderDashboard);
+
+// Ensure SW registration for PWA
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(() => console.log('Service Worker registered!'));
+}
+</script>
+
 </body>
 </html>
