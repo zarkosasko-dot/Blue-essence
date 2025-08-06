@@ -1,16 +1,12 @@
 
 <!DOCTYPE html>
+
 <html lang="hr">
 <head>
-  <meta charset="UTF-8">
-
-<link rel="icon" type="image/png" href="icon.png">
-<link rel="apple-touch-icon" href="icon.png">
-<link rel="manifest" href="manifest.json">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blue Essence</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Blue Essence</title>
+<style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -51,7 +47,7 @@
       gap: 10px;
       padding: 15px;
     }
-    .card { position: relative;
+    .card {
       background: #f0f4f8;
       border-radius: 12px;
       text-align: center;
@@ -156,159 +152,87 @@
       color: red;
       font-weight: bold;
     }
-  .info-icon { position: absolute; top: 4px; right: 6px;font-size: 14px; margin-left: 4px; cursor: help;}
-.info-icon:hover {opacity: 0.7;}
-</style>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js">
-  window.paramInfo = {
-    NO3: {
-      desc: "Nitrati (NO3) – pokazuju razinu organskog otpada. Optimalno 0-20 ppm.",
-      action: "Ako je prenisko, povećajte nutrijente; ako je previsoko, smanjite hranjenje i pojačajte izmjene vode."
-    },
-    PO4: {
-      desc: "Fosfati (PO4) – važni za rast koralja, ali previsoki potiču razvoj algi.",
-      action: "Ako je prenisko, povećajte hranjenje; ako je previsoko, koristite fosfatne smole ili smanjite hranjenje."
-    },
-    KH: {
-      desc: "Karbonatna tvrdoća (KH) – održava stabilan pH i omogućava rast koralja.",
-      action: "Ako je prenisko, dozirajte alkalinity aditive; ako je previsoko, smanjite doziranje."
-    },
-    Ca: {
-      desc: "Kalcij (Ca) – ključan za rast tvrdih koralja i školjki.",
-      action: "Ako je prenisko, dozirajte kalcij; ako je previsoko, pauzirajte doziranje dok ne padne."
-    },
-    Mg: {
-      desc: "Magnezij (Mg) – pomaže stabilizaciji KH i apsorpciji kalcija.",
-      action: "Ako je prenisko, dozirajte magnezij; ako je previsoko, pričekajte prirodno snižavanje."
-    },
-    pH: {
-      desc: "pH – optimalno 8.1-8.4.",
-      action: "Ako je prenisko, pojačajte aeraciju; ako je previsoko, provjerite KH i CO2."
-    },
-    Temp: {
-      desc: "Temperatura – većina morskih akvarija 24-26°C.",
-      action: "Ako je preniska, provjerite grijače; ako je previsoka, koristite ventilatore ili hladnjak."
-    },
-    Salinity: {
-      desc: "Slanost – optimalno 1.023-1.026 SG.",
-      action: "Ako je prenisko, polako dodajte sol; ako je previsoko, nadolijte RO/DI vode."
-    }
-  };
-
-  window.paramRanges = {
-    NO3: {min: 0, max: 20},
-    PO4: {min: 0.02, max: 0.1},
-    KH: {min: 7, max: 10},
-    Ca: {min: 400, max: 450},
-    Mg: {min: 1250, max: 1350},
-    pH: {min: 8.1, max: 8.4},
-    Temp: {min: 24, max: 26},
-    Salinity: {min: 1.023, max: 1.026}
-  };
-
-  function openInfo(param) {
-    const lastValues = window.lastValues || {};
-    document.getElementById('info-title').innerText = param;
-    document.getElementById('info-text').innerText = window.paramInfo[param]?.desc || "Nema dodatnih informacija.";
-    const value = parseFloat(lastValues[param]?.value || 0);
-    let advice = "";
-    const range = window.paramRanges[param];
-    if (!range) {
-      advice = window.paramInfo[param]?.action || "Nema posebnih uputa.";
-    } else if (value < range.min) {
-      advice = "Vrijednost je preniska – " + (window.paramInfo[param]?.action || "Provjerite uvjete u akvariju.");
-    } else if (value > range.max) {
-      advice = "Vrijednost je previsoka – " + (window.paramInfo[param]?.action || "Provjerite uvjete u akvariju.");
-    } else {
-      advice = "Vrijednost je u optimalnom rasponu – sve super! ✅";
-    }
-    document.getElementById('info-action').innerText = "Savjet: " + advice;
-    openPopup('info-popup');
-  }
-
-</script>
-</head>
+  </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body {
+    background: url('background.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+</style></head>
 <body>
-  <header>
-    <span id="listBtn" onclick="showMeasurements()">📊</span>
+<header>
+<span id="listBtn" onclick="showMeasurements()">📊</span>
     Blue Essence
     <span id="notesBtn" onclick="openNotes()">📝</span>
-    <span id="settingsBtn" onclick="openSettings()">⚙️</span>
-  </header>
-  
-  <button class="btn-add" onclick="openPopup('input-popup')">Dodaj mjerenje</button>
-
-  <div class="grid" id="dashboard"></div>
-
-  <!-- Popup for adding measurement -->
-  <div class="popup" id="input-popup">
-    <div class="popup-content">
-      <h3>Dodaj mjerenje</h3>
-      <input type="date" id="dateInput">
-      <input type="number" step="any" id="no3" placeholder="NO3">
-      <input type="number" step="any" id="po4" placeholder="PO4">
-      <input type="number" step="any" id="kh" placeholder="KH">
-      <input type="number" step="any" id="ca" placeholder="Ca">
-      <input type="number" step="any" id="mg" placeholder="Mg">
-      <input type="number" step="any" id="ph" placeholder="pH">
-      <input type="number" step="any" id="temp" placeholder="Temp">
-      <input type="number" step="any" id="salinity" placeholder="Salinity">
-      <button class="close-btn" onclick="saveMeasurement()">Spremi</button>
-      <button class="close-btn" onclick="closePopup('input-popup')">Odustani</button>
-    </div>
-  </div>
-
-  <!-- Settings popup -->
-  <div class="popup" id="settings-popup">
-    <div class="popup-content">
-      <h3>Postavke parametara</h3>
-      <label for="tankType">Tip akvarija:</label>
-      <select id="tankType" onchange="applyTankType()">
-        <option value="custom">Custom</option>
-        <option value="softy">Softy tank</option>
-        <option value="lps">LPS tank</option>
-        <option value="sps">SPS tank</option>
-      </select>
-      <table>
-        <tr><th>Parametar</th><th>Min</th><th>Max</th></tr>
-        <tbody id="settings-table"></tbody>
-      </table>
-      <button class="close-btn" onclick="saveSettings()">Spremi postavke</button>
-      <button class="close-btn" onclick="closePopup('settings-popup')">Zatvori</button>
-    </div>
-  </div>
-
-  <!-- Graph popup -->
-  <div class="popup" id="graph-popup">
-    <div class="popup-content">
-      <h3 id="graph-title"></h3>
-      <canvas id="graph-canvas"></canvas>
-      <button class="close-btn" onclick="closePopup('graph-popup')">Zatvori</button>
-    </div>
-  </div>
-
-  <!-- Measurements list popup -->
-  <div class="popup" id="measurements-popup">
-    <div class="popup-content">
-      <h3>Popis mjerenja</h3>
-      <div id="measurements-container"></div>
-      <button class="close-btn" onclick="closePopup('measurements-popup')">Zatvori</button>
-    </div>
-  </div>
-
-  <!-- Notes popup -->
-  <div class="popup" id="notes-popup">
-    <div class="popup-content">
-      <h3>Bilješke</h3>
-      <input type="date" id="noteDate">
-      <textarea id="noteText" rows="3" placeholder="Upiši bilješku..."></textarea>
-      <button class="close-btn" onclick="saveNote()">Spremi bilješku</button>
-      <input type="text" id="noteSearch" placeholder="Pretraži bilješke..." oninput="filterNotes()">
-      <div id="notes-container"></div>
-      <button class="close-btn" onclick="closePopup('notes-popup')">Zatvori</button>
-    </div>
-  </div>
-
+<span id="settingsBtn" onclick="openSettings()">⚙️</span>
+</header>
+<button class="btn-add" onclick="openPopup('input-popup')">Dodaj mjerenje</button>
+<div class="grid" id="dashboard"></div>
+<!-- Popup for adding measurement -->
+<div class="popup" id="input-popup">
+<div class="popup-content">
+<h3>Dodaj mjerenje</h3>
+<input id="dateInput" type="date"/>
+<input id="no3" placeholder="NO3" step="any" type="number"/>
+<input id="po4" placeholder="PO4" step="any" type="number"/>
+<input id="kh" placeholder="KH" step="any" type="number"/>
+<input id="ca" placeholder="Ca" step="any" type="number"/>
+<input id="mg" placeholder="Mg" step="any" type="number"/>
+<input id="ph" placeholder="pH" step="any" type="number"/>
+<input id="temp" placeholder="Temp" step="any" type="number"/>
+<input id="salinity" placeholder="Salinity" step="any" type="number"/>
+<button class="close-btn" onclick="saveMeasurement()">Spremi</button>
+<button class="close-btn" onclick="closePopup('input-popup')">Odustani</button>
+</div>
+</div>
+<!-- Settings popup -->
+<div class="popup" id="settings-popup">
+<div class="popup-content">
+<h3>Postavke parametara</h3>
+<label for="tankType">Tip akvarija:</label>
+<select id="tankType" onchange="applyTankType()">
+<option value="custom">Custom</option>
+<option value="softy">Softy tank</option>
+<option value="lps">LPS tank</option>
+<option value="sps">SPS tank</option>
+</select>
+<table>
+<tr><th>Parametar</th><th>Min</th><th>Max</th></tr>
+<tbody id="settings-table"></tbody>
+</table>
+<button class="close-btn" onclick="saveSettings()">Spremi postavke</button>
+<button class="close-btn" onclick="closePopup('settings-popup')">Zatvori</button>
+</div>
+</div>
+<!-- Graph popup -->
+<div class="popup" id="graph-popup">
+<div class="popup-content">
+<h3 id="graph-title"></h3>
+<canvas id="graph-canvas"></canvas>
+<button class="close-btn" onclick="closePopup('graph-popup')">Zatvori</button>
+</div>
+</div>
+<!-- Measurements list popup -->
+<div class="popup" id="measurements-popup">
+<div class="popup-content">
+<h3>Popis mjerenja</h3>
+<div id="measurements-container"></div>
+<button class="close-btn" onclick="closePopup('measurements-popup')">Zatvori</button>
+</div>
+</div>
+<!-- Notes popup -->
+<div class="popup" id="notes-popup">
+<div class="popup-content">
+<h3>Bilješke</h3>
+<input id="noteDate" type="date"/>
+<textarea id="noteText" placeholder="Upiši bilješku..." rows="3"></textarea>
+<button class="close-btn" onclick="saveNote()">Spremi bilješku</button>
+<input id="noteSearch" oninput="filterNotes()" placeholder="Pretraži bilješke..." type="text"/>
+<div id="notes-container"></div>
+<button class="close-btn" onclick="closePopup('notes-popup')">Zatvori</button>
+</div>
+</div>
 <script>
   const params = ["NO3","PO4","KH","Ca","Mg","pH","Temp","Salinity"];
   let measurements = JSON.parse(localStorage.getItem("measurements") || "[]");
@@ -346,12 +270,10 @@
         }
       }
       dashboard.innerHTML += `
-  <div class="card ${cardClass}" onclick="openGraph('${p}')">
-    <span class="info-icon" onclick="event.stopPropagation(); openInfo('${p}')">ℹ️</span>
-    ${lastValues[p].value}<br>
-    ${p}${icon}
-    <small>${formatDate(lastValues[p].date)}</small>
-  </div>`;
+        <div class="card ${cardClass}" onclick="openGraph('${p}')">
+          ${lastValues[p].value}<br>${p}${icon}
+          <small>${formatDate(lastValues[p].date)}</small>
+        </div>`;
     });
   }
 
@@ -419,60 +341,20 @@
 
   renderDashboard();
 
-  const paramInfo = {
-    NO3: {
-      desc: "Nitrati (NO3) – pokazuju razinu organskog otpada. Optimalno 0-20 ppm. Visoke razine ukazuju na prekomjerno hranjenje ili slab filtracijski sustav.",
-      action: "Ako je vrijednost iznad postavki, smanjite hranjenje i pojačajte izmjene vode. Ako je prenisko, moguće je da koralji nemaju dovoljno nutrijenata."
-    },
-    PO4: {
-      desc: "Fosfati (PO4) – važni za rast koralja, ali previsoki potiču razvoj algi. Preporuka je 0.02-0.1 ppm ovisno o tipu akvarija.",
-      action: "Ako je previsok, koristite fosfatne smole ili smanjite hranjenje. Ako je prenizak, razmislite o povećanju hranjenja ili uklanjanju medija koji vežu fosfat."
-    },
-    KH: {
-      desc: "Karbonatna tvrdoća (KH) – održava stabilan pH i omogućava rast koralja. Optimalno 7-10 dKH.",
-      action: "Ako je nizak, dozirajte buffer/alkalinity aditive. Ako je previsok, provjerite doziranje i razmislite o smanjenju."
-    },
-    Ca: {
-      desc: "Kalcij (Ca) – ključan za rast tvrdih koralja i školjki. Optimalno 400-450 ppm.",
-      action: "Ako je nizak, dozirajte kalcij ili provjerite Ca reaktor. Ako je previsok, pauzirajte doziranje dok ne padne."
-    },
-    Mg: {
-      desc: "Magnezij (Mg) – pomaže stabilizaciji KH i omogućava apsorpciju kalcija. Optimalno 1250-1350 ppm.",
-      action: "Ako je nizak, dozirajte magnezij. Ako je previsok, pričekajte prirodno snižavanje ili zamijenite dio vode."
-    },
-    pH: {
-      desc: "pH – pokazuje kiselost/alkalnost vode. Optimalno 8.1-8.4 za morski akvarij.",
-      action: "Ako je prenizak, povećajte površinsku cirkulaciju i aeraciju. Ako je previsok, provjerite KH i CO2 razinu u prostoriji."
-    },
-    Temp: {
-      desc: "Temperatura – većina morskih akvarija 24-26°C.",
-      action: "Ako je previsoka, koristite ventilatore ili hladnjak. Ako je preniska, provjerite grijače."
-    },
-    Salinity: {
-      desc: "Slanost – optimalno 1.023-1.026 SG.",
-      action: "Ako je preniska, polako dodajte sol. Ako je previsoka, nadolijte RO/DI vode."
-    }
-  };
-
-  function openInfo(param) {
-    document.getElementById('info-title').innerText = param;
-    document.getElementById('info-text').innerText = paramInfo[param]?.desc || "Nema dodatnih informacija.";
-    document.getElementById('info-action').innerText = "Savjet: " + (paramInfo[param]?.action || "Nema posebnih uputa.");
-    openPopup('info-popup');
-  }
-
-
     closePopup('input-popup');
   }
 
+  
   function openGraph(param) {
     const popup = document.getElementById('graph-popup');
     popup.style.display = 'flex';
     document.getElementById('graph-title').innerText = param + " kretanje";
 
     const ctx = document.getElementById('graph-canvas').getContext('2d');
-    const labels = measurements.map(m => formatDate(m.date));
-    const data = measurements.map(m => (m[param] && !isNaN(parseFloat(m[param]))) ? parseFloat(m[param]) : null);
+    
+    const filtered = measurements.filter(m => m[param] && !isNaN(parseFloat(m[param])));
+    const labels = filtered.map(m => formatDate(m.date));
+    const data = filtered.map(m => parseFloat(m[param]));
 
     if(chart) chart.destroy();
     chart = new Chart(ctx, {
@@ -505,6 +387,7 @@
       }
     });
   }
+
 
   function showMeasurements(){
     // Sort by date descending
@@ -565,49 +448,6 @@
   }
 
   renderDashboard();
-
-  const paramInfo = {
-    NO3: {
-      desc: "Nitrati (NO3) – pokazuju razinu organskog otpada. Optimalno 0-20 ppm. Visoke razine ukazuju na prekomjerno hranjenje ili slab filtracijski sustav.",
-      action: "Ako je vrijednost iznad postavki, smanjite hranjenje i pojačajte izmjene vode. Ako je prenisko, moguće je da koralji nemaju dovoljno nutrijenata."
-    },
-    PO4: {
-      desc: "Fosfati (PO4) – važni za rast koralja, ali previsoki potiču razvoj algi. Preporuka je 0.02-0.1 ppm ovisno o tipu akvarija.",
-      action: "Ako je previsok, koristite fosfatne smole ili smanjite hranjenje. Ako je prenizak, razmislite o povećanju hranjenja ili uklanjanju medija koji vežu fosfat."
-    },
-    KH: {
-      desc: "Karbonatna tvrdoća (KH) – održava stabilan pH i omogućava rast koralja. Optimalno 7-10 dKH.",
-      action: "Ako je nizak, dozirajte buffer/alkalinity aditive. Ako je previsok, provjerite doziranje i razmislite o smanjenju."
-    },
-    Ca: {
-      desc: "Kalcij (Ca) – ključan za rast tvrdih koralja i školjki. Optimalno 400-450 ppm.",
-      action: "Ako je nizak, dozirajte kalcij ili provjerite Ca reaktor. Ako je previsok, pauzirajte doziranje dok ne padne."
-    },
-    Mg: {
-      desc: "Magnezij (Mg) – pomaže stabilizaciji KH i omogućava apsorpciju kalcija. Optimalno 1250-1350 ppm.",
-      action: "Ako je nizak, dozirajte magnezij. Ako je previsok, pričekajte prirodno snižavanje ili zamijenite dio vode."
-    },
-    pH: {
-      desc: "pH – pokazuje kiselost/alkalnost vode. Optimalno 8.1-8.4 za morski akvarij.",
-      action: "Ako je prenizak, povećajte površinsku cirkulaciju i aeraciju. Ako je previsok, provjerite KH i CO2 razinu u prostoriji."
-    },
-    Temp: {
-      desc: "Temperatura – većina morskih akvarija 24-26°C.",
-      action: "Ako je previsoka, koristite ventilatore ili hladnjak. Ako je preniska, provjerite grijače."
-    },
-    Salinity: {
-      desc: "Slanost – optimalno 1.023-1.026 SG.",
-      action: "Ako je preniska, polako dodajte sol. Ako je previsoka, nadolijte RO/DI vode."
-    }
-  };
-
-  function openInfo(param) {
-    document.getElementById('info-title').innerText = param;
-    document.getElementById('info-text').innerText = paramInfo[param]?.desc || "Nema dodatnih informacija.";
-    document.getElementById('info-action').innerText = "Savjet: " + (paramInfo[param]?.action || "Nema posebnih uputa.");
-    openPopup('info-popup');
-  }
-
 
     showMeasurements();
   }
@@ -731,49 +571,6 @@
 
   renderDashboard();
 
-  const paramInfo = {
-    NO3: {
-      desc: "Nitrati (NO3) – pokazuju razinu organskog otpada. Optimalno 0-20 ppm. Visoke razine ukazuju na prekomjerno hranjenje ili slab filtracijski sustav.",
-      action: "Ako je vrijednost iznad postavki, smanjite hranjenje i pojačajte izmjene vode. Ako je prenisko, moguće je da koralji nemaju dovoljno nutrijenata."
-    },
-    PO4: {
-      desc: "Fosfati (PO4) – važni za rast koralja, ali previsoki potiču razvoj algi. Preporuka je 0.02-0.1 ppm ovisno o tipu akvarija.",
-      action: "Ako je previsok, koristite fosfatne smole ili smanjite hranjenje. Ako je prenizak, razmislite o povećanju hranjenja ili uklanjanju medija koji vežu fosfat."
-    },
-    KH: {
-      desc: "Karbonatna tvrdoća (KH) – održava stabilan pH i omogućava rast koralja. Optimalno 7-10 dKH.",
-      action: "Ako je nizak, dozirajte buffer/alkalinity aditive. Ako je previsok, provjerite doziranje i razmislite o smanjenju."
-    },
-    Ca: {
-      desc: "Kalcij (Ca) – ključan za rast tvrdih koralja i školjki. Optimalno 400-450 ppm.",
-      action: "Ako je nizak, dozirajte kalcij ili provjerite Ca reaktor. Ako je previsok, pauzirajte doziranje dok ne padne."
-    },
-    Mg: {
-      desc: "Magnezij (Mg) – pomaže stabilizaciji KH i omogućava apsorpciju kalcija. Optimalno 1250-1350 ppm.",
-      action: "Ako je nizak, dozirajte magnezij. Ako je previsok, pričekajte prirodno snižavanje ili zamijenite dio vode."
-    },
-    pH: {
-      desc: "pH – pokazuje kiselost/alkalnost vode. Optimalno 8.1-8.4 za morski akvarij.",
-      action: "Ako je prenizak, povećajte površinsku cirkulaciju i aeraciju. Ako je previsok, provjerite KH i CO2 razinu u prostoriji."
-    },
-    Temp: {
-      desc: "Temperatura – većina morskih akvarija 24-26°C.",
-      action: "Ako je previsoka, koristite ventilatore ili hladnjak. Ako je preniska, provjerite grijače."
-    },
-    Salinity: {
-      desc: "Slanost – optimalno 1.023-1.026 SG.",
-      action: "Ako je preniska, polako dodajte sol. Ako je previsoka, nadolijte RO/DI vode."
-    }
-  };
-
-  function openInfo(param) {
-    document.getElementById('info-title').innerText = param;
-    document.getElementById('info-text').innerText = paramInfo[param]?.desc || "Nema dodatnih informacija.";
-    document.getElementById('info-action').innerText = "Savjet: " + (paramInfo[param]?.action || "Nema posebnih uputa.");
-    openPopup('info-popup');
-  }
-
-
     closePopup('settings-popup');
   }
 
@@ -814,69 +611,96 @@
 
   renderDashboard();
 
-  const paramInfo = {
-    NO3: {
-      desc: "Nitrati (NO3) – pokazuju razinu organskog otpada. Optimalno 0-20 ppm. Visoke razine ukazuju na prekomjerno hranjenje ili slab filtracijski sustav.",
-      action: "Ako je vrijednost iznad postavki, smanjite hranjenje i pojačajte izmjene vode. Ako je prenisko, moguće je da koralji nemaju dovoljno nutrijenata."
-    },
-    PO4: {
-      desc: "Fosfati (PO4) – važni za rast koralja, ali previsoki potiču razvoj algi. Preporuka je 0.02-0.1 ppm ovisno o tipu akvarija.",
-      action: "Ako je previsok, koristite fosfatne smole ili smanjite hranjenje. Ako je prenizak, razmislite o povećanju hranjenja ili uklanjanju medija koji vežu fosfat."
-    },
-    KH: {
-      desc: "Karbonatna tvrdoća (KH) – održava stabilan pH i omogućava rast koralja. Optimalno 7-10 dKH.",
-      action: "Ako je nizak, dozirajte buffer/alkalinity aditive. Ako je previsok, provjerite doziranje i razmislite o smanjenju."
-    },
-    Ca: {
-      desc: "Kalcij (Ca) – ključan za rast tvrdih koralja i školjki. Optimalno 400-450 ppm.",
-      action: "Ako je nizak, dozirajte kalcij ili provjerite Ca reaktor. Ako je previsok, pauzirajte doziranje dok ne padne."
-    },
-    Mg: {
-      desc: "Magnezij (Mg) – pomaže stabilizaciji KH i omogućava apsorpciju kalcija. Optimalno 1250-1350 ppm.",
-      action: "Ako je nizak, dozirajte magnezij. Ako je previsok, pričekajte prirodno snižavanje ili zamijenite dio vode."
-    },
-    pH: {
-      desc: "pH – pokazuje kiselost/alkalnost vode. Optimalno 8.1-8.4 za morski akvarij.",
-      action: "Ako je prenizak, povećajte površinsku cirkulaciju i aeraciju. Ako je previsok, provjerite KH i CO2 razinu u prostoriji."
-    },
-    Temp: {
-      desc: "Temperatura – većina morskih akvarija 24-26°C.",
-      action: "Ako je previsoka, koristite ventilatore ili hladnjak. Ako je preniska, provjerite grijače."
-    },
-    Salinity: {
-      desc: "Slanost – optimalno 1.023-1.026 SG.",
-      action: "Ako je preniska, polako dodajte sol. Ako je previsoka, nadolijte RO/DI vode."
-    }
-  };
 
-  function openInfo(param) {
-    document.getElementById('info-title').innerText = param;
-    document.getElementById('info-text').innerText = paramInfo[param]?.desc || "Nema dodatnih informacija.";
-    document.getElementById('info-action').innerText = "Savjet: " + (paramInfo[param]?.action || "Nema posebnih uputa.");
-    openPopup('info-popup');
-  }
+// --- Custom Adjustments v1.1 ---
 
+// Ensure last value is always the latest by date
+function renderDashboard() {
+    dashboard.innerHTML = "";
+    let lastValues = {};
+    params.forEach(p => lastValues[p] = {value: "-", date: "-"});
 
-</script>
-  <footer>&copy; ŽŠ | Powered by <a href="https://www.facebook.com/groups/2138221309559208/?ref=share" target="_blank" style="color:white;text-decoration:underline;">HReef</a></footer>
+    // Sort measurements by date ascending to pick last chronologically
+    const sorted = [...measurements].sort((a, b) => new Date(a.date) - new Date(b.date));
+    sorted.forEach(m => {
+      params.forEach(p => {
+        if(m[p] !== "" && m[p] !== undefined && m[p] !== null){
+          lastValues[p] = {value: m[p], date: m.date};
+        }
+      });
+    });
 
-<!-- Info popup -->
-<div class="popup" id="info-popup">
-  <div class="popup-content">
-    <h3 id="info-title"></h3>
-    <p id="info-text"></p>
-    <p id="info-action" style="font-weight:bold;color:#004080;"></p>
-    <button class="close-btn" onclick="closePopup('info-popup')">Zatvori</button>
-  </div>
-</div>
+    params.forEach(p => {
+      const val = parseFloat(lastValues[p].value);
+      const min = parseFloat(settings[p]?.min);
+      const max = parseFloat(settings[p]?.max);
+      let icon = "";
+      let cardClass = "";
+      if(!isNaN(val)){
+        if((!isNaN(min) && val < min) || (!isNaN(max) && val > max)){
+          icon = '<span class="warning">⚠️</span>';
+          cardClass = "warning-card";
+        } else if(!isNaN(min) || !isNaN(max)) {
+          icon = '<span class="check">✅</span>';
+          cardClass = "check-card";
+        }
+      }
+      dashboard.innerHTML += `
+        <div class="card ${cardClass}" onclick="openGraph('${p}')">
+          ${lastValues[p].value}<br>${p}${icon}
+          <small>${formatDate(lastValues[p].date)}</small>
+        </div>`;
+    });
+}
 
+// Ensure graphs are sorted by date ascending
+function openGraph(param) {
+    const popup = document.getElementById('graph-popup');
+    popup.style.display = 'flex';
+    document.getElementById('graph-title').innerText = param + " kretanje";
 
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js')
-    .then(() => console.log('Service Worker registered!'));
+    const ctx = document.getElementById('graph-canvas').getContext('2d');
+    
+    const filtered = measurements.filter(m => m[param] && !isNaN(parseFloat(m[param])));
+    filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+    const labels = filtered.map(m => formatDate(m.date));
+    const data = filtered.map(m => parseFloat(m[param]));
+
+    if(chart) chart.destroy();
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: param,
+          data: data,
+          borderColor: '#007BFF',
+          backgroundColor: 'rgba(0,123,255,0.1)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.parsed.y + ' (' + context.label + ')';
+              }
+            }
+          }
+        },
+        scales: {
+          x: { ticks: { autoSkip: true, maxTicksLimit: 6 } }
+        }
+      }
+    });
 }
 </script>
-
+<div style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #003366; color: white; text-align: left; padding: 5px 15px; font-size: 14px;">
+<div>© ŽŠ | <a href="https://www.facebook.com/groups/2138221309559208/?ref=share" style="color: white; text-decoration: none;" target="_blank">powered by HReef</a></div>
+<div style="font-size: 12px; margin-top: 2px;">v1.1</div>
+</div>
 </body>
 </html>
