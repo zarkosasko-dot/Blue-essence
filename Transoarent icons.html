@@ -1,0 +1,710 @@
+
+<!DOCTYPE html>
+
+<html lang="hr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Blue Essence</title>
+<style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #0066cc, #3399ff);
+    }
+    header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #004080;
+      color: white;
+      padding: 10px 20px;
+      font-family: "Brush Script MT", cursive;
+      font-size: 28px;
+      position: relative;
+    }
+    #listBtn {
+      position: absolute;
+      left: 15px;
+      font-size: 28px;
+      cursor: pointer;
+    }
+    #notesBtn {
+      position: absolute;
+      right: 55px;
+      font-size: 28px;
+      cursor: pointer;
+    }
+    #settingsBtn {
+      position: absolute;
+      right: 15px;
+      font-size: 28px;
+      cursor: pointer;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding: 15px;
+    }
+    .card {
+      background: #f0f4f8;
+      border-radius: 12px;
+      text-align: center;
+      padding: 10px;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .card.warning-card {
+      background: #ffdddd;
+    }
+    .card.check-card {
+      background: #ddffdd;
+    }
+    .card small {
+      display: block;
+      color: #555;
+      margin-top: 5px;
+      font-weight: normal;
+    }
+    .btn-add {
+      display: block;
+      margin: 15px auto;
+      padding: 10px 20px;
+      font-size: 18px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .warning {
+      color: #ffcc00;
+      margin-left: 5px;
+    }
+    .check {
+      color: #00cc44;
+      margin-left: 5px;
+    }
+    /* Popups */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .popup-content {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80%;
+      overflow-y: auto;
+    }
+    .popup-content input, .popup-content textarea {
+      display: block;
+      width: 95%;
+      margin: 8px auto;
+      padding: 6px;
+    }
+    .close-btn {
+      margin-top: 10px;
+      background: #0066cc;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+    }
+    .measurement-card, .note-card {
+      background: #f0f4f8;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    .delete-btn {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      cursor: pointer;
+      color: red;
+      font-weight: bold;
+    }
+  
+        .card .warning, .card .check {
+            opacity: 0.5;
+        }
+        </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body {
+    background: url('background.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+</style></head>
+<body>
+<header>
+<span id="listBtn" onclick="showMeasurements()">📊</span>
+    Blue Essence
+    <span id="notesBtn" onclick="openNotes()">📝</span>
+<span id="settingsBtn" onclick="openSettings()">⚙️</span>
+</header>
+<button class="btn-add" onclick="openPopup('input-popup')">Dodaj mjerenje</button>
+<div class="grid" id="dashboard"></div>
+<!-- Popup for adding measurement -->
+<div class="popup" id="input-popup">
+<div class="popup-content">
+<h3>Dodaj mjerenje</h3>
+<input id="dateInput" type="date"/>
+<input id="no3" placeholder="NO3" step="any" type="number"/>
+<input id="po4" placeholder="PO4" step="any" type="number"/>
+<input id="kh" placeholder="KH" step="any" type="number"/>
+<input id="ca" placeholder="Ca" step="any" type="number"/>
+<input id="mg" placeholder="Mg" step="any" type="number"/>
+<input id="ph" placeholder="pH" step="any" type="number"/>
+<input id="temp" placeholder="Temp" step="any" type="number"/>
+<input id="salinity" placeholder="Salinity" step="any" type="number"/>
+<button class="close-btn" onclick="saveMeasurement()">Spremi</button>
+<button class="close-btn" onclick="closePopup('input-popup')">Odustani</button>
+</div>
+</div>
+<!-- Settings popup -->
+<div class="popup" id="settings-popup">
+<div class="popup-content">
+<h3>Postavke parametara</h3>
+<label for="tankType">Tip akvarija:</label>
+<select id="tankType" onchange="applyTankType()">
+<option value="custom">Custom</option>
+<option value="softy">Softy tank</option>
+<option value="lps">LPS tank</option>
+<option value="sps">SPS tank</option>
+</select>
+<table>
+<tr><th>Parametar</th><th>Min</th><th>Max</th></tr>
+<tbody id="settings-table"></tbody>
+</table>
+<button class="close-btn" onclick="saveSettings()">Spremi postavke</button>
+<button class="close-btn" onclick="closePopup('settings-popup')">Zatvori</button>
+</div>
+</div>
+<!-- Graph popup -->
+<div class="popup" id="graph-popup">
+<div class="popup-content">
+<h3 id="graph-title"></h3>
+<canvas id="graph-canvas"></canvas>
+<button class="close-btn" onclick="closePopup('graph-popup')">Zatvori</button>
+</div>
+</div>
+<!-- Measurements list popup -->
+<div class="popup" id="measurements-popup">
+<div class="popup-content">
+<h3>Popis mjerenja</h3>
+<div id="measurements-container"></div>
+<button class="close-btn" onclick="closePopup('measurements-popup')">Zatvori</button>
+</div>
+</div>
+<!-- Notes popup -->
+<div class="popup" id="notes-popup">
+<div class="popup-content">
+<h3>Bilješke</h3>
+<input id="noteDate" type="date"/>
+<textarea id="noteText" placeholder="Upiši bilješku..." rows="3"></textarea>
+<button class="close-btn" onclick="saveNote()">Spremi bilješku</button>
+<input id="noteSearch" oninput="filterNotes()" placeholder="Pretraži bilješke..." type="text"/>
+<div id="notes-container"></div>
+<button class="close-btn" onclick="closePopup('notes-popup')">Zatvori</button>
+</div>
+</div>
+<script>
+  const params = ["NO3","PO4","KH","Ca","Mg","pH","Temp","Salinity"];
+  let measurements = JSON.parse(localStorage.getItem("measurements") || "[]");
+  let notes = JSON.parse(localStorage.getItem("notes") || "[]");
+  let settings = JSON.parse(localStorage.getItem("settings") || "{}");
+  const dashboard = document.getElementById('dashboard');
+  let chart;
+
+  function renderDashboard() {
+    dashboard.innerHTML = "";
+    let lastValues = {};
+    params.forEach(p => lastValues[p] = {value: "-", date: "-"});
+
+    measurements.forEach(m => {
+      params.forEach(p => {
+        if(m[p] !== "" && m[p] !== undefined && m[p] !== null){
+          lastValues[p] = {value: m[p], date: m.date};
+        }
+      });
+    });
+
+    params.forEach(p => {
+      const val = parseFloat(lastValues[p].value);
+      const min = parseFloat(settings[p]?.min);
+      const max = parseFloat(settings[p]?.max);
+      let icon = "";
+      let cardClass = "";
+      if(!isNaN(val)){
+        if((!isNaN(min) && val < min) || (!isNaN(max) && val > max)){
+          icon = '<span class="warning">⚠️</span>';
+          cardClass = "warning-card";
+        } else if(!isNaN(min) || !isNaN(max)) {
+          icon = '<span class="check">✅</span>';
+          cardClass = "check-card";
+        }
+      }
+      dashboard.innerHTML += `
+        <div class="card ${cardClass}" onclick="openGraph('${p}')">
+          ${lastValues[p].value}<br>${p}${icon}
+          <small>${formatDate(lastValues[p].date)}</small>
+        </div>`;
+    });
+  }
+
+  function formatDate(dateStr){
+    if(!dateStr || dateStr === "-") return "-";
+    const d = new Date(dateStr);
+    if(isNaN(d)) return dateStr;
+    return d.toLocaleDateString("hr-HR");
+  }
+
+  function openPopup(id){
+    document.getElementById(id).style.display='flex';
+    if(id === 'input-popup'){
+      document.getElementById("dateInput").valueAsDate = new Date();
+      params.forEach(p => document.getElementById(p.toLowerCase()).value = "");
+    }
+    if(id === 'notes-popup'){
+      document.getElementById("noteDate").valueAsDate = new Date();
+      document.getElementById("noteText").value = "";
+      document.getElementById("noteSearch").value = "";
+      showNotes();
+    }
+  }
+  function closePopup(id){document.getElementById(id).style.display='none';}
+
+  function saveMeasurement(){
+    const measurement = {date: document.getElementById("dateInput").value};
+    params.forEach(p => measurement[p] = document.getElementById(p.toLowerCase()).value);
+    measurements.push(measurement);
+    localStorage.setItem("measurements", JSON.stringify(measurements));
+    
+  // Tank type predefined ranges
+  const tankPresets = {
+    softy: {
+      NO3: {min: 5, max: 20}, PO4: {min: 0.05, max: 0.2},
+      KH: {min: 7, max: 10}, Ca: {min: 380, max: 450},
+      Mg: {min: 1250, max: 1350}, pH: {min: 7.8, max: 8.3},
+      Temp: {min: 24, max: 27}, Salinity: {min: 1.023, max: 1.026}
+    },
+    lps: {
+      NO3: {min: 2, max: 10}, PO4: {min: 0.02, max: 0.08},
+      KH: {min: 8, max: 9}, Ca: {min: 400, max: 450},
+      Mg: {min: 1280, max: 1380}, pH: {min: 7.9, max: 8.3},
+      Temp: {min: 24, max: 26}, Salinity: {min: 1.024, max: 1.026}
+    },
+    sps: {
+      NO3: {min: 0.2, max: 5}, PO4: {min: 0.01, max: 0.05},
+      KH: {min: 7, max: 8}, Ca: {min: 420, max: 450},
+      Mg: {min: 1300, max: 1400}, pH: {min: 8.0, max: 8.3},
+      Temp: {min: 24, max: 25}, Salinity: {min: 1.025, max: 1.026}
+    }
+  };
+
+  function applyTankType(){
+    const type = document.getElementById('tankType').value;
+    if(type === 'custom') return;
+    const preset = tankPresets[type];
+    params.forEach(p => {
+      if(preset[p]){
+        document.getElementById('min-'+p).value = preset[p].min;
+        document.getElementById('max-'+p).value = preset[p].max;
+      }
+    });
+  }
+
+  renderDashboard();
+
+    closePopup('input-popup');
+  }
+
+  
+  function openGraph(param) {
+    const popup = document.getElementById('graph-popup');
+    popup.style.display = 'flex';
+    document.getElementById('graph-title').innerText = param + " kretanje";
+
+    const ctx = document.getElementById('graph-canvas').getContext('2d');
+    
+    const filtered = measurements.filter(m => m[param] && !isNaN(parseFloat(m[param])));
+    const labels = filtered.map(m => formatDate(m.date));
+    const data = filtered.map(m => parseFloat(m[param]));
+
+    if(chart) chart.destroy();
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: param,
+          data: data,
+          borderColor: '#007BFF',
+          backgroundColor: 'rgba(0,123,255,0.1)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.parsed.y + ' (' + context.label + ')';
+              }
+            }
+          }
+        },
+        scales: {
+          x: { ticks: { autoSkip: true, maxTicksLimit: 6 } }
+        }
+      }
+    });
+  }
+
+
+  function showMeasurements(){
+    // Sort by date descending
+    measurements.sort((a, b) => new Date(b.date) - new Date(a.date));
+    const container = document.getElementById('measurements-container');
+    container.innerHTML = "";
+    if(measurements.length === 0){
+      container.innerHTML = "<em>Nema mjerenja.</em>";
+    } else {
+      measurements.slice().forEach((m, i) => {
+        let html = `<div class="measurement-card">
+                      <span class="delete-btn" onclick="deleteMeasurement(${i})">🗑</span>
+                      <strong>${formatDate(m.date)}</strong><br>`;
+        params.forEach(p => { html += `${p}: ${m[p] || '-'}<br>`; });
+        html += "</div>";
+        container.innerHTML += html;
+      });
+    }
+    openPopup('measurements-popup');
+  }
+
+  function deleteMeasurement(index){
+    measurements.splice(index, 1);
+    localStorage.setItem("measurements", JSON.stringify(measurements));
+    
+  // Tank type predefined ranges
+  const tankPresets = {
+    softy: {
+      NO3: {min: 5, max: 20}, PO4: {min: 0.05, max: 0.2},
+      KH: {min: 7, max: 10}, Ca: {min: 380, max: 450},
+      Mg: {min: 1250, max: 1350}, pH: {min: 7.8, max: 8.3},
+      Temp: {min: 24, max: 27}, Salinity: {min: 1.023, max: 1.026}
+    },
+    lps: {
+      NO3: {min: 2, max: 10}, PO4: {min: 0.02, max: 0.08},
+      KH: {min: 8, max: 9}, Ca: {min: 400, max: 450},
+      Mg: {min: 1280, max: 1380}, pH: {min: 7.9, max: 8.3},
+      Temp: {min: 24, max: 26}, Salinity: {min: 1.024, max: 1.026}
+    },
+    sps: {
+      NO3: {min: 0.2, max: 5}, PO4: {min: 0.01, max: 0.05},
+      KH: {min: 7, max: 8}, Ca: {min: 420, max: 450},
+      Mg: {min: 1300, max: 1400}, pH: {min: 8.0, max: 8.3},
+      Temp: {min: 24, max: 25}, Salinity: {min: 1.025, max: 1.026}
+    }
+  };
+
+  function applyTankType(){
+    const type = document.getElementById('tankType').value;
+    if(type === 'custom') return;
+    const preset = tankPresets[type];
+    params.forEach(p => {
+      if(preset[p]){
+        document.getElementById('min-'+p).value = preset[p].min;
+        document.getElementById('max-'+p).value = preset[p].max;
+      }
+    });
+  }
+
+  renderDashboard();
+
+    showMeasurements();
+  }
+
+  function openNotes(){ openPopup('notes-popup'); }
+
+  function showNotes(){
+    const container = document.getElementById('notes-container');
+    container.innerHTML = "";
+    if(notes.length === 0){
+      container.innerHTML = "<em>Nema bilješki.</em>";
+    } else {
+      notes.slice().reverse().forEach((n, i) => {
+        let html = `<div class="note-card">
+                      <span class="delete-btn" onclick="deleteNote(${notes.length-1-i})">🗑</span>
+                      <strong>${formatDate(n.date)}</strong><br>${n.text}
+                    </div>`;
+        container.innerHTML += html;
+      });
+    }
+  }
+
+  function saveNote(){
+    const note = {
+      date: document.getElementById("noteDate").value,
+      text: document.getElementById("noteText").value
+    };
+    if(note.text.trim() === "") return;
+    notes.push(note);
+    localStorage.setItem("notes", JSON.stringify(notes));
+    showNotes();
+  }
+
+  function deleteNote(index){
+    notes.splice(index, 1);
+    localStorage.setItem("notes", JSON.stringify(notes));
+    showNotes();
+  }
+
+  function filterNotes(){
+    const searchTerm = document.getElementById("noteSearch").value.toLowerCase();
+    const container = document.getElementById('notes-container');
+    container.innerHTML = "";
+    const filtered = notes.filter(n => 
+      n.text.toLowerCase().includes(searchTerm) ||
+      formatDate(n.date).toLowerCase().includes(searchTerm)
+    ).reverse();
+    if(filtered.length === 0){
+      container.innerHTML = "<em>Nema rezultata pretrage.</em>";
+    } else {
+      filtered.forEach(n => {
+        let actualIndex = notes.indexOf(n);
+        let html = `<div class="note-card">
+                      <span class="delete-btn" onclick="deleteNote(${actualIndex})">🗑</span>
+                      <strong>${formatDate(n.date)}</strong><br>${n.text}
+                    </div>`;
+        container.innerHTML += html;
+      });
+    }
+  }
+
+  function openSettings(){
+    const tbody = document.getElementById('settings-table');
+    tbody.innerHTML = "";
+    params.forEach(p => {
+      const minVal = settings[p]?.min || "";
+      const maxVal = settings[p]?.max || "";
+      tbody.innerHTML += `
+        <tr>
+          <td>${p}</td>
+          <td><input type="number" step="any" id="min-${p}" value="${minVal}"></td>
+          <td><input type="number" step="any" id="max-${p}" value="${maxVal}"></td>
+        </tr>`;
+    });
+    openPopup('settings-popup');
+  }
+
+  function saveSettings(){
+    settings = {};
+    params.forEach(p => {
+      settings[p] = {
+        min: document.getElementById('min-' + p).value,
+        max: document.getElementById('max-' + p).value
+      };
+    });
+    localStorage.setItem("settings", JSON.stringify(settings));
+    
+  // Tank type predefined ranges
+  const tankPresets = {
+    softy: {
+      NO3: {min: 5, max: 20}, PO4: {min: 0.05, max: 0.2},
+      KH: {min: 7, max: 10}, Ca: {min: 380, max: 450},
+      Mg: {min: 1250, max: 1350}, pH: {min: 7.8, max: 8.3},
+      Temp: {min: 24, max: 27}, Salinity: {min: 1.023, max: 1.026}
+    },
+    lps: {
+      NO3: {min: 2, max: 10}, PO4: {min: 0.02, max: 0.08},
+      KH: {min: 8, max: 9}, Ca: {min: 400, max: 450},
+      Mg: {min: 1280, max: 1380}, pH: {min: 7.9, max: 8.3},
+      Temp: {min: 24, max: 26}, Salinity: {min: 1.024, max: 1.026}
+    },
+    sps: {
+      NO3: {min: 0.2, max: 5}, PO4: {min: 0.01, max: 0.05},
+      KH: {min: 7, max: 8}, Ca: {min: 420, max: 450},
+      Mg: {min: 1300, max: 1400}, pH: {min: 8.0, max: 8.3},
+      Temp: {min: 24, max: 25}, Salinity: {min: 1.025, max: 1.026}
+    }
+  };
+
+  function applyTankType(){
+    const type = document.getElementById('tankType').value;
+    if(type === 'custom') return;
+    const preset = tankPresets[type];
+    params.forEach(p => {
+      if(preset[p]){
+        document.getElementById('min-'+p).value = preset[p].min;
+        document.getElementById('max-'+p).value = preset[p].max;
+      }
+    });
+  }
+
+  renderDashboard();
+
+    closePopup('settings-popup');
+  }
+
+  
+  // Tank type predefined ranges
+  const tankPresets = {
+    softy: {
+      NO3: {min: 5, max: 20}, PO4: {min: 0.05, max: 0.2},
+      KH: {min: 7, max: 10}, Ca: {min: 380, max: 450},
+      Mg: {min: 1250, max: 1350}, pH: {min: 7.8, max: 8.3},
+      Temp: {min: 24, max: 27}, Salinity: {min: 1.023, max: 1.026}
+    },
+    lps: {
+      NO3: {min: 2, max: 10}, PO4: {min: 0.02, max: 0.08},
+      KH: {min: 8, max: 9}, Ca: {min: 400, max: 450},
+      Mg: {min: 1280, max: 1380}, pH: {min: 7.9, max: 8.3},
+      Temp: {min: 24, max: 26}, Salinity: {min: 1.024, max: 1.026}
+    },
+    sps: {
+      NO3: {min: 0.2, max: 5}, PO4: {min: 0.01, max: 0.05},
+      KH: {min: 7, max: 8}, Ca: {min: 420, max: 450},
+      Mg: {min: 1300, max: 1400}, pH: {min: 8.0, max: 8.3},
+      Temp: {min: 24, max: 25}, Salinity: {min: 1.025, max: 1.026}
+    }
+  };
+
+  function applyTankType(){
+    const type = document.getElementById('tankType').value;
+    if(type === 'custom') return;
+    const preset = tankPresets[type];
+    params.forEach(p => {
+      if(preset[p]){
+        document.getElementById('min-'+p).value = preset[p].min;
+        document.getElementById('max-'+p).value = preset[p].max;
+      }
+    });
+  }
+
+  renderDashboard();
+
+
+// --- Custom Adjustments v1.1 ---
+
+// Ensure last value is always the latest by date
+function renderDashboard() {
+    dashboard.innerHTML = "";
+    let lastValues = {};
+    params.forEach(p => lastValues[p] = {value: "-", date: "-"});
+
+    // Sort measurements by date ascending to pick last chronologically
+    const sorted = [...measurements].sort((a, b) => new Date(a.date) - new Date(b.date));
+    sorted.forEach(m => {
+      params.forEach(p => {
+        if(m[p] !== "" && m[p] !== undefined && m[p] !== null){
+          lastValues[p] = {value: m[p], date: m.date};
+        }
+      });
+    });
+
+    params.forEach(p => {
+      const val = parseFloat(lastValues[p].value);
+      const min = parseFloat(settings[p]?.min);
+      const max = parseFloat(settings[p]?.max);
+      let icon = "";
+      let cardClass = "";
+      if(!isNaN(val)){
+        if((!isNaN(min) && val < min) || (!isNaN(max) && val > max)){
+          icon = '<span class="warning">⚠️</span>';
+          cardClass = "warning-card";
+        } else if(!isNaN(min) || !isNaN(max)) {
+          icon = '<span class="check">✅</span>';
+          cardClass = "check-card";
+        }
+      }
+      dashboard.innerHTML += `
+        <div class="card ${cardClass}" onclick="openGraph('${p}')">
+          ${lastValues[p].value}<br>${p}${icon}
+          <small>${formatDate(lastValues[p].date)}</small>
+        </div>`;
+    });
+}
+
+// Ensure graphs are sorted by date ascending
+function openGraph(param) {
+    const popup = document.getElementById('graph-popup');
+    popup.style.display = 'flex';
+    document.getElementById('graph-title').innerText = param + " kretanje";
+
+    const ctx = document.getElementById('graph-canvas').getContext('2d');
+    
+    const filtered = measurements.filter(m => m[param] && !isNaN(parseFloat(m[param])));
+    filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+    const labels = filtered.map(m => formatDate(m.date));
+    const data = filtered.map(m => parseFloat(m[param]));
+
+    if(chart) chart.destroy();
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: param,
+          data: data,
+          borderColor: '#007BFF',
+          backgroundColor: 'rgba(0,123,255,0.1)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.parsed.y + ' (' + context.label + ')';
+              }
+            }
+          }
+        },
+        scales: {
+          x: { ticks: { autoSkip: true, maxTicksLimit: 6 } }
+        }
+      }
+    });
+}
+</script>
+<div style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #003366; color: white; text-align: left; padding: 5px 15px; font-size: 14px;">
+<div>© ŽŠ | <a href="https://www.facebook.com/groups/2138221309559208/?ref=share" style="color: white; text-decoration: none;" target="_blank">powered by HReef</a></div>
+<div style="font-size: 12px; margin-top: 2px;">v1.1</div>
+</div>
+</body>
+</html>
