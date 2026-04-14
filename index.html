@@ -198,6 +198,25 @@
     cursor: pointer;
   }
 
+  .secondary-btn {
+    background: #0f6b78;
+  }
+
+  .helper-text {
+    margin: 8px 0 0;
+    color: #516273;
+    font-size: 0.9rem;
+  }
+
+  .elitech-status {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(15, 107, 120, 0.12);
+    color: #0d4f58;
+    font-size: 0.92rem;
+  }
+
   table {
     width: 100%;
     margin-top: 10px;
@@ -233,13 +252,21 @@
 
   .footer {
     position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    padding: 5px 15px;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
     color: white;
     font-size: 14px;
-    background: #003366;
+    background: rgba(0, 38, 71, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    box-shadow: 0 16px 40px rgba(2, 12, 24, 0.34);
+    backdrop-filter: blur(8px);
   }
 
   .footer a {
@@ -251,6 +278,139 @@
     display: block;
     margin-top: 2px;
     font-size: 12px;
+  }
+
+  .app-shell {
+    width: min(1120px, calc(100vw - 24px));
+    margin: 0 auto;
+    padding-bottom: 92px;
+  }
+
+  .hero-panel,
+  .summary-strip,
+  .dashboard-wrap {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 24px;
+    box-shadow: 0 18px 40px rgba(3, 23, 43, 0.18);
+    backdrop-filter: blur(10px);
+  }
+
+  .hero-panel {
+    margin: 16px 15px 14px;
+    padding: 22px 22px 18px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(224, 243, 255, 0.86));
+  }
+
+  .hero-title {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(32px, 4vw, 44px);
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  .hero-copy {
+    margin: 10px 0 0;
+    max-width: 720px;
+    color: #4f6882;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .summary-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0 15px 14px;
+    padding: 14px;
+  }
+
+  .summary-box {
+    padding: 14px;
+    background: rgba(242, 248, 253, 0.9);
+    border-radius: 18px;
+  }
+
+  .summary-box span {
+    display: block;
+    color: #55708b;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .summary-box strong {
+    display: block;
+    margin-top: 6px;
+    font-size: 1.35rem;
+  }
+
+  .alert-strip {
+    display: none;
+    margin: 0 15px 14px;
+    padding: 14px 16px;
+    color: #704700;
+    background: linear-gradient(135deg, rgba(255, 240, 194, 0.96), rgba(255, 220, 112, 0.92));
+    border-radius: 18px;
+    box-shadow: 0 14px 32px rgba(120, 84, 8, 0.12);
+  }
+
+  .alert-strip.visible {
+    display: block;
+  }
+
+  .alert-strip strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .dashboard-wrap {
+    margin: 0 15px;
+    padding: 18px 0 8px;
+  }
+
+  .dashboard-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 0 18px;
+    margin-bottom: 8px;
+  }
+
+  .dashboard-head h3 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  .dashboard-head p {
+    margin: 6px 0 0;
+    color: #55708b;
+  }
+
+  .dashboard-tag {
+    padding: 8px 12px;
+    font-size: 0.84rem;
+    font-weight: 700;
+    background: rgba(17, 34, 55, 0.06);
+    border-radius: 999px;
+  }
+
+  .footer-version {
+    padding: 7px 12px;
+    font-size: 0.84rem;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
   }
 
   @media (max-width: 420px) {
@@ -270,6 +430,15 @@
     .card {
       font-size: 16px;
     }
+
+    .summary-strip {
+      grid-template-columns: 1fr;
+    }
+
+    .footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 </style>
 </head>
@@ -282,8 +451,28 @@
 </header>
 
 <main>
-  <button class="btn-add" onclick="openPopup('input-popup')">Dodaj mjerenje</button>
-  <div class="grid" id="dashboard"></div>
+  <section class="hero-panel">
+    <h2 class="hero-title">Reef tank pregled bez kaosa.</h2>
+    <p class="hero-copy">Sve najbitnije vrijednosti, bilješke, upozorenja i priprema za Elitech temperaturu sada su složeni tako da odmah vidiš što je stabilno, što kasni i što trebaš izmjeriti dalje.</p>
+    <div class="hero-actions">
+      <button class="btn-add" onclick="openPopup('input-popup')">Dodaj mjerenje</button>
+      <button class="close-btn secondary-btn" onclick="showStaleWarning(true)">Pregled upozorenja</button>
+    </div>
+  </section>
+
+  <section class="summary-strip" id="summary-strip"></section>
+  <section class="alert-strip" id="alert-strip"></section>
+
+  <section class="dashboard-wrap">
+    <div class="dashboard-head">
+      <div>
+        <h3>Glavni dashboard</h3>
+        <p>Dodirni karticu za graf i pogled kroz vrijeme.</p>
+      </div>
+      <div class="dashboard-tag" id="dashboard-tag">Zadnji pregled: -</div>
+    </div>
+    <div class="grid" id="dashboard"></div>
+  </section>
 </main>
 
 <div class="popup" id="input-popup">
@@ -298,6 +487,10 @@
     <input id="ph" type="number" step="any" placeholder="pH">
     <input id="temp" type="number" step="any" placeholder="Temp">
     <input id="salinity" type="number" step="any" placeholder="Salinity">
+    <div class="popup-actions">
+      <button class="close-btn secondary-btn" onclick="fillTempFromElitech()">Dohvati Elitech temp</button>
+    </div>
+    <div class="helper-text" id="temp-sync-status">Elitech temperatura jos nije dohvacena.</div>
     <div class="popup-actions">
       <button class="close-btn" onclick="saveMeasurement()">Spremi</button>
       <button class="close-btn" onclick="closePopup('input-popup')">Odustani</button>
@@ -325,6 +518,14 @@
       </thead>
       <tbody id="settings-table"></tbody>
     </table>
+    <h4>Elitech temperatura</h4>
+    <label><input id="elitechEnabled" type="checkbox"> Ukljuci Elitech dohvat</label>
+    <input id="elitechProxyUrl" type="text" placeholder="https://tvoj-proxy.example.com/api/elitech-temperature">
+    <p class="helper-text">Upisi adresu svog Elitech proxy endpointa. Temperatura ce se prikazati na postojecoj Temp kartici.</p>
+    <div class="popup-actions">
+      <button class="close-btn secondary-btn" onclick="testElitechConnection()">Testiraj Elitech vezu</button>
+    </div>
+    <div class="elitech-status" id="elitech-status">Elitech nije konfiguriran.</div>
     <div class="popup-actions">
       <button class="close-btn" onclick="saveSettings()">Spremi postavke</button>
       <button class="close-btn" onclick="closePopup('settings-popup')">Zatvori</button>
@@ -413,10 +614,14 @@
   };
 
   const dashboard = document.getElementById("dashboard");
+  const summaryStrip = document.getElementById("summary-strip");
+  const alertStrip = document.getElementById("alert-strip");
+  const dashboardTag = document.getElementById("dashboard-tag");
   let measurements = parseStoredArray("measurements");
   let notes = parseStoredArray("notes");
   let settings = parseStoredObject("settings");
   let chart;
+  let liveTemperature = null;
 
   function parseStoredArray(key) {
     try {
@@ -446,6 +651,13 @@
 
   function persistSettings() {
     localStorage.setItem("settings", JSON.stringify(settings));
+  }
+
+  function getElitechConfig() {
+    return {
+      enabled: Boolean(settings.elitech?.enabled),
+      proxyUrl: settings.elitech?.proxyUrl || ""
+    };
   }
 
   function escapeHtml(value) {
@@ -504,7 +716,90 @@
       });
     });
 
+    if (liveTemperature?.temperature !== undefined) {
+      lastValues.Temp = {
+        value: String(liveTemperature.temperature),
+        date: liveTemperature.monitorTime
+      };
+    }
+
     return lastValues;
+  }
+
+  async function fetchElitechTemperature() {
+    const config = getElitechConfig();
+    if (!config.enabled || !config.proxyUrl) {
+      throw new Error("Elitech proxy nije postavljen.");
+    }
+
+    const response = await fetch(config.proxyUrl, {
+      method: "GET",
+      headers: {
+        Accept: "application/json"
+      }
+    });
+
+    const payload = await response.json();
+    if (!response.ok || !payload.ok) {
+      throw new Error(payload.error || "Elitech dohvat nije uspio.");
+    }
+
+    liveTemperature = payload.data;
+    return payload.data;
+  }
+
+  function setElitechStatus(message) {
+    const node = document.getElementById("elitech-status");
+    if (node) {
+      node.textContent = message;
+    }
+  }
+
+  function setTempSyncStatus(message) {
+    const node = document.getElementById("temp-sync-status");
+    if (node) {
+      node.textContent = message;
+    }
+  }
+
+  function renderOverview() {
+    const latestValues = getLatestValues();
+    const staleItems = getStaleItems();
+    const lastMeasurement = measurements.length ? getSortedMeasurements("desc")[0].date : "-";
+    const outOfRange = params.filter((param) => {
+      const value = parseFloat(latestValues[param].value);
+      const min = parseFloat(settings[param]?.min);
+      const max = parseFloat(settings[param]?.max);
+      return !Number.isNaN(value) && ((!Number.isNaN(min) && value < min) || (!Number.isNaN(max) && value > max));
+    });
+
+    summaryStrip.innerHTML = [
+      { label: "Mjerenja", value: String(measurements.length) },
+      { label: "Zadnji test", value: formatDate(lastMeasurement) },
+      { label: "Kasne parametri", value: String(staleItems.length) },
+      { label: "Temp", value: liveTemperature?.temperature !== undefined ? `${liveTemperature.temperature}${liveTemperature.unit || "°C"}` : "Ručni unos" }
+    ].map((item) => `
+      <div class="summary-box">
+        <span>${item.label}</span>
+        <strong>${escapeHtml(item.value)}</strong>
+      </div>
+    `).join("");
+
+    dashboardTag.textContent = `Zadnji pregled: ${formatDate(lastMeasurement)}`;
+
+    if (staleItems.length > 0) {
+      alertStrip.classList.add("visible");
+      alertStrip.innerHTML = `<strong>Vrijeme je za novo testiranje</strong>${escapeHtml(staleItems.map((item) => item.param).join(", "))} nisu mjereni dulje od 7 dana.`;
+    } else {
+      alertStrip.classList.remove("visible");
+      alertStrip.innerHTML = "";
+    }
+
+    if (liveTemperature?.temperature !== undefined) {
+      setElitechStatus(`Live Temp: ${liveTemperature.temperature}${liveTemperature.unit || "°C"}`);
+    } else if (outOfRange.length > 0) {
+      setElitechStatus(`Provjeri: ${outOfRange.join(", ")}`);
+    }
   }
 
   function getSortedMeasurements(direction = "asc") {
@@ -545,6 +840,13 @@
 
     const lastValues = getLatestValues();
 
+    if (liveTemperature?.temperature !== undefined) {
+      lastValues.Temp = {
+        value: String(liveTemperature.temperature),
+        date: liveTemperature.monitorTime
+      };
+    }
+
     params.forEach((param) => {
       const value = parseFloat(lastValues[param].value);
       const min = parseFloat(settings[param]?.min);
@@ -559,11 +861,17 @@
 
       dashboard.innerHTML += `
         <div class="card ${cardClasses}" onclick="openGraph('${param}')">
-          ${escapeHtml(lastValues[param].value)}<br>${param}${status.icon}
-          <small>${escapeHtml(formatDate(lastValues[param].date))}</small>
+          <div class="card-top">
+            <div class="param-name">${param}</div>
+            <div class="param-status">${status.icon}</div>
+          </div>
+          <div class="param-value">${escapeHtml(lastValues[param].value)}</div>
+          <small class="param-date">${escapeHtml(formatDate(lastValues[param].date))}</small>
           ${staleMarkup}
         </div>`;
     });
+
+    renderOverview();
   }
 
   function showStaleWarning() {
@@ -595,6 +903,12 @@
       params.forEach((param) => {
         document.getElementById(param.toLowerCase()).value = "";
       });
+      if (liveTemperature?.temperature !== undefined) {
+        document.getElementById("temp").value = liveTemperature.temperature;
+        setTempSyncStatus(`Elitech temp spremna: ${liveTemperature.temperature}${liveTemperature.unit || "C"}`);
+      } else {
+        setTempSyncStatus("Elitech temperatura jos nije dohvacena.");
+      }
     }
 
     if (id === "notes-popup") {
@@ -622,6 +936,18 @@
     persistMeasurements();
     renderDashboard();
     closePopup("input-popup");
+  }
+
+  async function fillTempFromElitech() {
+    try {
+      setTempSyncStatus("Dohvacam Elitech temperaturu...");
+      const data = await fetchElitechTemperature();
+      document.getElementById("temp").value = data.temperature;
+      setTempSyncStatus(`Upisana temperatura ${data.temperature}${data.unit || "C"} (${formatDate(data.monitorTime)})`);
+      renderDashboard();
+    } catch (error) {
+      setTempSyncStatus(error.message);
+    }
   }
 
   function openGraph(param) {
@@ -777,6 +1103,7 @@
 
   function openSettings() {
     const tbody = document.getElementById("settings-table");
+    const elitech = getElitechConfig();
 
     tbody.innerHTML = params.map((param) => {
       const minValue = settings[param]?.min || "";
@@ -789,6 +1116,10 @@
           <td><input type="number" step="any" id="max-${param}" value="${escapeHtml(maxValue)}"></td>
         </tr>`;
     }).join("");
+
+    document.getElementById("elitechEnabled").checked = elitech.enabled;
+    document.getElementById("elitechProxyUrl").value = elitech.proxyUrl;
+    setElitechStatus(elitech.proxyUrl ? "Elitech proxy je spremljen." : "Elitech nije konfiguriran.");
 
     openPopup("settings-popup");
   }
@@ -809,27 +1140,70 @@
   }
 
   function saveSettings() {
-    settings = {};
+    const nextSettings = {
+      elitech: {
+        enabled: document.getElementById("elitechEnabled").checked,
+        proxyUrl: document.getElementById("elitechProxyUrl").value.trim()
+      }
+    };
 
     params.forEach((param) => {
-      settings[param] = {
+      nextSettings[param] = {
         min: document.getElementById("min-" + param).value,
         max: document.getElementById("max-" + param).value
       };
     });
 
+    settings = nextSettings;
     persistSettings();
     renderDashboard();
     closePopup("settings-popup");
   }
 
+  async function testElitechConnection() {
+    try {
+      setElitechStatus("Provjeravam Elitech vezu...");
+      settings.elitech = {
+        enabled: document.getElementById("elitechEnabled").checked,
+        proxyUrl: document.getElementById("elitechProxyUrl").value.trim()
+      };
+      const data = await fetchElitechTemperature();
+      setElitechStatus(`Veza radi. Temp: ${data.temperature}${data.unit || "C"} (${formatDate(data.monitorTime)})`);
+      setTempSyncStatus(`Elitech temp spremna: ${data.temperature}${data.unit || "C"}`);
+      renderDashboard();
+    } catch (error) {
+      setElitechStatus(`Greska: ${error.message}`);
+    }
+  }
+
+  async function loadElitechTemperature() {
+    const config = getElitechConfig();
+    if (!config.enabled || !config.proxyUrl) {
+      return;
+    }
+
+    try {
+      setElitechStatus("Dohvacam Elitech temperaturu...");
+      const data = await fetchElitechTemperature();
+      setElitechStatus(`Zadnja Elitech temp: ${data.temperature}${data.unit || "C"} (${formatDate(data.monitorTime)})`);
+      setTempSyncStatus(`Elitech temp spremna: ${data.temperature}${data.unit || "C"}`);
+      renderDashboard();
+    } catch (error) {
+      setElitechStatus(`Greska: ${error.message}`);
+    }
+  }
+
   renderDashboard();
   showStaleWarning();
+  loadElitechTemperature();
 </script>
 
 <div class="footer">
-  <div>© ŽŠ | <a href="https://www.facebook.com/groups/2138221309559208/?ref=share" target="_blank">powered by HReef</a></div>
-  <small>v1.2</small>
+  <div>
+    <div>© ŽŠ | <a href="https://www.facebook.com/groups/2138221309559208/?ref=share" target="_blank">powered by HReef</a></div>
+    <small>Reef tank dashboard, bilješke i trendovi na jednom mjestu.</small>
+  </div>
+  <div class="footer-version">v1.3</div>
 </div>
 </body>
 </html>
