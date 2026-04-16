@@ -57,9 +57,16 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 28px;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    font-size: 22px;
     cursor: pointer;
     user-select: none;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
   #listBtn {
@@ -227,9 +234,10 @@
     display: block;
     width: 100%;
     margin: 8px 0;
-    padding: 10px 12px;
-    border: 1px solid #ccd6e0;
-    border-radius: 8px;
+    padding: 12px 14px;
+    border: 1px solid rgba(106, 134, 160, 0.28);
+    border-radius: 12px;
+    background: rgba(248, 251, 254, 0.94);
     font: inherit;
   }
 
@@ -243,14 +251,15 @@
   .close-btn {
     padding: 9px 14px;
     color: white;
-    background: var(--primary-light);
+    background: linear-gradient(135deg, #168dff, #0b72da);
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     cursor: pointer;
+    box-shadow: 0 10px 20px rgba(11, 114, 218, 0.18);
   }
 
   .secondary-btn {
-    background: #0f6b78;
+    background: linear-gradient(135deg, #0f6b78, #1792a3);
   }
 
   .helper-text {
@@ -268,6 +277,35 @@
     font-size: 0.92rem;
   }
 
+  .advice-box {
+    margin-top: 16px;
+    padding: 16px;
+    background: linear-gradient(180deg, rgba(241, 247, 252, 0.95), rgba(232, 243, 250, 0.92));
+    border: 1px solid rgba(17, 34, 55, 0.08);
+    border-radius: 16px;
+  }
+
+  .advice-box h4 {
+    margin: 0 0 10px;
+    font-size: 1rem;
+  }
+
+  .advice-box p {
+    margin: 0 0 10px;
+    color: #4f6882;
+    line-height: 1.45;
+  }
+
+  .advice-box ul {
+    margin: 0;
+    padding-left: 18px;
+    color: #1d2430;
+  }
+
+  .advice-box li {
+    margin-bottom: 6px;
+  }
+
   table {
     width: 100%;
     margin-top: 10px;
@@ -276,9 +314,17 @@
 
   th,
   td {
-    padding: 6px;
+    padding: 8px 6px;
     text-align: center;
     border: 1px solid #ccd6e0;
+  }
+
+  th {
+    color: #4d6982;
+    background: rgba(235, 244, 251, 0.85);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
 
   .measurement-card,
@@ -286,7 +332,7 @@
     position: relative;
     margin-bottom: 12px;
     padding: 14px;
-    background: var(--surface-soft);
+    background: linear-gradient(180deg, rgba(246, 250, 253, 0.96), rgba(236, 245, 251, 0.92));
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
   }
@@ -348,33 +394,40 @@
   }
 
   .hero-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
     margin: 16px 15px 14px;
-    padding: 22px 22px 18px;
+    padding: 18px 20px;
     background: linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(224, 243, 255, 0.86));
+  }
+
+  .hero-panel > h2,
+  .hero-panel > p {
+    display: none;
   }
 
   .hero-title {
     margin: 0;
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: clamp(32px, 4vw, 44px);
-    font-style: italic;
-    font-weight: 500;
-    line-height: 1;
+    color: #294763;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
   }
 
-  .hero-copy {
-    margin: 10px 0 0;
-    max-width: 720px;
-    color: #4f6882;
-    font-size: 1rem;
-    line-height: 1.5;
+  .hero-status {
+    margin: 6px 0 0;
+    color: #17324d;
+    font-size: 1.05rem;
+    font-weight: 600;
   }
 
   .hero-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 18px;
   }
 
   .summary-strip {
@@ -465,6 +518,11 @@
   }
 
   @media (max-width: 860px) {
+    .hero-panel {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
     .grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -516,6 +574,11 @@
   <section class="hero-panel">
     <h2 class="hero-title">Reef tank pregled bez kaosa.</h2>
     <p class="hero-copy">Sve najbitnije vrijednosti, bilješke, upozorenja i priprema za Elitech temperaturu sada su složeni tako da odmah vidiš što je stabilno, što kasni i što trebaš izmjeriti dalje.</p>
+    <p class="hero-copy">Sve najbitnije vrijednosti, bilješke, upozorenja i priprema za Elitech temperaturu sada su složeni tako da odmah vidiš što je stabilno, što kasni i što trebaš izmjeriti dalje.</p>
+    <div>
+      <div class="hero-title">Blue Essence Dashboard</div>
+      <div class="hero-status" id="hero-status">Pregled stanja akvarija i ključnih zadataka.</div>
+    </div>
     <div class="hero-actions">
       <button class="btn-add" onclick="openPopup('input-popup')">Dodaj mjerenje</button>
       <button class="close-btn secondary-btn" onclick="showStaleWarning(true)">Pregled upozorenja</button>
@@ -599,6 +662,7 @@
   <div class="popup-content">
     <h3 id="graph-title"></h3>
     <canvas id="graph-canvas"></canvas>
+    <div class="advice-box" id="graph-advice"></div>
     <div class="popup-actions">
       <button class="close-btn" onclick="closePopup('graph-popup')">Zatvori</button>
     </div>
@@ -675,10 +739,238 @@
     }
   };
 
+  const parameterAdvice = {
+    NO3: {
+      low: {
+        title: "NO3 prenizak",
+        intro: "Prenizak nitrat često znači da je sustav previše sterilno čist za stabilan reef.",
+        actions: [
+          "Smanji agresivni export ako koristiš prejak skimmer ili previše medija.",
+          "Povećaj hranjenje postupno i promatraj reakciju kroz nekoliko dana.",
+          "Izbjegavaj nagle korekcije dok ne vidiš stabilan trend."
+        ]
+      },
+      high: {
+        title: "NO3 previsok",
+        intro: "Povišen nitrat najčešće upućuje na višak organskog opterećenja ili slabiji export.",
+        actions: [
+          "Provjeri količinu hrane i ostatke u akvariju.",
+          "Napravi umjerenu izmjenu vode i provjeri radi li skimmer kako treba.",
+          "Čisti filtere i razmotri postupno pojačanje exporta."
+        ]
+      },
+      ok: {
+        title: "NO3 je uredan",
+        intro: "Vrijednost je u sigurnom rasponu.",
+        actions: [
+          "Nastavi pratiti trend, ne samo jednu pojedinačnu vrijednost.",
+          "Bilježi promjene u hranjenju ili exportu kad god ih radiš."
+        ]
+      }
+    },
+    PO4: {
+      low: {
+        title: "PO4 prenizak",
+        intro: "Prenizak fosfat može dovesti do blijedih koralja i nestabilnog rasta.",
+        actions: [
+          "Smanji fosfatne medije ako ih koristiš.",
+          "Povećaj hranjenje pažljivo i prati promjenu kroz nekoliko dana.",
+          "Ne diži vrijednost naglo bez praćenja NO3 i općeg balansa."
+        ]
+      },
+      high: {
+        title: "PO4 previsok",
+        intro: "Povišen fosfat često dolazi uz previše hrane, detritus ili slab export.",
+        actions: [
+          "Provjeri hranjenje i nakupljanje otpada po dnu i filterima.",
+          "Napravi umjerenu izmjenu vode i po potrebi uvedi fosfatni medij.",
+          "Snižavaj postupno da ne šokiraš sustav."
+        ]
+      },
+      ok: {
+        title: "PO4 je uredan",
+        intro: "Fosfat izgleda stabilno.",
+        actions: [
+          "Prati odnos NO3 i PO4, ne samo jednu vrijednost.",
+          "Nastavi s istim ritmom održavanja ako su koralji stabilni."
+        ]
+      }
+    },
+    KH: {
+      low: {
+        title: "KH prenizak",
+        intro: "Nizak KH smanjuje stabilnost sustava i može uzrokovati stres koraljima.",
+        actions: [
+          "Provjeri troši li akvarij više alkaliniteta nego što nadoknađuješ.",
+          "Povećaj doziranje postupno, bez naglih skokova.",
+          "Prati pH i Ca paralelno uz korekciju."
+        ]
+      },
+      high: {
+        title: "KH previsok",
+        intro: "Previsok KH zna izazvati nestabilnost i loše reakcije osjetljivijih koralja.",
+        actions: [
+          "Provjeri da ne doziraš previše ili prečesto.",
+          "Smanji korekcije postupno i pusti sustav da troši višak.",
+          "Nemoj raditi nagli pad kroz jedan dan."
+        ]
+      },
+      ok: {
+        title: "KH je uredan",
+        intro: "Alkalinitet je unutar raspona.",
+        actions: [
+          "Za reef je važnija stabilnost nego savršena brojka.",
+          "Prati dnevni ili tjedni pad ako imaš veći broj koralja."
+        ]
+      }
+    },
+    Ca: {
+      low: {
+        title: "Ca prenizak",
+        intro: "Nizak kalcij može usporiti rast i oporavak tvrdih koralja.",
+        actions: [
+          "Provjeri doziranje kalcija i odnos s KH i Mg.",
+          "Korigiraj postepeno, ne sve odjednom.",
+          "Ako se brzo troši, prati i stvarnu dnevnu potrošnju."
+        ]
+      },
+      high: {
+        title: "Ca previsok",
+        intro: "Previsok kalcij može narušiti balans s alkalinitetom i magnezijem.",
+        actions: [
+          "Smanji doziranje kalcija na neko vrijeme.",
+          "Provjeri jesu li testovi i doziranje točni.",
+          "Pusti sustav da prirodno potroši višak prije jačih intervencija."
+        ]
+      },
+      ok: {
+        title: "Ca je uredan",
+        intro: "Kalcij izgleda stabilno.",
+        actions: [
+          "Drži fokus na odnosu Ca, KH i Mg kao cjelini.",
+          "Ako koralji brzo rastu, prati trend trošenja."
+        ]
+      }
+    },
+    Mg: {
+      low: {
+        title: "Mg prenizak",
+        intro: "Nizak magnezij otežava stabilnost kalcija i alkaliniteta.",
+        actions: [
+          "Korigiraj magnezij postupno kroz više dana.",
+          "Provjeri i Ca/KH jer se često svi zajedno ponašaju nestabilno.",
+          "Ne pokušavaj rješavati Ca i KH bez stabilnog Mg."
+        ]
+      },
+      high: {
+        title: "Mg previsok",
+        intro: "Previsok magnezij rijetko traži paniku, ali ukazuje na predoziranje ili neusklađene dodatke.",
+        actions: [
+          "Pauziraj dodatak magnezija i prati pad kroz vrijeme.",
+          "Provjeri sastav dodataka i rutinu doziranja.",
+          "Izbjegni naglo spuštanje ako nema vidljivog problema u sustavu."
+        ]
+      },
+      ok: {
+        title: "Mg je uredan",
+        intro: "Magnezij izgleda uravnoteženo.",
+        actions: [
+          "Nastavi ga pratiti kao stabilizator Ca i KH odnosa.",
+          "Bilježi veću potrošnju ako mijenjaš rasvjetu ili broj koralja."
+        ]
+      }
+    },
+    pH: {
+      low: {
+        title: "pH prenizak",
+        intro: "Nizak pH često je povezan s lošijom ventilacijom, viškom CO2 ili slabijom izmjenom plinova.",
+        actions: [
+          "Provjeri cirkulaciju i zračenje sustava.",
+          "Ako je moguće, poboljšaj izmjenu zraka u prostoru.",
+          "Ne pokušavaj rješavati samo brojku bez uzroka."
+        ]
+      },
+      high: {
+        title: "pH previsok",
+        intro: "Previsok pH je rjeđi, ali može doći nakon agresivnih dodataka ili jakog doziranja.",
+        actions: [
+          "Provjeri doziranje alkaliniteta i dodatke koji dižu pH.",
+          "Promatraj oscilacije kroz dan prije većih korekcija.",
+          "Provjeri mjeri li test ili sonda točno."
+        ]
+      },
+      ok: {
+        title: "pH je uredan",
+        intro: "pH je u razumnom rasponu.",
+        actions: [
+          "Važan je i dnevni raspon, ne samo jedna vrijednost.",
+          "Ako je pH stabilan, ne diraj sustav bez razloga."
+        ]
+      }
+    },
+    Temp: {
+      low: {
+        title: "Temperatura preniska",
+        intro: "Preniska temperatura usporava metabolizam i može stresirati osjetljive stanovnike.",
+        actions: [
+          "Provjeri grijač, termostat i cirkulaciju vode.",
+          "Podiži temperaturu postepeno, ne naglo.",
+          "Ako koristiš Elitech, provjeri trend i oscilacije tijekom dana."
+        ]
+      },
+      high: {
+        title: "Temperatura previsoka",
+        intro: "Povišena temperatura brzo povećava stres i smanjuje količinu kisika u vodi.",
+        actions: [
+          "Provjeri grijač, rasvjetu i ventilaciju poklopca ili ormarića.",
+          "Pojačaj cirkulaciju i hlađenje ako je potrebno.",
+          "Spuštaj temperaturu postupno, bez naglih šokova."
+        ]
+      },
+      ok: {
+        title: "Temperatura je uredna",
+        intro: "Temperatura izgleda stabilno.",
+        actions: [
+          "Prati oscilacije tijekom dana, posebno ljeti i pod jačom rasvjetom.",
+          "Ako koristiš vanjski senzor, povremeno usporedi očitanja."
+        ]
+      }
+    },
+    Salinity: {
+      low: {
+        title: "Salinitet prenizak",
+        intro: "Prenizak salinitet može ozbiljno poremetiti osmoregulaciju organizama.",
+        actions: [
+          "Provjeri refraktometar ili mjerač i potvrdi očitanje.",
+          "Korigiraj slanu vodu postupno, ne odjednom.",
+          "Provjeri je li automatska nadoljevna voda pravilno podešena."
+        ]
+      },
+      high: {
+        title: "Salinitet previsok",
+        intro: "Previsok salinitet često nastaje zbog isparavanja ili netočnog dolijevanja.",
+        actions: [
+          "Provjeri ATO i razinu isparavanja.",
+          "Spuštaj salinitet postepeno dodavanjem RO/DI vode prema planu.",
+          "Provjeri točnost mjerenja prije većih intervencija."
+        ]
+      },
+      ok: {
+        title: "Salinitet je uredan",
+        intro: "Salinitet izgleda stabilno.",
+        actions: [
+          "Drži mjerni alat kalibriranim.",
+          "Prati trend nakon većih izmjena vode ili promjena ATO postavki."
+        ]
+      }
+    }
+  };
+
   const dashboard = document.getElementById("dashboard");
   const summaryStrip = document.getElementById("summary-strip");
   const alertStrip = document.getElementById("alert-strip");
   const dashboardTag = document.getElementById("dashboard-tag");
+  const heroStatus = document.getElementById("hero-status");
   let measurements = parseStoredArray("measurements");
   let notes = parseStoredArray("notes");
   let settings = parseStoredObject("settings");
@@ -852,9 +1144,13 @@
     if (staleItems.length > 0) {
       alertStrip.classList.add("visible");
       alertStrip.innerHTML = `<strong>Vrijeme je za novo testiranje</strong>${escapeHtml(staleItems.map((item) => item.param).join(", "))} nisu mjereni dulje od 7 dana.`;
+      heroStatus.textContent = `${staleItems.length} parametra čekaju novo mjerenje.`;
     } else {
       alertStrip.classList.remove("visible");
       alertStrip.innerHTML = "";
+      heroStatus.textContent = outOfRange.length > 0
+        ? `${outOfRange.length} parametra su izvan raspona.`
+        : "Akvarij izgleda stabilno i spreman je za brzi pregled.";
     }
 
     if (liveTemperature?.temperature !== undefined) {
@@ -895,6 +1191,52 @@
     }
 
     return { icon: "", cardClass: "" };
+  }
+
+  function getParameterAdviceState(param, value) {
+    const advice = parameterAdvice[param];
+    if (!advice) {
+      return null;
+    }
+
+    const min = parseFloat(settings[param]?.min);
+    const max = parseFloat(settings[param]?.max);
+
+    if (!Number.isNaN(value) && !Number.isNaN(min) && value < min) {
+      return advice.low;
+    }
+
+    if (!Number.isNaN(value) && !Number.isNaN(max) && value > max) {
+      return advice.high;
+    }
+
+    return advice.ok;
+  }
+
+  function renderGraphAdvice(param) {
+    const adviceContainer = document.getElementById("graph-advice");
+    const latestValues = getLatestValues();
+    const latest = latestValues[param] || { value: "-", date: "-" };
+    const numericValue = parseFloat(latest.value);
+    const advice = getParameterAdviceState(param, numericValue);
+
+    if (!advice) {
+      adviceContainer.innerHTML = "";
+      return;
+    }
+
+    const latestLine = latest.date && latest.date !== "-"
+      ? `<p>Zadnja vrijednost: <strong>${escapeHtml(String(latest.value))}</strong> od ${escapeHtml(formatDate(latest.date))}</p>`
+      : `<p>Zadnja vrijednost: <strong>${escapeHtml(String(latest.value))}</strong></p>`;
+
+    adviceContainer.innerHTML = `
+      <h4>${escapeHtml(advice.title)}</h4>
+      ${latestLine}
+      <p>${escapeHtml(advice.intro)}</p>
+      <ul>
+        ${advice.actions.map((action) => `<li>${escapeHtml(action)}</li>`).join("")}
+      </ul>
+    `;
   }
 
   function renderDashboard() {
@@ -1019,6 +1361,7 @@
 
     document.getElementById("graph-popup").style.display = "flex";
     document.getElementById("graph-title").innerText = param + " kretanje";
+    renderGraphAdvice(param);
 
     const labels = filtered.map((measurement) => formatDate(measurement.date));
     const data = filtered.map((measurement) => parseFloat(measurement[param]));
