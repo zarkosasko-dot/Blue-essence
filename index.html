@@ -1371,6 +1371,17 @@
           </div>
           <div class="trend-list" id="trend-list"></div>
         </div>
+
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <h3>Moji zadaci</h3>
+              <p>Rucno dodani zadaci koje zelis pratiti.</p>
+            </div>
+            <button class="task-done" onclick="setActiveView('tasks')">Otvori sve</button>
+          </div>
+          <div class="tasks-list" id="home-tasks-preview"></div>
+        </div>
       </section>
 
       <section class="view" id="view-params">
@@ -1512,6 +1523,7 @@
   const quickGrid = document.getElementById("quick-grid");
   const trendList = document.getElementById("trend-list");
   const tasksList = document.getElementById("tasks-list");
+  const homeTasksPreview = document.getElementById("home-tasks-preview");
   const logList = document.getElementById("log-list");
   const healthRing = document.getElementById("health-ring");
   const healthLabel = document.getElementById("health-label");
@@ -2449,6 +2461,94 @@
       : `<div class="empty-state">Još nema dovoljno mjerenja za trend analizu.</div>`;
   }
 
+  function renderTasksView() {
+    if (!tasksList) {
+      return;
+    }
+
+    const taskGroups = getTaskItems();
+    const filteredCustomTasks = taskGroups.custom.filter((task) => {
+      if (taskFilter === "all") return true;
+      if (taskFilter === "done") return task.done;
+      return !task.done;
+    });
+
+    const customMarkup = filteredCustomTasks.length
+      ? filteredCustomTasks.map((task) => `
+          <div class="task-item">
+            <div class="task-row">
+              <div>
+                <strong>${escapeHtml(task.title)}</strong>
+                <p>${escapeHtml(task.meta)} Â· ${escapeHtml(task.text)}</p>
+                <span class="task-badge">${task.dueDate ? `Rok ${escapeHtml(formatDate(task.dueDate))}` : "Bez roka"} Â· ${escapeHtml(getRepeatLabel(task.repeat))}${task.done ? " Â· Gotovo" : ""}</span>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button class="task-done" onclick="toggleTaskDone(${task.id})">${task.done ? "Vrati" : "Gotovo"}</button>
+                <button class="task-done" onclick="deleteTask(${task.id})">BriĹˇi</button>
+              </div>
+            </div>
+          </div>
+        `).join("")
+      : `<div class="empty-state">JoĹˇ nema ruÄŤno dodanih zadataka.</div>`;
+
+    const autoMarkup = taskGroups.auto.length
+      ? taskGroups.auto.map((task) => `
+          <div class="task-item">
+            <div class="task-row">
+              <div>
+                <strong>${escapeHtml(task.title)}</strong>
+                <p>${escapeHtml(task.meta)} Â· ${escapeHtml(task.text)}</p>
+              </div>
+            </div>
+          </div>
+        `).join("")
+      : `<div class="empty-state">Nema automatskih zadataka za prikaz.</div>`;
+
+    tasksList.innerHTML = `
+      <div class="task-item">
+        <strong>Moji zadaci</strong>
+        <p>RuÄŤni zadaci koje si sam dodao u aplikaciju.</p>
+      </div>
+      <div class="task-filters">
+        <button class="task-filter ${taskFilter === "open" ? "active" : ""}" onclick="setTaskFilter('open')">Otvoreni</button>
+        <button class="task-filter ${taskFilter === "done" ? "active" : ""}" onclick="setTaskFilter('done')">Gotovi</button>
+        <button class="task-filter ${taskFilter === "all" ? "active" : ""}" onclick="setTaskFilter('all')">Svi</button>
+      </div>
+      ${customMarkup}
+      <div class="task-item">
+        <strong>Automatski zadaci</strong>
+        <p>Podsjetnici izvedeni iz mjerenja i osnovne rutine odrĹľavanja.</p>
+      </div>
+      ${autoMarkup}
+    `;
+  }
+
+  function renderHomeTasksPreview() {
+    if (!homeTasksPreview) {
+      return;
+    }
+
+    const openTasks = [...tasks]
+      .filter((task) => !task.done)
+      .sort((a, b) => {
+        if (!a.dueDate && !b.dueDate) return 0;
+        if (!a.dueDate) return 1;
+        if (!b.dueDate) return -1;
+        return new Date(a.dueDate) - new Date(b.dueDate);
+      })
+      .slice(0, 3);
+
+    homeTasksPreview.innerHTML = openTasks.length
+      ? openTasks.map((task) => `
+          <div class="task-item">
+            <strong>${escapeHtml(task.title)}</strong>
+            <p>${escapeHtml(task.meta)} Â· ${escapeHtml(task.text)}</p>
+            <span class="task-badge">${task.dueDate ? `Rok ${escapeHtml(formatDate(task.dueDate))}` : "Bez roka"}</span>
+          </div>
+        `).join("")
+      : `<div class="empty-state">JoĹˇ nema ruÄŤno dodanih zadataka. Otvori Zadaci i dodaj prvi podsjetnik.</div>`;
+  }
+
   function renderPremiumOverviewFixed() {
     const staleItems = getStaleItems();
     const lastMeasurement = measurements.length ? getSortedMeasurements("desc")[0].date : "-";
@@ -2534,6 +2634,7 @@
       renderPremiumOverviewFixed();
       renderHomeExtrasFixed();
       renderTasksView();
+      renderHomeTasksPreview();
       renderLogbookView();
     } catch (error) {
       console.error("Dashboard render error", error);
@@ -2630,6 +2731,8 @@
     persistTasks();
     closePopup("task-popup");
     renderDashboard();
+    taskFilter = "open";
+    setActiveView("tasks");
   }
 
   function toggleTaskDone(taskId) {
