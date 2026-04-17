@@ -667,6 +667,30 @@
     gap: 10px;
   }
 
+  .tank-hero {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .tank-photo {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 18px;
+    border: 1px solid rgba(111, 229, 255, 0.16);
+    background: linear-gradient(180deg, rgba(18, 40, 61, 0.96), rgba(12, 26, 42, 0.94));
+  }
+
+  .tank-photo.placeholder {
+    display: grid;
+    place-items: center;
+    color: #6fe5ff;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
   .summary-strip {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1260,10 +1284,7 @@
   document.querySelector("main").innerHTML = `
     <div class="app-main">
       <section class="hero-panel">
-        <div>
-          <div class="hero-title">Today</div>
-          <div class="hero-status" id="hero-status">Pregled stanja akvarija i kljucnih zadataka.</div>
-        </div>
+        <div class="tank-hero" id="tank-hero"></div>
         <div class="hero-actions">
           <button class="btn-add" onclick="openPopup('input-popup')">Dodaj mjerenje</button>
           <button class="close-btn secondary-btn" onclick="showStaleWarning(true)">Upozorenja</button>
@@ -1278,8 +1299,8 @@
           <div class="health-card">
             <div class="health-ring" id="health-ring">--</div>
             <div class="health-copy">
-              <span class="hero-title">Health score</span>
-              <strong id="health-label">Loading...</strong>
+              <span class="hero-title">Ocjena stanja</span>
+              <strong id="health-label">Učitavanje...</strong>
               <p id="health-copy">Pregled stabilnosti i prioriteta za danas.</p>
             </div>
           </div>
@@ -1288,7 +1309,7 @@
         <div class="section-card">
           <div class="section-head">
             <div>
-              <h3>Needs Attention</h3>
+              <h3>Treba pažnju</h3>
               <p>Najvažnije stvari koje traže reakciju.</p>
             </div>
           </div>
@@ -1298,7 +1319,7 @@
         <div class="section-card">
           <div class="section-head">
             <div>
-              <h3>Quick Parameters</h3>
+              <h3>Brzi parametri</h3>
               <p>Najbitnije vrijednosti za brzi pregled.</p>
             </div>
           </div>
@@ -1308,7 +1329,7 @@
         <div class="section-card">
           <div class="section-head">
             <div>
-              <h3>Parameter Trends</h3>
+              <h3>Trendovi parametara</h3>
               <p>Što raste, pada ili ostaje stabilno.</p>
             </div>
           </div>
@@ -1320,10 +1341,10 @@
         <section class="dashboard-wrap">
           <div class="dashboard-head">
             <div>
-              <h3>Parameters</h3>
+              <h3>Parametri</h3>
               <p>Dodirni karticu za trend, status i preporuke.</p>
             </div>
-            <div class="dashboard-tag" id="dashboard-tag">Updated -</div>
+            <div class="dashboard-tag" id="dashboard-tag">Ažurirano -</div>
           </div>
           <div class="grid" id="dashboard"></div>
         </section>
@@ -1333,7 +1354,7 @@
         <div class="section-card">
           <div class="section-head">
             <div>
-              <h3>Tasks</h3>
+              <h3>Zadaci</h3>
               <p>Rutine i zadaci koji dolaze na red.</p>
             </div>
           </div>
@@ -1345,7 +1366,7 @@
         <div class="section-card">
           <div class="section-head">
             <div>
-              <h3>Logbook</h3>
+              <h3>Dnevnik</h3>
               <p>Zadnje bilješke i ključni unosi.</p>
             </div>
           </div>
@@ -1357,7 +1378,7 @@
         <div class="section-card">
           <div class="section-head">
             <div>
-              <h3>More</h3>
+              <h3>Više</h3>
               <p>Postavke, mjerenja i dodatne opcije.</p>
             </div>
           </div>
@@ -1368,7 +1389,7 @@
                   <strong>Mjerenja</strong>
                   <p>Pregled svih spremljenih mjerenja.</p>
                 </div>
-                <button class="task-done" onclick="showMeasurements()">Open</button>
+                <button class="task-done" onclick="showMeasurements()">Otvori</button>
               </div>
             </div>
             <div class="task-item">
@@ -1377,7 +1398,7 @@
                   <strong>Bilješke</strong>
                   <p>Dodaj ili pregledaj bilješke o tanku.</p>
                 </div>
-                <button class="task-done" onclick="openNotes()">Open</button>
+                <button class="task-done" onclick="openNotes()">Otvori</button>
               </div>
             </div>
             <div class="task-item">
@@ -1386,7 +1407,7 @@
                   <strong>Postavke</strong>
                   <p>Rasponi, Elitech i konfiguracija akvarija.</p>
                 </div>
-                <button class="task-done" onclick="openSettings()">Open</button>
+                <button class="task-done" onclick="openSettings()">Otvori</button>
               </div>
             </div>
           </div>
@@ -1397,19 +1418,37 @@
 
   document.querySelector("body").insertAdjacentHTML("beforeend", `
     <nav class="tabbar" id="tabbar">
-      <button class="tab-btn active" data-view="home" onclick="setActiveView('home')">Home</button>
-      <button class="tab-btn" data-view="params" onclick="setActiveView('params')">Params</button>
-      <button class="tab-btn" data-view="tasks" onclick="setActiveView('tasks')">Tasks</button>
-      <button class="tab-btn" data-view="logbook" onclick="setActiveView('logbook')">Log</button>
-      <button class="tab-btn" data-view="more" onclick="setActiveView('more')">More</button>
+      <button class="tab-btn active" data-view="home" onclick="setActiveView('home')">Početna</button>
+      <button class="tab-btn" data-view="params" onclick="setActiveView('params')">Parametri</button>
+      <button class="tab-btn" data-view="tasks" onclick="setActiveView('tasks')">Zadaci</button>
+      <button class="tab-btn" data-view="logbook" onclick="setActiveView('logbook')">Dnevnik</button>
+      <button class="tab-btn" data-view="more" onclick="setActiveView('more')">Više</button>
     </nav>
   `);
+
+  document.getElementById("input-popup").querySelector(".popup-content").innerHTML = `
+    <h3>Dodaj mjerenje</h3>
+    <input id="dateInput" type="date">
+    <input id="no3" type="number" step="any" placeholder="NO3">
+    <input id="po4" type="number" step="any" placeholder="PO4">
+    <input id="kh" type="number" step="any" placeholder="KH">
+    <input id="ca" type="number" step="any" placeholder="Ca">
+    <input id="mg" type="number" step="any" placeholder="Mg">
+    <input id="ph" type="number" step="any" placeholder="pH">
+    <input id="temp" type="number" step="any" placeholder="Temp">
+    <input id="salinity" type="number" step="any" placeholder="Salinitet">
+    <div class="popup-actions">
+      <button class="close-btn" onclick="saveMeasurement()">Spremi</button>
+      <button class="close-btn" onclick="closePopup('input-popup')">Odustani</button>
+    </div>
+  `;
 
   const dashboard = document.getElementById("dashboard");
   const summaryStrip = document.getElementById("summary-strip");
   const alertStrip = document.getElementById("alert-strip");
   const dashboardTag = document.getElementById("dashboard-tag");
   const heroStatus = document.getElementById("hero-status");
+  const tankHero = document.getElementById("tank-hero");
   const attentionList = document.getElementById("attention-list");
   const quickGrid = document.getElementById("quick-grid");
   const trendList = document.getElementById("trend-list");
@@ -1441,6 +1480,41 @@
     } catch {
       return {};
     }
+  }
+
+  function getTankProfile() {
+    return {
+      name: settings.tankProfile?.name || "Moj tank",
+      image: settings.tankProfile?.image || ""
+    };
+  }
+
+  function readFileAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ""));
+      reader.onerror = () => reject(new Error("Ne mogu učitati sliku."));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function renderTankHero() {
+    if (!tankHero) {
+      return;
+    }
+
+    const profile = getTankProfile();
+    const photoMarkup = profile.image
+      ? `<img class="tank-photo" src="${profile.image}" alt="${escapeHtml(profile.name)}">`
+      : `<div class="tank-photo placeholder">TANK</div>`;
+
+    tankHero.innerHTML = `
+      ${photoMarkup}
+      <div>
+        <div class="hero-title">Pregled danas</div>
+        <div class="hero-status">${escapeHtml(profile.name)}</div>
+      </div>
+    `;
   }
 
   function persistMeasurements() {
@@ -1649,6 +1723,10 @@
   }
 
   function renderHomeExtras() {
+    if (!healthRing || !healthLabel || !healthCopy || !attentionList || !quickGrid || !trendList) {
+      return;
+    }
+
     const latestValues = getLatestValues();
     const staleItems = getStaleItems();
     const outOfRange = params.filter((param) => {
@@ -1743,6 +1821,10 @@
   }
 
   function renderTasksView() {
+    if (!tasksList) {
+      return;
+    }
+
     const tasks = getTaskItems();
     tasksList.innerHTML = tasks.length
       ? tasks.map((task) => `
@@ -1760,6 +1842,10 @@
   }
 
   function renderLogbookView() {
+    if (!logList) {
+      return;
+    }
+
     const latestNotes = [...notes].reverse().slice(0, 5);
     logList.innerHTML = latestNotes.length
       ? latestNotes.map((note) => `
@@ -1907,38 +1993,42 @@
       };
     }
 
-      params.forEach((param) => {
-        const value = parseFloat(lastValues[param].value);
-        const min = parseFloat(settings[param]?.min);
-        const max = parseFloat(settings[param]?.max);
-        const status = getStatusMarkup(value, min, max);
-        const meta = parameterMeta[param] || { label: param, unit: "" };
-        const daysSince = getDaysSince(lastValues[param].date);
-        const isStale = daysSince !== null && daysSince > 7;
-        const staleMarkup = isStale
-          ? `<span class="stale-note">Zadnje mjerenje prije ${daysSince} dana</span>`
-          : "";
+    params.forEach((param) => {
+      const value = parseFloat(lastValues[param].value);
+      const min = parseFloat(settings[param]?.min);
+      const max = parseFloat(settings[param]?.max);
+      const status = getStatusMarkup(value, min, max);
+      const meta = parameterMeta[param] || { label: param, unit: "" };
+      const daysSince = getDaysSince(lastValues[param].date);
+      const isStale = daysSince !== null && daysSince > 7;
+      const staleMarkup = isStale
+        ? `<span class="stale-note">Zadnje mjerenje prije ${daysSince} dana</span>`
+        : "";
       const cardClasses = [status.cardClass, isStale ? "stale-card" : ""].filter(Boolean).join(" ");
 
-        dashboard.innerHTML += `
-          <div class="card ${cardClasses}" onclick="openGraph('${param}')">
-            <div class="card-top">
-              <div class="param-name">${param}</div>
-              <div class="param-status">${status.icon}</div>
-            </div>
-            <div class="param-value">${escapeHtml(lastValues[param].value)}</div>
-            <span class="param-label">${escapeHtml(meta.label)}</span>
-            <span class="param-unit">${escapeHtml(meta.unit)}</span>
-            <small class="param-date">${escapeHtml(formatDate(lastValues[param].date))}</small>
-            ${staleMarkup}
-          </div>`;
-      });
-  
-        renderPremiumOverview();
-        renderHomeExtras();
-        renderTasksView();
-        renderLogbookView();
-      }
+      dashboard.innerHTML += `
+        <div class="card ${cardClasses}" onclick="openGraph('${param}')">
+          <div class="card-top">
+            <div class="param-name">${param}</div>
+            <div class="param-status">${status.icon}</div>
+          </div>
+          <div class="param-value">${escapeHtml(lastValues[param].value)}</div>
+          <span class="param-label">${escapeHtml(meta.label)}</span>
+          <span class="param-unit">${escapeHtml(meta.unit)}</span>
+          <small class="param-date">${escapeHtml(formatDate(lastValues[param].date))}</small>
+          ${staleMarkup}
+        </div>`;
+    });
+
+    try {
+      renderPremiumOverview();
+      renderHomeExtras();
+      renderTasksView();
+      renderLogbookView();
+    } catch (error) {
+      console.error("Dashboard render error", error);
+    }
+  }
 
   function showStaleWarning() {
     const latestValues = getLatestValues();
@@ -2000,8 +2090,8 @@
 
     measurements.push(measurement);
     persistMeasurements();
-    renderDashboard();
     closePopup("input-popup");
+    renderDashboard();
   }
 
   async function fillTempFromElitech() {
