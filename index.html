@@ -419,6 +419,38 @@
     font-weight: 600;
   }
 
+  .task-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .task-filter {
+    padding: 8px 12px;
+    color: #8ba4b9;
+    background: rgba(12, 40, 59, 0.5);
+    border: 1px solid rgba(111, 229, 255, 0.1);
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .task-filter.active {
+    color: #6fe5ff;
+    background: rgba(111, 229, 255, 0.08);
+  }
+
+  .task-badge {
+    display: inline-flex;
+    margin-top: 8px;
+    padding: 6px 10px;
+    color: #b8cad9;
+    font-size: 0.76rem;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 999px;
+  }
+
   .empty-state {
     padding: 18px;
     color: #8ba4b9;
@@ -1262,7 +1294,7 @@
     <span id="listBtn" class="header-btn" onclick="showMeasurements()">&#9776;</span>
     <div class="header-title">
       <strong>Blue Essence</strong>
-      <span class="header-subtitle">Reef control dashboard</span>
+      <span class="header-subtitle">Kontrola reef tanka</span>
     </div>
     <div style="display:flex; gap:10px;">
       <span id="notesBtn" class="header-btn" onclick="openNotes()">&#9998;</span>
@@ -1272,7 +1304,7 @@
 
   document.querySelector(".hero-panel").innerHTML = `
     <div>
-      <div class="hero-title">Today</div>
+      <div class="hero-title">Pregled danas</div>
       <div class="hero-status" id="hero-status">Pregled stanja akvarija i kljucnih zadataka.</div>
     </div>
     <div class="hero-actions">
@@ -1357,6 +1389,7 @@
               <h3>Zadaci</h3>
               <p>Rutine i zadaci koji dolaze na red.</p>
             </div>
+            <button class="task-done" onclick="openPopup('task-popup')">Dodaj</button>
           </div>
           <div class="tasks-list" id="tasks-list"></div>
         </div>
@@ -1405,7 +1438,7 @@
               <div class="task-row">
                 <div>
                   <strong>Postavke</strong>
-                  <p>Rasponi, Elitech i konfiguracija akvarija.</p>
+                  <p>Rasponi i konfiguracija akvarija.</p>
                 </div>
                 <button class="task-done" onclick="openSettings()">Otvori</button>
               </div>
@@ -1443,6 +1476,28 @@
     </div>
   `;
 
+  document.querySelector("body").insertAdjacentHTML("beforeend", `
+    <div class="popup" id="task-popup">
+      <div class="popup-content">
+        <h3>Novi zadatak</h3>
+        <input id="taskTitleInput" type="text" placeholder="Naziv zadatka">
+        <input id="taskDueInput" type="date">
+        <select id="taskRepeatInput">
+          <option value="once">Jednom</option>
+          <option value="daily">Dnevno</option>
+          <option value="weekly">Tjedno</option>
+          <option value="monthly">Mjesečno</option>
+        </select>
+        <input id="taskMetaInput" type="text" placeholder="Kratka oznaka, npr. Nedjelja">
+        <textarea id="taskTextInput" rows="4" placeholder="Kratka napomena ili opis"></textarea>
+        <div class="popup-actions">
+          <button class="close-btn" onclick="saveTask()">Spremi zadatak</button>
+          <button class="close-btn" onclick="closePopup('task-popup')">Odustani</button>
+        </div>
+      </div>
+    </div>
+  `);
+
   const dashboard = document.getElementById("dashboard");
   const summaryStrip = document.getElementById("summary-strip");
   const alertStrip = document.getElementById("alert-strip");
@@ -1459,10 +1514,22 @@
   const healthCopy = document.getElementById("health-copy");
   let measurements = parseStoredArray("measurements");
   let notes = parseStoredArray("notes");
+  let tasks = parseStoredArray("tasks");
   let settings = parseStoredObject("settings");
   let chart;
   let liveTemperature = null;
   let activeView = "home";
+  let taskFilter = "open";
+
+  tasks = tasks.map((task) => ({
+    id: task.id || Date.now() + Math.random(),
+    title: task.title || "Zadatak",
+    meta: task.meta || "Ručni zadatak",
+    text: task.text || "Bez dodatne napomene.",
+    done: Boolean(task.done),
+    dueDate: task.dueDate || "",
+    repeat: task.repeat || "once"
+  }));
 
   function parseStoredArray(key) {
     try {
@@ -1489,6 +1556,15 @@
     };
   }
 
+  function getRepeatLabel(value) {
+    return ({
+      once: "Jednom",
+      daily: "Dnevno",
+      weekly: "Tjedno",
+      monthly: "Mjesečno"
+    })[value] || "Jednom";
+  }
+
   function readFileAsDataUrl(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -1513,8 +1589,16 @@
       <div>
         <div class="hero-title">Pregled danas</div>
         <div class="hero-status">${escapeHtml(profile.name)}</div>
+        <div class="helper-text" id="hero-status">Pregled stanja akvarija i ključnih zadataka.</div>
       </div>
     `;
+  }
+
+  function setHeroStatusText(message) {
+    const node = document.getElementById("hero-status");
+    if (node) {
+      node.textContent = message;
+    }
   }
 
   function persistMeasurements() {
@@ -1523,6 +1607,10 @@
 
   function persistNotes() {
     localStorage.setItem("notes", JSON.stringify(notes));
+  }
+
+  function persistTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
   }
 
   function persistSettings() {
@@ -1666,7 +1754,7 @@
     if (staleItems.length > 0) {
       alertStrip.classList.add("visible");
       alertStrip.innerHTML = `<strong>Vrijeme je za novo testiranje</strong>${escapeHtml(staleItems.map((item) => item.param).join(", "))} nisu mjereni dulje od 7 dana.`;
-      heroStatus.textContent = `${staleItems.length} parametra čekaju novo mjerenje.`;
+      setHeroStatusText(`${staleItems.length} parametra čekaju novo mjerenje.`);
     } else {
       alertStrip.classList.remove("visible");
       alertStrip.innerHTML = "";
@@ -1683,8 +1771,8 @@
   }
 
   function getHealthScore(staleCount, outOfRangeCount) {
-    const score = 100 - (staleCount * 8) - (outOfRangeCount * 12);
-    return Math.max(42, Math.min(100, score));
+    const score = 100 - (staleCount * 4) - (outOfRangeCount * 7);
+    return Math.max(58, Math.min(100, score));
   }
 
   function setActiveView(view) {
@@ -1739,11 +1827,18 @@
 
     healthRing.textContent = String(healthScore);
     healthRing.style.setProperty("--ring-angle", `${Math.round((healthScore / 100) * 360)}deg`);
-    healthLabel.textContent = healthScore >= 86 ? "Looking Great" : healthScore >= 70 ? "Needs Light Attention" : "Stability At Risk";
+    healthLabel.textContent = healthScore >= 86 ? "Izgleda odlično" : healthScore >= 70 ? "Traži laganu pažnju" : "Traži brzu reakciju";
     healthCopy.textContent = staleItems.length > 0
       ? `Najveći prioritet je osvježiti ${staleItems.length} zastarjela mjerenja i vratiti redovno testiranje.`
       : outOfRange.length > 0
         ? `Trenutno su ${outOfRange.length} parametra izvan raspona pa vrijedi reagirati postupno i pratiti trend.`
+        : "Zadnja očitanja izgledaju uredno i sustav djeluje stabilno kroz glavne parametre.";
+
+    healthLabel.textContent = healthScore >= 90 ? "Vrlo stabilno" : healthScore >= 78 ? "Uredno stanje" : healthScore >= 66 ? "Traži pažnju" : "Vrijedi provjeriti";
+    healthCopy.textContent = staleItems.length > 0
+      ? `Najveći prioritet je osvježiti ${staleItems.length} zastarjela mjerenja i vratiti redovno testiranje.`
+      : outOfRange.length > 0
+        ? `Trenutno su ${outOfRange.length} parametra izvan raspona pa vrijedi reagirati postupno i pratiti trend, bez panike.`
         : "Zadnja očitanja izgledaju uredno i sustav djeluje stabilno kroz glavne parametre.";
 
     const attentionItems = [];
@@ -1806,18 +1901,21 @@
   function getTaskItems() {
     const staleItems = getStaleItems().map((item) => ({
       title: `Izmjeri ${item.param}`,
-      meta: "Priority task",
+      meta: "Automatski prioritet",
       text: `Zadnje mjerenje je starije od 7 dana.`
     }));
 
     const routineTasks = [
-      { title: "Test water parameters", meta: "Weekly", text: "Odradi kompletno tjedno testiranje glavnih parametara." },
-      { title: "Water change (10%)", meta: "Weekly", text: "Rutinska izmjena vode za stabilnost sustava." },
-      { title: "Clean glass", meta: "Every few days", text: "Brzo čišćenje stakla i vizualna provjera tanka." },
-      { title: "Replace filter floss", meta: "Biweekly", text: "Zamijeni mehanički medij i provjeri protok." }
+      { title: "Testiraj parametre vode", meta: "Tjedno", text: "Odradi kompletno tjedno testiranje glavnih parametara." },
+      { title: "Zamjena vode (10%)", meta: "Tjedno", text: "Rutinska izmjena vode za stabilnost sustava." },
+      { title: "Očisti staklo", meta: "Svakih nekoliko dana", text: "Brzo čišćenje stakla i vizualna provjera tanka." },
+      { title: "Zamijeni filter vatu", meta: "Svaka 2 tjedna", text: "Zamijeni mehanički medij i provjeri protok." }
     ];
 
-    return [...staleItems, ...routineTasks].slice(0, 6);
+    return {
+      auto: [...staleItems, ...routineTasks].slice(0, 4),
+      custom: [...tasks].reverse()
+    };
   }
 
   function renderTasksView() {
@@ -1825,20 +1923,61 @@
       return;
     }
 
-    const tasks = getTaskItems();
-    tasksList.innerHTML = tasks.length
-      ? tasks.map((task) => `
+    const taskGroups = getTaskItems();
+    const autoMarkup = taskGroups.auto.length
+      ? taskGroups.auto.map((task) => `
           <div class="task-item">
             <div class="task-row">
               <div>
                 <strong>${escapeHtml(task.title)}</strong>
                 <p>${escapeHtml(task.meta)} · ${escapeHtml(task.text)}</p>
               </div>
-              <button class="task-done" onclick="openPopup('input-popup')">Done</button>
             </div>
           </div>
         `).join("")
-      : `<div class="empty-state">Nema otvorenih zadataka. Sustav izgleda uredno.</div>`;
+      : `<div class="empty-state">Nema automatskih zadataka za prikaz.</div>`;
+
+    const filteredCustomTasks = taskGroups.custom.filter((task) => {
+      if (taskFilter === "all") return true;
+      if (taskFilter === "done") return task.done;
+      return !task.done;
+    });
+
+    const customMarkup = filteredCustomTasks.length
+      ? filteredCustomTasks.map((task) => `
+          <div class="task-item">
+            <div class="task-row">
+              <div>
+                <strong>${escapeHtml(task.title)}</strong>
+                <p>${escapeHtml(task.meta)} · ${escapeHtml(task.text)}</p>
+                <span class="task-badge">${task.dueDate ? `Rok ${escapeHtml(formatDate(task.dueDate))}` : "Bez roka"} · ${escapeHtml(getRepeatLabel(task.repeat))}${task.done ? " · Gotovo" : ""}</span>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button class="task-done" onclick="toggleTaskDone(${task.id})">${task.done ? "Vrati" : "Gotovo"}</button>
+                <button class="task-done" onclick="deleteTask(${task.id})">Briši</button>
+              </div>
+            </div>
+          </div>
+        `).join("")
+      : `<div class="empty-state">Još nema ručno dodanih zadataka.</div>`;
+
+    tasksList.innerHTML = `
+      <div class="task-item">
+        <strong>Automatski zadaci</strong>
+        <p>Podsjetnici izvedeni iz mjerenja i osnovne rutine održavanja.</p>
+      </div>
+      ${autoMarkup}
+        <div class="task-item">
+          <strong>Moji zadaci</strong>
+          <p>Ručni zadaci koje si sam dodao u aplikaciju.</p>
+        </div>
+        <div class="task-filters">
+          <button class="task-filter ${taskFilter === "open" ? "active" : ""}" onclick="setTaskFilter('open')">Otvoreni</button>
+          <button class="task-filter ${taskFilter === "done" ? "active" : ""}" onclick="setTaskFilter('done')">Gotovi</button>
+          <button class="task-filter ${taskFilter === "all" ? "active" : ""}" onclick="setTaskFilter('all')">Svi</button>
+        </div>
+        ${customMarkup}
+      `;
   }
 
   function renderLogbookView() {
@@ -1870,9 +2009,9 @@
     const healthScore = getHealthScore(staleItems.length, outOfRange.length);
 
     summaryStrip.innerHTML = [
-      { label: "Health", value: `${healthScore}` },
-      { label: "Entries", value: String(measurements.length) },
-      { label: "Due", value: String(staleItems.length) },
+      { label: "Stanje", value: `${healthScore}` },
+      { label: "Unosi", value: String(measurements.length) },
+      { label: "Kasni", value: String(staleItems.length) },
       { label: "Temp", value: liveTemperature?.temperature !== undefined ? `${liveTemperature.temperature}${liveTemperature.unit || "°C"}` : "Manual" }
     ].map((item) => `
       <div class="summary-box">
@@ -1881,18 +2020,20 @@
       </div>
     `).join("");
 
-    dashboardTag.textContent = `Updated ${formatDate(lastMeasurement)}`;
+    dashboardTag.textContent = `Ažurirano ${formatDate(lastMeasurement)}`;
 
     if (staleItems.length > 0) {
       alertStrip.classList.add("visible");
-      alertStrip.innerHTML = `<strong>Needs attention</strong>${escapeHtml(staleItems.map((item) => item.param).join(", "))} cekaju novo mjerenje dulje od 7 dana.`;
-      heroStatus.textContent = `${staleItems.length} parametra cekaju novo mjerenje.`;
+      alertStrip.innerHTML = `<strong>Treba pažnju</strong>${escapeHtml(staleItems.map((item) => item.param).join(", "))} čekaju novo mjerenje dulje od 7 dana.`;
+      heroStatus.textContent = `${staleItems.length} parametra čekaju novo mjerenje.`;
     } else {
       alertStrip.classList.remove("visible");
       alertStrip.innerHTML = "";
-      heroStatus.textContent = outOfRange.length > 0
-        ? `${outOfRange.length} parametra su izvan raspona.`
-        : "Sustav izgleda stabilno i spreman je za brzi pregled.";
+      setHeroStatusText(
+        outOfRange.length > 0
+          ? `${outOfRange.length} parametra su izvan raspona.`
+          : "Sustav izgleda stabilno i spreman je za brzi pregled."
+      );
     }
 
     if (liveTemperature?.temperature !== undefined) {
@@ -1983,6 +2124,7 @@
 
   function renderDashboard() {
     dashboard.innerHTML = "";
+    renderTankHero();
 
     const lastValues = getLatestValues();
 
@@ -2059,12 +2201,6 @@
       params.forEach((param) => {
         document.getElementById(param.toLowerCase()).value = "";
       });
-      if (liveTemperature?.temperature !== undefined) {
-        document.getElementById("temp").value = liveTemperature.temperature;
-        setTempSyncStatus(`Elitech temp spremna: ${liveTemperature.temperature}${liveTemperature.unit || "C"}`);
-      } else {
-        setTempSyncStatus("Elitech temperatura još nije dohvaćena.");
-      }
     }
 
     if (id === "notes-popup") {
@@ -2072,6 +2208,14 @@
       document.getElementById("noteText").value = "";
       document.getElementById("noteSearch").value = "";
       showNotes();
+    }
+
+    if (id === "task-popup") {
+      document.getElementById("taskTitleInput").value = "";
+      document.getElementById("taskDueInput").valueAsDate = new Date();
+      document.getElementById("taskRepeatInput").value = "once";
+      document.getElementById("taskMetaInput").value = "";
+      document.getElementById("taskTextInput").value = "";
     }
   }
 
@@ -2091,6 +2235,49 @@
     measurements.push(measurement);
     persistMeasurements();
     closePopup("input-popup");
+    renderDashboard();
+  }
+
+  function saveTask() {
+    const title = document.getElementById("taskTitleInput").value.trim();
+    const dueDate = document.getElementById("taskDueInput").value;
+    const repeat = document.getElementById("taskRepeatInput").value;
+    const meta = document.getElementById("taskMetaInput").value.trim();
+    const text = document.getElementById("taskTextInput").value.trim();
+
+    if (!title) {
+      return;
+    }
+
+    tasks.push({
+      id: Date.now(),
+      title,
+      meta: meta || "Ručni zadatak",
+      text: text || "Bez dodatne napomene.",
+      done: false,
+      dueDate,
+      repeat
+    });
+
+    persistTasks();
+    closePopup("task-popup");
+    renderDashboard();
+  }
+
+  function toggleTaskDone(taskId) {
+    tasks = tasks.map((task) => task.id === taskId ? { ...task, done: !task.done } : task);
+    persistTasks();
+    renderDashboard();
+  }
+
+  function setTaskFilter(filter) {
+    taskFilter = filter;
+    renderTasksView();
+  }
+
+  function deleteTask(taskId) {
+    tasks = tasks.filter((task) => task.id !== taskId);
+    persistTasks();
     renderDashboard();
   }
 
@@ -2260,23 +2447,50 @@
 
   function openSettings() {
     const tbody = document.getElementById("settings-table");
-    const elitech = getElitechConfig();
+    const popupContent = document.getElementById("settings-popup").querySelector(".popup-content");
+    popupContent.innerHTML = `
+      <h3>Postavke parametara</h3>
+      <h4>Profil tanka</h4>
+      <input id="tankNameInput" type="text" placeholder="Naziv tanka">
+      <input id="tankImageInput" type="file" accept="image/*">
+      <p class="helper-text">Po želji dodaj sliku tanka. Sprema se lokalno u aplikaciji.</p>
+      <label for="tankType">Tip akvarija:</label>
+      <select id="tankType" onchange="applyTankType()">
+        <option value="custom">Custom</option>
+        <option value="softy">Softy tank</option>
+        <option value="lps">LPS tank</option>
+        <option value="sps">SPS tank</option>
+      </select>
+      <table>
+        <thead>
+          <tr>
+            <th>Parametar</th>
+            <th>Min</th>
+            <th>Max</th>
+          </tr>
+        </thead>
+        <tbody id="settings-table"></tbody>
+      </table>
+      <div class="popup-actions">
+        <button class="close-btn" onclick="saveSettings()">Spremi postavke</button>
+        <button class="close-btn" onclick="closePopup('settings-popup')">Zatvori</button>
+      </div>
+    `;
+    const refreshedTbody = document.getElementById("settings-table");
+    const tankProfile = getTankProfile();
 
-    tbody.innerHTML = params.map((param) => {
+    refreshedTbody.innerHTML = params.map((param) => {
       const minValue = settings[param]?.min || "";
       const maxValue = settings[param]?.max || "";
 
       return `
-        <tr>
-          <td>${param}</td>
-          <td><input type="number" step="any" id="min-${param}" value="${escapeHtml(minValue)}"></td>
-          <td><input type="number" step="any" id="max-${param}" value="${escapeHtml(maxValue)}"></td>
-        </tr>`;
+          <tr>
+            <td>${param}</td>
+            <td><input type="number" step="any" id="min-${param}" value="${escapeHtml(minValue)}"></td>
+            <td><input type="number" step="any" id="max-${param}" value="${escapeHtml(maxValue)}"></td>
+          </tr>`;
     }).join("");
-
-    document.getElementById("elitechEnabled").checked = elitech.enabled;
-    document.getElementById("elitechProxyUrl").value = elitech.proxyUrl;
-    setElitechStatus(elitech.proxyUrl ? "Elitech proxy je spremljen." : "Elitech nije konfiguriran.");
+    document.getElementById("tankNameInput").value = tankProfile.name;
 
     openPopup("settings-popup");
   }
@@ -2296,11 +2510,11 @@
     });
   }
 
-  function saveSettings() {
+  async function saveSettings() {
     const nextSettings = {
-      elitech: {
-        enabled: document.getElementById("elitechEnabled").checked,
-        proxyUrl: document.getElementById("elitechProxyUrl").value.trim()
+      tankProfile: {
+        name: document.getElementById("tankNameInput").value.trim() || "Moj tank",
+        image: settings.tankProfile?.image || ""
       }
     };
 
@@ -2311,49 +2525,19 @@
       };
     });
 
-    settings = nextSettings;
-    persistSettings();
+      settings = nextSettings;
+      const imageInput = document.getElementById("tankImageInput");
+      if (imageInput?.files?.[0]) {
+        settings.tankProfile.image = await readFileAsDataUrl(imageInput.files[0]);
+      }
+      persistSettings();
+      renderDashboard();
+      closePopup("settings-popup");
+    }
+
     renderDashboard();
-    closePopup("settings-popup");
-  }
-
-  async function testElitechConnection() {
-    try {
-      setElitechStatus("Provjeravam Elitech vezu...");
-      settings.elitech = {
-        enabled: document.getElementById("elitechEnabled").checked,
-        proxyUrl: document.getElementById("elitechProxyUrl").value.trim()
-      };
-      const data = await fetchElitechTemperature();
-      setElitechStatus(`Veza radi. Temp: ${data.temperature}${data.unit || "C"} (${formatDate(data.monitorTime)})`);
-      setTempSyncStatus(`Elitech temp spremna: ${data.temperature}${data.unit || "C"}`);
-      renderDashboard();
-    } catch (error) {
-      setElitechStatus(`Greska: ${error.message}`);
-    }
-  }
-
-  async function loadElitechTemperature() {
-    const config = getElitechConfig();
-    if (!config.enabled || !config.proxyUrl) {
-      return;
-    }
-
-    try {
-      setElitechStatus("Dohvacam Elitech temperaturu...");
-      const data = await fetchElitechTemperature();
-      setElitechStatus(`Zadnja Elitech temp: ${data.temperature}${data.unit || "C"} (${formatDate(data.monitorTime)})`);
-      setTempSyncStatus(`Elitech temp spremna: ${data.temperature}${data.unit || "C"}`);
-      renderDashboard();
-    } catch (error) {
-      setElitechStatus(`Greska: ${error.message}`);
-    }
-  }
-
-  renderDashboard();
-  showStaleWarning();
-  loadElitechTemperature();
-</script>
+    showStaleWarning();
+  </script>
 
 <div class="footer">
   <div>
