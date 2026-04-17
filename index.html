@@ -762,7 +762,7 @@
   }
 
   .alert-strip {
-    display: none;
+    display: none !important;
     margin: 0 0 14px;
     padding: 14px 16px;
     color: #f2d78b;
@@ -2566,6 +2566,8 @@
     const analysis = getHealthAnalysis();
 
     summaryStrip.style.display = "none";
+    alertStrip.style.display = "none";
+    alertStrip.classList.remove("visible");
 
     summaryStrip.innerHTML = [
       { label: "Stanje", value: `${analysis.score}` },
