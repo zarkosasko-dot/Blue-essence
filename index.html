@@ -72,10 +72,14 @@
   }
 
   .header-title strong {
+    font-family: "Baskerville", "Times New Roman", Georgia, serif;
     font-weight: 600;
+    font-size: 1.28em;
+    letter-spacing: 0.02em;
   }
 
   .header-subtitle {
+    display: none;
     color: rgba(156, 185, 210, 0.82);
     font-family: "Segoe UI", sans-serif;
     font-size: 12px;
@@ -305,7 +309,7 @@
     border-radius: 50%;
     background:
       radial-gradient(circle at center, rgba(9, 24, 39, 0.96) 58%, transparent 59%),
-      conic-gradient(#3be0ab var(--ring-angle, 320deg), rgba(80, 103, 125, 0.22) 0);
+      conic-gradient(var(--ring-color, #3be0ab) var(--ring-angle, 320deg), rgba(80, 103, 125, 0.22) 0);
     box-shadow: inset 0 0 0 1px rgba(111, 229, 255, 0.08);
   }
 
@@ -1568,7 +1572,26 @@
   function readFileAsDataUrl(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result || ""));
+      reader.onload = () => {
+        const image = new Image();
+        image.onload = () => {
+          const maxSize = 640;
+          const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(image.width * scale);
+          canvas.height = Math.round(image.height * scale);
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            resolve(String(reader.result || ""));
+            return;
+          }
+
+          ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", 0.82));
+        };
+        image.onerror = () => resolve(String(reader.result || ""));
+        image.src = String(reader.result || "");
+      };
       reader.onerror = () => reject(new Error("Ne mogu učitati sliku."));
       reader.readAsDataURL(file);
     });
@@ -1770,9 +1793,84 @@
     }
   }
 
-  function getHealthScore(staleCount, outOfRangeCount) {
-    const score = 100 - (staleCount * 4) - (outOfRangeCount * 7);
-    return Math.max(58, Math.min(100, score));
+  function getTrendDirection(param) {
+    const relevant = getSortedMeasurements("asc")
+      .filter((measurement) => measurement[param] && !Number.isNaN(parseFloat(measurement[param])))
+      .slice(-2);
+
+    if (relevant.length < 2) {
+      return 0;
+    }
+
+    const previous = parseFloat(relevant[0][param]);
+    const current = parseFloat(relevant[1][param]);
+    if (Number.isNaN(previous) || Number.isNaN(current)) {
+      return 0;
+    }
+
+    if (current > previous) return 1;
+    if (current < previous) return -1;
+    return 0;
+  }
+
+  function getHealthAnalysis() {
+    const latestValues = getLatestValues();
+    const staleItems = getStaleItems();
+    let penalty = staleItems.length * 2.5;
+    let severeCount = 0;
+    let mildCount = 0;
+
+    params.forEach((param) => {
+      const value = parseFloat(latestValues[param]?.value);
+      const min = parseFloat(settings[param]?.min);
+      const max = parseFloat(settings[param]?.max);
+
+      if (Number.isNaN(value) || (Number.isNaN(min) && Number.isNaN(max))) {
+        return;
+      }
+
+      let deviationRatio = 0;
+      let trendPenalty = 0;
+      const direction = getTrendDirection(param);
+
+      if (!Number.isNaN(min) && value < min) {
+        deviationRatio = (min - value) / Math.max(Math.abs(min), 0.0001);
+        if (direction < 0) trendPenalty = 1.5;
+      } else if (!Number.isNaN(max) && value > max) {
+        deviationRatio = (value - max) / Math.max(Math.abs(max), 0.0001);
+        if (direction > 0) trendPenalty = 1.5;
+      } else {
+        const center = (!Number.isNaN(min) && !Number.isNaN(max)) ? (min + max) / 2 : value;
+        const span = (!Number.isNaN(min) && !Number.isNaN(max)) ? Math.max(Math.abs(max - min), 0.0001) : Math.max(Math.abs(center), 0.0001);
+        const drift = Math.abs(value - center) / span;
+        penalty += Math.min(1.5, drift * 1.2);
+        return;
+      }
+
+      if (deviationRatio <= 0.05) {
+        penalty += 3 + trendPenalty;
+        mildCount += 1;
+      } else if (deviationRatio <= 0.12) {
+        penalty += 7 + trendPenalty;
+        severeCount += 1;
+      } else {
+        penalty += 12 + trendPenalty;
+        severeCount += 1;
+      }
+    });
+
+    const score = Math.max(52, Math.min(100, Math.round(100 - penalty)));
+    const color = score >= 85 ? "#42e0b0" : score >= 68 ? "#f2c94c" : "#ff7a7a";
+    const label = score >= 85 ? "Vrlo stabilno" : score >= 68 ? "Traži pažnju" : "Izvan kontrole";
+
+    return {
+      score,
+      color,
+      label,
+      staleCount: staleItems.length,
+      severeCount,
+      mildCount
+    };
   }
 
   function setActiveView(view) {
@@ -1823,7 +1921,7 @@
       const max = parseFloat(settings[param]?.max);
       return !Number.isNaN(value) && ((!Number.isNaN(min) && value < min) || (!Number.isNaN(max) && value > max));
     });
-    const healthScore = getHealthScore(staleItems.length, outOfRange.length);
+    const analysis = getHealthAnalysis();
 
     healthRing.textContent = String(healthScore);
     healthRing.style.setProperty("--ring-angle", `${Math.round((healthScore / 100) * 360)}deg`);
@@ -1840,6 +1938,20 @@
       : outOfRange.length > 0
         ? `Trenutno su ${outOfRange.length} parametra izvan raspona pa vrijedi reagirati postupno i pratiti trend, bez panike.`
         : "Zadnja očitanja izgledaju uredno i sustav djeluje stabilno kroz glavne parametre.";
+
+    const analysis = getHealthAnalysis();
+    healthRing.textContent = String(analysis.score);
+    healthRing.style.setProperty("--ring-angle", `${Math.round((analysis.score / 100) * 360)}deg`);
+    healthRing.style.setProperty("--ring-color", analysis.color);
+    healthLabel.textContent = analysis.label;
+    healthLabel.style.color = analysis.color;
+    healthCopy.textContent = analysis.staleCount > 0
+      ? `Najveći prioritet je osvježiti ${analysis.staleCount} zastarjela mjerenja i vratiti redovno testiranje.`
+      : analysis.severeCount > 0
+        ? `Ima odstupanja koja prelaze sigurnu zonu pa vrijedi reagirati postupno i pratiti trend, bez panike.`
+        : analysis.mildCount > 0
+          ? "Postoje manja odstupanja unutar oko 5% tolerancije. Prati trend i ne radi nagle korekcije."
+          : "Zadnja očitanja izgledaju uredno i sustav djeluje stabilno kroz glavne parametre.";
 
     const attentionItems = [];
     staleItems.forEach((item) => {
@@ -2009,7 +2121,7 @@
     const healthScore = getHealthScore(staleItems.length, outOfRange.length);
 
     summaryStrip.innerHTML = [
-      { label: "Stanje", value: `${healthScore}` },
+      { label: "Stanje", value: `${analysis.score}` },
       { label: "Unosi", value: String(measurements.length) },
       { label: "Kasni", value: String(staleItems.length) },
       { label: "Temp", value: liveTemperature?.temperature !== undefined ? `${liveTemperature.temperature}${liveTemperature.unit || "°C"}` : "Manual" }
