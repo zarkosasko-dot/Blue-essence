@@ -28,9 +28,9 @@
     font-family: "Trebuchet MS", "Segoe UI", sans-serif;
     color: var(--text);
     background:
-      radial-gradient(circle at top, rgba(41, 119, 176, 0.18), transparent 34%),
-      linear-gradient(180deg, #06111d 0%, #091827 52%, #0c2031 100%);
-    background-size: cover;
+      linear-gradient(180deg, rgba(3, 12, 22, 0.78), rgba(4, 18, 30, 0.9)),
+      radial-gradient(circle at top, rgba(41, 119, 176, 0.2), transparent 34%),
+      url("background.png") center/cover fixed no-repeat;
   }
 
   header {
@@ -74,12 +74,14 @@
   }
 
   .header-title strong {
-    font-family: "Baskerville", "Times New Roman", Georgia, serif;
-    font-weight: 600;
-    font-size: 1.28em;
-    letter-spacing: 0.02em;
+    font-family: "Gill Sans", "Trebuchet MS", "Segoe UI", sans-serif;
+    font-weight: 700;
+    font-size: 1.06em;
+    letter-spacing: 0.12em;
     line-height: 1;
     white-space: nowrap;
+    text-transform: uppercase;
+    text-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
   }
 
   .header-subtitle {
@@ -1380,7 +1382,7 @@
           <div class="section-head">
             <div>
               <h3>Moji zadaci</h3>
-              <p>Rucno dodani zadaci koje zelis pratiti.</p>
+              <p>Ru?no dodani zadaci koje ?eli? pratiti.</p>
             </div>
             <button class="task-done" onclick="setActiveView('tasks')">Otvori sve</button>
           </div>
@@ -1461,6 +1463,11 @@
                 </div>
                 <button class="task-done" onclick="openSettings()">Otvori</button>
               </div>
+            </div>
+            <div class="task-item">
+              <strong>Info</strong>
+              <p>Verzija: v1.3</p>
+              <p>Izradio: Zarko</p>
             </div>
           </div>
         </div>
@@ -1611,6 +1618,40 @@
       reader.onerror = () => reject(new Error("Ne mogu učitati sliku."));
       reader.readAsDataURL(file);
     });
+  }
+
+  function updateTankImagePreview(imageDataUrl) {
+    const preview = document.getElementById("tankImagePreview");
+    const status = document.getElementById("tankImageStatus");
+    if (!preview || !status) {
+      return;
+    }
+
+    if (imageDataUrl) {
+      preview.innerHTML = `<img class="tank-photo" src="${imageDataUrl}" alt="Preview slike tanka">`;
+      status.textContent = "Nova ili trenutna slika je spremna. Za potvrdu klikni Spremi postavke.";
+      return;
+    }
+
+    preview.innerHTML = `<div class="tank-photo placeholder">TANK</div>`;
+    status.textContent = "Odaberi sliku pa spremi postavke.";
+  }
+
+  function previewTankImage(event) {
+    const file = event?.target?.files?.[0];
+    if (!file) {
+      updateTankImagePreview(settings.tankProfile?.image || "");
+      return;
+    }
+
+    readFileAsDataUrl(file)
+      .then((dataUrl) => updateTankImagePreview(dataUrl))
+      .catch(() => {
+        const status = document.getElementById("tankImageStatus");
+        if (status) {
+          status.textContent = "Ne mogu u?itati odabranu sliku.";
+        }
+      });
   }
 
   function renderTankHero() {
@@ -2114,7 +2155,7 @@
             <p>${escapeHtml(item.text)}</p>
           </div>
         `).join("")
-      : `<div class="empty-state">Sve izgleda uredno. Trenutno nema hitnih upozorenja.</div>`;
+      : `<div class="empty-state">Trenutno nema kriti?nih alarma. Ako ?eli? dodatnu sigurnost, prvo provjeri temperaturu, salinitet i KH.</div>`;
 
     quickGrid.innerHTML = ["Salinity", "pH", "KH", "Ca"].map((param) => {
       const meta = parameterMeta[param];
@@ -2394,18 +2435,18 @@
       ? (
           analysis.staleCount > 0
             ? `Stanje izgleda stabilno, ali ${analysis.staleCount} parametra nisu svježe mjerena.`
-            : "Tank izgleda stabilno, a manja odstupanja su jos unutar sigurne zone."
+            : "Tank izgleda stabilno, a manja odstupanja su jo? unutar sigurne zone."
         )
       : analysis.score >= 60
         ? (
             analysis.recommendations.length
               ? analysis.recommendations.join(" ")
-              : "Ima odstupanja koja traze postupnu korekciju i pracenje trenda."
+              : "Ima odstupanja koja tra?e postupnu korekciju i pra?enje trenda."
           )
         : (
             analysis.recommendations.length
               ? `Kreni od ovoga: ${analysis.recommendations.join(" ")}`
-              : "Vise bitnih parametara je van raspona i treba ih mirno vratiti pod kontrolu."
+              : "Vi?e bitnih parametara je van raspona i treba ih mirno vratiti pod kontrolu."
           );
 
     const attentionItems = [];
@@ -2958,7 +2999,9 @@
       <h3>Postavke parametara</h3>
       <h4>Profil tanka</h4>
       <input id="tankNameInput" type="text" placeholder="Naziv tanka">
-      <input id="tankImageInput" type="file" accept="image/*">
+      <input id="tankImageInput" type="file" accept="image/*" capture="environment" onchange="previewTankImage(event)">
+      <div id="tankImagePreview" style="margin:10px 0 6px;"></div>
+      <div class="helper-text" id="tankImageStatus">Odaberi sliku pa spremi postavke.</div>
       <p class="helper-text">Po želji dodaj sliku tanka. Sprema se lokalno u aplikaciji.</p>
       <label for="tankType">Tip akvarija:</label>
       <select id="tankType" onchange="applyTankType()">
@@ -2978,9 +3021,9 @@
         <tbody id="settings-table"></tbody>
       </table>
       <h4>Elitech temperatura</h4>
-      <label><input id="elitechEnabled" type="checkbox"> Ukljuci Elitech dohvat</label>
+      <label><input id="elitechEnabled" type="checkbox"> Uklju?i Elitech dohvat</label>
       <input id="elitechProxyUrl" type="text" placeholder="https://tvoj-proxy.example.com/api/elitech-temperature">
-      <p class="helper-text">Upisi adresu svog Elitech proxy endpointa. Temperatura ce se prikazati na postojecoj Temp kartici.</p>
+      <p class="helper-text">Upi?i adresu svog Elitech proxy endpointa. Temperatura ce se prikazati na postoje?oj Temp kartici.</p>
       <div class="popup-actions">
         <button class="close-btn secondary-btn" onclick="testElitechConnection()">Testiraj Elitech vezu</button>
       </div>
@@ -3006,6 +3049,7 @@
           </tr>`;
     }).join("");
     document.getElementById("tankNameInput").value = tankProfile.name;
+    updateTankImagePreview(tankProfile.image);
     document.getElementById("tankType").value = settings.tankProfile?.type || "custom";
     document.getElementById("elitechEnabled").checked = elitechConfig.enabled;
     document.getElementById("elitechProxyUrl").value = elitechConfig.proxyUrl;
