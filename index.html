@@ -3057,6 +3057,17 @@
     renderDashboard();
     closePopup("settings-popup");
   }
+
+  setActiveView("home");
+  renderDashboard();
+
+  if (getElitechConfig().enabled && getElitechConfig().proxyUrl) {
+    fetchElitechTemperature()
+      .then(() => renderDashboard())
+      .catch(() => {
+        setElitechStatus("Elitech trenutno nije dostupan.");
+      });
+  }
   </script>
 
 <div class="footer">
