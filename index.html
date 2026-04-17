@@ -1713,8 +1713,8 @@
     return lastValues;
   }
 
-  async function fetchElitechTemperature() {
-    const config = getElitechConfig();
+  async function fetchElitechTemperature(configOverride) {
+    const config = configOverride || getElitechConfig();
     if (!config.enabled || !config.proxyUrl) {
       throw new Error("Elitech proxy nije postavljen.");
     }
@@ -1921,10 +1921,8 @@
       const max = parseFloat(settings[param]?.max);
       return !Number.isNaN(value) && ((!Number.isNaN(min) && value < min) || (!Number.isNaN(max) && value > max));
     });
-    const analysis = getHealthAnalysis();
+    const obsoleteAnalysis = getHealthAnalysis();
 
-    healthRing.textContent = String(healthScore);
-    healthRing.style.setProperty("--ring-angle", `${Math.round((healthScore / 100) * 360)}deg`);
     healthLabel.textContent = healthScore >= 86 ? "Izgleda odlično" : healthScore >= 70 ? "Traži laganu pažnju" : "Traži brzu reakciju";
     healthCopy.textContent = staleItems.length > 0
       ? `Najveći prioritet je osvježiti ${staleItems.length} zastarjela mjerenja i vratiti redovno testiranje.`
@@ -2525,9 +2523,25 @@
       const data = await fetchElitechTemperature();
       document.getElementById("temp").value = data.temperature;
       setTempSyncStatus(`Upisana temperatura ${data.temperature}${data.unit || "C"} (${formatDate(data.monitorTime)})`);
+      setElitechStatus(`Live Temp: ${data.temperature}${data.unit || "C"}`);
       renderDashboard();
     } catch (error) {
       setTempSyncStatus(error.message);
+    }
+  }
+
+  async function testElitechConnection() {
+    const config = {
+      enabled: document.getElementById("elitechEnabled")?.checked,
+      proxyUrl: document.getElementById("elitechProxyUrl")?.value.trim() || ""
+    };
+
+    try {
+      setElitechStatus("Testiram Elitech vezu...");
+      const data = await fetchElitechTemperature(config);
+      setElitechStatus(`Spojeno: ${data.temperature}${data.unit || "C"} (${formatDate(data.monitorTime)})`);
+    } catch (error) {
+      setElitechStatus(error.message);
     }
   }
 
@@ -2542,11 +2556,23 @@
 
     const labels = filtered.map((measurement) => formatDate(measurement.date));
     const data = filtered.map((measurement) => parseFloat(measurement[param]));
-    const ctx = document.getElementById("graph-canvas").getContext("2d");
+    const canvas = document.getElementById("graph-canvas");
+    const ctx = canvas.getContext("2d");
 
     if (chart) {
       chart.destroy();
     }
+
+    if (typeof Chart === "undefined") {
+      canvas.style.display = "none";
+      document.getElementById("graph-advice").insertAdjacentHTML(
+        "beforeend",
+        "<p><strong>Graf trenutno nije dostupan.</strong> Otvori app s internetom ili dodaj lokalni Chart.js bundle.</p>"
+      );
+      return;
+    }
+
+    canvas.style.display = "block";
 
     chart = new Chart(ctx, {
       type: "line",
@@ -2684,7 +2710,6 @@
   }
 
   function openSettings() {
-    const tbody = document.getElementById("settings-table");
     const popupContent = document.getElementById("settings-popup").querySelector(".popup-content");
     popupContent.innerHTML = `
       <h3>Postavke parametara</h3>
@@ -2709,6 +2734,14 @@
         </thead>
         <tbody id="settings-table"></tbody>
       </table>
+      <h4>Elitech temperatura</h4>
+      <label><input id="elitechEnabled" type="checkbox"> Ukljuci Elitech dohvat</label>
+      <input id="elitechProxyUrl" type="text" placeholder="https://tvoj-proxy.example.com/api/elitech-temperature">
+      <p class="helper-text">Upisi adresu svog Elitech proxy endpointa. Temperatura ce se prikazati na postojecoj Temp kartici.</p>
+      <div class="popup-actions">
+        <button class="close-btn secondary-btn" onclick="testElitechConnection()">Testiraj Elitech vezu</button>
+      </div>
+      <div class="elitech-status" id="elitech-status">Elitech nije konfiguriran.</div>
       <div class="popup-actions">
         <button class="close-btn" onclick="saveSettings()">Spremi postavke</button>
         <button class="close-btn" onclick="closePopup('settings-popup')">Zatvori</button>
@@ -2716,6 +2749,7 @@
     `;
     const refreshedTbody = document.getElementById("settings-table");
     const tankProfile = getTankProfile();
+    const elitechConfig = getElitechConfig();
 
     refreshedTbody.innerHTML = params.map((param) => {
       const minValue = settings[param]?.min || "";
@@ -2729,6 +2763,14 @@
           </tr>`;
     }).join("");
     document.getElementById("tankNameInput").value = tankProfile.name;
+    document.getElementById("tankType").value = settings.tankProfile?.type || "custom";
+    document.getElementById("elitechEnabled").checked = elitechConfig.enabled;
+    document.getElementById("elitechProxyUrl").value = elitechConfig.proxyUrl;
+    setElitechStatus(
+      elitechConfig.enabled && elitechConfig.proxyUrl
+        ? `Proxy spreman: ${elitechConfig.proxyUrl}`
+        : "Elitech nije konfiguriran."
+    );
 
     openPopup("settings-popup");
   }
@@ -2750,9 +2792,16 @@
 
   async function saveSettings() {
     const nextSettings = {
+      ...settings,
       tankProfile: {
+        ...settings.tankProfile,
         name: document.getElementById("tankNameInput").value.trim() || "Moj tank",
+        type: document.getElementById("tankType").value,
         image: settings.tankProfile?.image || ""
+      },
+      elitech: {
+        enabled: document.getElementById("elitechEnabled").checked,
+        proxyUrl: document.getElementById("elitechProxyUrl").value.trim()
       }
     };
 
@@ -2763,18 +2812,16 @@
       };
     });
 
-      settings = nextSettings;
-      const imageInput = document.getElementById("tankImageInput");
-      if (imageInput?.files?.[0]) {
-        settings.tankProfile.image = await readFileAsDataUrl(imageInput.files[0]);
-      }
-      persistSettings();
-      renderDashboard();
-      closePopup("settings-popup");
+    settings = nextSettings;
+    const imageInput = document.getElementById("tankImageInput");
+    if (imageInput?.files?.[0]) {
+      settings.tankProfile.image = await readFileAsDataUrl(imageInput.files[0]);
     }
 
+    persistSettings();
     renderDashboard();
-    showStaleWarning();
+    closePopup("settings-popup");
+  }
   </script>
 
 <div class="footer">
