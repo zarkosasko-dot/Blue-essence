@@ -1813,6 +1813,25 @@
     return 0;
   }
 
+  function getStaleItems() {
+    const latestValues = getLatestValues();
+
+    return params.map((param) => {
+      const latest = latestValues[param];
+      const daysSince = getDaysSince(latest?.date);
+
+      if (daysSince === null || daysSince <= 7) {
+        return null;
+      }
+
+      return {
+        param,
+        date: latest.date,
+        daysSince
+      };
+    }).filter(Boolean);
+  }
+
   function getHealthAnalysis() {
     const latestValues = getLatestValues();
     const staleItems = getStaleItems();
@@ -1870,6 +1889,109 @@
       staleCount: staleItems.length,
       severeCount,
       mildCount
+    };
+  }
+
+  function getHealthAnalysis() {
+    const latestValues = getLatestValues();
+    const staleItems = getStaleItems();
+    const weights = {
+      Temp: 1.8,
+      Salinity: 1.8,
+      KH: 1.55,
+      pH: 1.25,
+      Ca: 1.1,
+      Mg: 1.0,
+      NO3: 0.9,
+      PO4: 0.9
+    };
+    const recommendationMap = {
+      Temp: "Provjeri grijac, rashladu i dnevne oscilacije temperature.",
+      Salinity: "Provjeri refraktometar i ATO prije korekcije saliniteta.",
+      KH: "Provjeri doziranje i potrosnju alkaliniteta prije vece korekcije.",
+      pH: "Provjeri ventilaciju prostora i dnevne oscilacije pH.",
+      Ca: "Provjeri doziranje kalcija i odnos s KH.",
+      Mg: "Provjeri magnezij postupno, bez naglih korekcija.",
+      NO3: "Provjeri hranjenje i export ako NO3 nastavlja bjezati.",
+      PO4: "Provjeri hranjenje, detritus i fosfatni medij ako ga koristis."
+    };
+    let penalty = 0;
+    let severeCount = 0;
+    let mildCount = 0;
+    const issues = [];
+
+    params.forEach((param) => {
+      const value = parseFloat(latestValues[param]?.value);
+      const min = parseFloat(settings[param]?.min);
+      const max = parseFloat(settings[param]?.max);
+
+      if (Number.isNaN(value) || (Number.isNaN(min) && Number.isNaN(max))) {
+        return;
+      }
+
+      const weight = weights[param] || 1;
+      const rangeSpan = (!Number.isNaN(min) && !Number.isNaN(max))
+        ? Math.max(max - min, 0.0001)
+        : Math.max(Math.abs(value), 0.0001);
+      const direction = getTrendDirection(param);
+      let points = 0;
+
+      if (!Number.isNaN(min) && value < min) {
+        const deviationRatio = (min - value) / rangeSpan;
+        points = deviationRatio <= 0.2 ? 6 * weight : deviationRatio <= 0.45 ? 12 * weight : 20 * weight;
+        if (direction < 0) {
+          points += 3 * weight;
+        }
+      } else if (!Number.isNaN(max) && value > max) {
+        const deviationRatio = (value - max) / rangeSpan;
+        points = deviationRatio <= 0.2 ? 6 * weight : deviationRatio <= 0.45 ? 12 * weight : 20 * weight;
+        if (direction > 0) {
+          points += 3 * weight;
+        }
+      } else {
+        const edgeDistance = Math.min(Math.abs(value - min), Math.abs(max - value));
+        const edgeRatio = edgeDistance / Math.max(rangeSpan / 2, 0.0001);
+
+        if (edgeRatio < 0.1) {
+          points = 2.6 * weight;
+        } else if (edgeRatio < 0.22) {
+          points = 1.2 * weight;
+        }
+      }
+
+      if (points <= 0) {
+        return;
+      }
+
+      penalty += points;
+
+      if (points >= 12 * weight) {
+        severeCount += 1;
+      } else {
+        mildCount += 1;
+      }
+
+      issues.push({
+        param,
+        points,
+        recommendation: recommendationMap[param]
+      });
+    });
+
+    const sortedIssues = issues.sort((a, b) => b.points - a.points);
+    const score = Math.max(0, Math.min(100, Math.round(100 - penalty)));
+    const color = score >= 85 ? "#4bd37b" : score >= 60 ? "#f2c94c" : "#ff6b6b";
+    const label = score >= 85 ? "Stabilno" : score >= 60 ? "Trazi paznju" : "Kriticno";
+
+    return {
+      score,
+      color,
+      label,
+      staleCount: staleItems.length,
+      severeCount,
+      mildCount,
+      recommendations: sortedIssues.slice(0, 2).map((item) => item.recommendation),
+      topIssues: sortedIssues.slice(0, 2).map((item) => item.param)
     };
   }
 
@@ -2252,13 +2374,23 @@
     healthRing.style.setProperty("--ring-color", analysis.color);
     healthLabel.textContent = analysis.label;
     healthLabel.style.color = analysis.color;
-    healthCopy.textContent = analysis.staleCount > 0
-      ? `Najveći prioritet je osvježiti ${analysis.staleCount} zastarjela mjerenja i vratiti redovno testiranje.`
-      : analysis.severeCount > 0
-        ? "Ima ozbiljnijih odstupanja pa vrijedi reagirati postupno i pratiti trend, bez panike."
-        : analysis.mildCount > 0
-          ? "Postoje manja odstupanja unutar oko 5% tolerancije. Prati trend i ne radi nagle korekcije."
-          : "Zadnja očitanja izgledaju uredno i sustav djeluje stabilno kroz glavne parametre.";
+    healthCopy.textContent = analysis.score >= 85
+      ? (
+          analysis.staleCount > 0
+            ? `Stanje izgleda stabilno, ali ${analysis.staleCount} parametra nisu svježe mjerena.`
+            : "Tank izgleda stabilno, a manja odstupanja su jos unutar sigurne zone."
+        )
+      : analysis.score >= 60
+        ? (
+            analysis.recommendations.length
+              ? analysis.recommendations.join(" ")
+              : "Ima odstupanja koja traze postupnu korekciju i pracenje trenda."
+          )
+        : (
+            analysis.recommendations.length
+              ? `Kreni od ovoga: ${analysis.recommendations.join(" ")}`
+              : "Vise bitnih parametara je van raspona i treba ih mirno vratiti pod kontrolu."
+          );
 
     const attentionItems = [];
     staleItems.forEach((item) => {
