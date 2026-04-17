@@ -1972,6 +1972,16 @@
       NO3: "Provjeri hranjenje i export ako NO3 nastavlja bjezati.",
       PO4: "Provjeri hranjenje, detritus i fosfatni medij ako ga koristis."
     };
+    const toleranceBands = {
+      Temp: { warn: 0.5, major: 1.0, critical: 1.8 },
+      Salinity: { warn: 0.001, major: 0.002, critical: 0.0035 },
+      KH: { warn: 0.4, major: 0.8, critical: 1.4 },
+      pH: { warn: 0.08, major: 0.16, critical: 0.28 },
+      Ca: { warn: 20, major: 40, critical: 80 },
+      Mg: { warn: 50, major: 100, critical: 180 },
+      NO3: { warn: 2, major: 5, critical: 10 },
+      PO4: { warn: 0.02, major: 0.05, critical: 0.1 }
+    };
     let penalty = 0;
     let severeCount = 0;
     let mildCount = 0;
@@ -1987,32 +1997,34 @@
       }
 
       const weight = weights[param] || 1;
-      const rangeSpan = (!Number.isNaN(min) && !Number.isNaN(max))
-        ? Math.max(max - min, 0.0001)
-        : Math.max(Math.abs(value), 0.0001);
+      const bands = toleranceBands[param] || { warn: 1, major: 2, critical: 4 };
       const direction = getTrendDirection(param);
       let points = 0;
+      let deviationAmount = 0;
 
       if (!Number.isNaN(min) && value < min) {
-        const deviationRatio = (min - value) / rangeSpan;
-        points = deviationRatio <= 0.2 ? 6 * weight : deviationRatio <= 0.45 ? 12 * weight : 20 * weight;
+        deviationAmount = min - value;
+        points = deviationAmount <= bands.warn
+          ? 4 * weight
+          : deviationAmount <= bands.major
+            ? 9 * weight
+            : deviationAmount <= bands.critical
+              ? 15 * weight
+              : 22 * weight;
         if (direction < 0) {
-          points += 3 * weight;
+          points += 2 * weight;
         }
       } else if (!Number.isNaN(max) && value > max) {
-        const deviationRatio = (value - max) / rangeSpan;
-        points = deviationRatio <= 0.2 ? 6 * weight : deviationRatio <= 0.45 ? 12 * weight : 20 * weight;
+        deviationAmount = value - max;
+        points = deviationAmount <= bands.warn
+          ? 4 * weight
+          : deviationAmount <= bands.major
+            ? 9 * weight
+            : deviationAmount <= bands.critical
+              ? 15 * weight
+              : 22 * weight;
         if (direction > 0) {
-          points += 3 * weight;
-        }
-      } else {
-        const edgeDistance = Math.min(Math.abs(value - min), Math.abs(max - value));
-        const edgeRatio = edgeDistance / Math.max(rangeSpan / 2, 0.0001);
-
-        if (edgeRatio < 0.1) {
-          points = 2.6 * weight;
-        } else if (edgeRatio < 0.22) {
-          points = 1.2 * weight;
+          points += 2 * weight;
         }
       }
 
