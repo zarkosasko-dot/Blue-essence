@@ -28,61 +28,65 @@
     font-family: "Trebuchet MS", "Segoe UI", sans-serif;
     color: var(--text);
     background:
-      linear-gradient(rgba(0, 60, 100, 0.15), rgba(0, 30, 60, 0.35)),
-      url("background.png") no-repeat center center fixed,
-      linear-gradient(to bottom, #0066cc, #3399ff);
+      radial-gradient(circle at top, rgba(41, 119, 176, 0.18), transparent 34%),
+      linear-gradient(180deg, #06111d 0%, #091827 52%, #0c2031 100%);
     background-size: cover;
   }
 
   header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     position: sticky;
     top: 0;
     z-index: 10;
-    margin: 14px 15px 0;
-    padding: 14px 20px;
-    background: linear-gradient(135deg, rgba(2, 52, 97, 0.96), rgba(0, 113, 163, 0.9));
+    margin: 0;
+    padding: 18px 18px 12px;
     color: white;
     font-family: Georgia, "Times New Roman", serif;
     font-size: 28px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
-    box-shadow: 0 16px 34px rgba(0, 16, 33, 0.24);
-    backdrop-filter: blur(8px);
+    background: linear-gradient(180deg, rgba(6, 17, 29, 0.96), rgba(6, 17, 29, 0.8), rgba(6, 17, 29, 0));
   }
 
   .header-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    display: grid;
-    place-items: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 42px;
     height: 42px;
-    font-size: 22px;
+    color: #7be9ff;
+    font-size: 20px;
     cursor: pointer;
     user-select: none;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(11, 28, 44, 0.84);
+    border: 1px solid rgba(111, 229, 255, 0.14);
     border-radius: 14px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 18px rgba(2, 12, 24, 0.22);
   }
 
-  #listBtn {
-    left: 15px;
+  .header-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
   }
 
-  #notesBtn {
-    right: 55px;
+  .header-title strong {
+    font-weight: 600;
   }
 
-  #settingsBtn {
-    right: 15px;
+  .header-subtitle {
+    color: rgba(156, 185, 210, 0.82);
+    font-family: "Segoe UI", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
   main {
-    padding: 10px 0 72px;
+    width: min(1120px, calc(100vw - 24px));
+    margin: 0 auto;
+    padding: 8px 0 110px;
   }
 
   .btn-add {
@@ -90,14 +94,15 @@
     align-items: center;
     justify-content: center;
     margin: 0;
-    padding: 12px 24px;
-    font-size: 18px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
     color: white;
-    background: linear-gradient(135deg, #26b1ff, #0b7fff);
+    background: linear-gradient(135deg, #13b7e6, #1f88ff);
     border: none;
     border-radius: 14px;
     cursor: pointer;
-    box-shadow: 0 10px 24px rgba(0, 84, 196, 0.28);
+    box-shadow: 0 12px 24px rgba(18, 102, 183, 0.28);
   }
 
   .grid {
@@ -110,14 +115,16 @@
   .card {
     position: relative;
     overflow: hidden;
-    padding: 16px 14px;
+    min-height: 172px;
+    padding: 16px 14px 14px;
     text-align: left;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(236, 244, 251, 0.94));
-    border: 1px solid rgba(17, 34, 55, 0.06);
-    border-radius: 20px;
-    box-shadow: 0 12px 28px rgba(17, 34, 55, 0.12);
+    color: #eff8ff;
+    background: linear-gradient(180deg, rgba(17, 32, 50, 0.96), rgba(13, 26, 42, 0.96));
+    border: 1px solid rgba(138, 192, 232, 0.1);
+    border-radius: 22px;
+    box-shadow: 0 16px 28px rgba(2, 12, 24, 0.24);
     cursor: pointer;
-    transition: transform 0.15s ease, background 0.2s ease;
+    transition: transform 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
   .card::after {
@@ -126,24 +133,25 @@
     inset: auto -24px -24px auto;
     width: 82px;
     height: 82px;
-    background: radial-gradient(circle, rgba(74, 194, 255, 0.22), rgba(74, 194, 255, 0));
+    background: radial-gradient(circle, rgba(74, 194, 255, 0.14), rgba(74, 194, 255, 0));
   }
 
   .card:hover {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    border-color: rgba(111, 229, 255, 0.22);
   }
 
   .card.warning-card {
-    background: rgba(255, 222, 222, 0.95);
+    border-color: rgba(243, 195, 83, 0.34);
+    box-shadow: 0 16px 28px rgba(41, 28, 4, 0.22);
   }
 
   .card.check-card {
-    background: rgba(224, 248, 221, 0.95);
+    border-color: rgba(66, 226, 166, 0.22);
   }
 
   .card.stale-card {
-    outline: 3px solid rgba(255, 196, 0, 0.9);
-    outline-offset: -3px;
+    box-shadow: inset 0 0 0 1px rgba(255, 196, 0, 0.34), 0 16px 28px rgba(2, 12, 24, 0.24);
   }
 
   .card small {
@@ -155,23 +163,35 @@
   }
 
   .warning {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
     margin-left: 5px;
-    color: #f2b400;
+    font-size: 0;
+    background: #f2c94c;
+    border-radius: 999px;
+    box-shadow: 0 0 0 4px rgba(242, 201, 76, 0.12);
   }
 
   .check {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
     margin-left: 5px;
-    color: #0f9f43;
+    font-size: 0;
+    background: #43dba2;
+    border-radius: 999px;
+    box-shadow: 0 0 0 4px rgba(67, 219, 162, 0.12);
   }
 
   .stale-note {
     display: inline-flex;
     margin-top: 10px;
     padding: 6px 10px;
-    color: #8a5a00;
+    color: #f0d27a;
     font-size: 0.8rem;
     font-weight: bold;
-    background: rgba(255, 227, 156, 0.6);
+    background: rgba(92, 71, 24, 0.5);
     border-radius: 999px;
   }
 
@@ -183,18 +203,18 @@
   }
 
   .param-name {
-    color: #567189;
+    color: #6fe5ff;
     font-size: 0.82rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
 
   .param-status {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .param-value {
-    margin-top: 16px;
+    margin-top: 26px;
     font-size: clamp(24px, 3vw, 34px);
     font-weight: 700;
     line-height: 1;
@@ -203,8 +223,244 @@
   .param-date {
     display: block;
     margin-top: 12px;
-    color: #617a93;
-    font-size: 0.9rem;
+    color: #7f96ab;
+    font-size: 0.82rem;
+  }
+
+  .param-label {
+    display: block;
+    margin-top: 8px;
+    color: #b8cad9;
+    font-size: 0.92rem;
+  }
+
+  .param-unit {
+    display: block;
+    margin-top: 6px;
+    color: #5f7a93;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .app-main {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .view {
+    display: none;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .view.active {
+    display: flex;
+  }
+
+  .section-card {
+    padding: 16px;
+    background: rgba(10, 25, 40, 0.92);
+    border: 1px solid rgba(110, 162, 205, 0.08);
+    border-radius: 24px;
+    box-shadow: 0 18px 40px rgba(2, 12, 24, 0.28);
+  }
+
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .section-head h3,
+  .section-head h4 {
+    margin: 0;
+    color: #f2f8ff;
+  }
+
+  .section-head p {
+    margin: 4px 0 0;
+    color: #8ba4b9;
+    font-size: 0.92rem;
+  }
+
+  .health-card {
+    display: grid;
+    grid-template-columns: 116px 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .health-ring {
+    display: grid;
+    place-items: center;
+    width: 108px;
+    height: 108px;
+    color: #f2f8ff;
+    font-size: 2rem;
+    font-weight: 700;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at center, rgba(9, 24, 39, 0.96) 58%, transparent 59%),
+      conic-gradient(#3be0ab var(--ring-angle, 320deg), rgba(80, 103, 125, 0.22) 0);
+    box-shadow: inset 0 0 0 1px rgba(111, 229, 255, 0.08);
+  }
+
+  .health-copy strong {
+    display: block;
+    color: #5ef2c3;
+    font-size: 1.35rem;
+  }
+
+  .health-copy p {
+    margin: 8px 0 0;
+    color: #8ba4b9;
+    line-height: 1.45;
+  }
+
+  .attention-list,
+  .tasks-list,
+  .log-list,
+  .trend-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .attention-item,
+  .task-item,
+  .log-item,
+  .trend-item {
+    padding: 14px 15px;
+    background: linear-gradient(180deg, rgba(16, 33, 51, 0.96), rgba(12, 26, 42, 0.94));
+    border: 1px solid rgba(111, 229, 255, 0.08);
+    border-radius: 18px;
+  }
+
+  .attention-item strong,
+  .task-item strong,
+  .log-item strong,
+  .trend-item strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #f2f8ff;
+  }
+
+  .attention-item p,
+  .task-item p,
+  .log-item p,
+  .trend-item p {
+    margin: 0;
+    color: #8ba4b9;
+    line-height: 1.45;
+  }
+
+  .attention-item.warning {
+    border-color: rgba(242, 201, 76, 0.18);
+  }
+
+  .attention-item.danger {
+    border-color: rgba(255, 122, 122, 0.2);
+  }
+
+  .quick-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .mini-card {
+    padding: 14px 12px;
+    background: linear-gradient(180deg, rgba(16, 33, 51, 0.96), rgba(12, 26, 42, 0.94));
+    border: 1px solid rgba(111, 229, 255, 0.08);
+    border-radius: 18px;
+  }
+
+  .mini-card .mini-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #6fe5ff;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .mini-card strong {
+    display: block;
+    margin-top: 18px;
+    color: #f2f8ff;
+    font-size: 1.4rem;
+  }
+
+  .mini-card span {
+    display: block;
+    margin-top: 6px;
+    color: #8ba4b9;
+    font-size: 0.85rem;
+  }
+
+  .task-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .task-done {
+    padding: 8px 14px;
+    color: #6fe5ff;
+    background: rgba(12, 40, 59, 0.86);
+    border: 1px solid rgba(111, 229, 255, 0.12);
+    border-radius: 12px;
+    font-weight: 600;
+  }
+
+  .empty-state {
+    padding: 18px;
+    color: #8ba4b9;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(16, 33, 51, 0.96), rgba(12, 26, 42, 0.94));
+    border: 1px solid rgba(111, 229, 255, 0.08);
+    border-radius: 18px;
+  }
+
+  .tabbar {
+    position: fixed;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    padding: 10px;
+    background: rgba(7, 18, 29, 0.94);
+    border: 1px solid rgba(110, 162, 205, 0.1);
+    border-radius: 22px;
+    box-shadow: 0 16px 40px rgba(2, 12, 24, 0.34);
+    backdrop-filter: blur(8px);
+  }
+
+  .tab-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 6px;
+    color: #7f96ab;
+    background: transparent;
+    border: 0;
+    border-radius: 16px;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .tab-btn.active {
+    color: #6fe5ff;
+    background: rgba(111, 229, 255, 0.08);
   }
 
   .popup {
@@ -251,15 +507,15 @@
   .close-btn {
     padding: 9px 14px;
     color: white;
-    background: linear-gradient(135deg, #168dff, #0b72da);
-    border: none;
+    background: linear-gradient(135deg, #10283b, #15344d);
+    border: 1px solid rgba(111, 229, 255, 0.12);
     border-radius: 12px;
     cursor: pointer;
-    box-shadow: 0 10px 20px rgba(11, 114, 218, 0.18);
+    box-shadow: 0 10px 20px rgba(2, 12, 24, 0.22);
   }
 
   .secondary-btn {
-    background: linear-gradient(135deg, #0f6b78, #1792a3);
+    background: linear-gradient(135deg, #14354d, #1a4f73);
   }
 
   .helper-text {
@@ -348,22 +604,7 @@
   }
 
   .footer {
-    position: fixed;
-    right: 12px;
-    bottom: 12px;
-    left: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    color: white;
-    font-size: 14px;
-    background: rgba(0, 38, 71, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 18px;
-    box-shadow: 0 16px 40px rgba(2, 12, 24, 0.34);
-    backdrop-filter: blur(8px);
+    display: none;
   }
 
   .footer a {
@@ -377,20 +618,14 @@
     font-size: 12px;
   }
 
-  .app-shell {
-    width: min(1120px, calc(100vw - 24px));
-    margin: 0 auto;
-    padding-bottom: 92px;
-  }
-
   .hero-panel,
   .summary-strip,
   .dashboard-wrap {
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(10, 25, 40, 0.92);
+    border: 1px solid rgba(110, 162, 205, 0.08);
     border-radius: 24px;
-    box-shadow: 0 18px 40px rgba(3, 23, 43, 0.18);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 18px 40px rgba(2, 12, 24, 0.28);
+    backdrop-filter: blur(12px);
   }
 
   .hero-panel {
@@ -398,9 +633,11 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    margin: 16px 15px 14px;
+    margin: 0 0 14px;
     padding: 18px 20px;
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(224, 243, 255, 0.86));
+    background:
+      radial-gradient(circle at top right, rgba(48, 154, 210, 0.2), transparent 34%),
+      linear-gradient(180deg, rgba(12, 31, 49, 0.98), rgba(10, 24, 39, 0.96));
   }
 
   .hero-panel > h2,
@@ -410,7 +647,7 @@
 
   .hero-title {
     margin: 0;
-    color: #294763;
+    color: #6fe5ff;
     font-size: 0.82rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -419,8 +656,8 @@
 
   .hero-status {
     margin: 6px 0 0;
-    color: #17324d;
-    font-size: 1.05rem;
+    color: #f2f8ff;
+    font-size: 1.08rem;
     font-weight: 600;
   }
 
@@ -434,19 +671,20 @@
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px;
-    margin: 0 15px 14px;
+    margin: 0 0 14px;
     padding: 14px;
   }
 
   .summary-box {
     padding: 14px;
-    background: rgba(242, 248, 253, 0.9);
+    background: linear-gradient(180deg, rgba(14, 33, 52, 0.96), rgba(11, 26, 41, 0.94));
+    border: 1px solid rgba(111, 229, 255, 0.08);
     border-radius: 18px;
   }
 
   .summary-box span {
     display: block;
-    color: #55708b;
+    color: #88a3ba;
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -455,17 +693,19 @@
   .summary-box strong {
     display: block;
     margin-top: 6px;
+    color: #f2f8ff;
     font-size: 1.35rem;
   }
 
   .alert-strip {
     display: none;
-    margin: 0 15px 14px;
+    margin: 0 0 14px;
     padding: 14px 16px;
-    color: #704700;
-    background: linear-gradient(135deg, rgba(255, 240, 194, 0.96), rgba(255, 220, 112, 0.92));
+    color: #f2d78b;
+    background: linear-gradient(135deg, rgba(65, 49, 20, 0.94), rgba(84, 63, 24, 0.92));
+    border: 1px solid rgba(243, 195, 83, 0.14);
     border-radius: 18px;
-    box-shadow: 0 14px 32px rgba(120, 84, 8, 0.12);
+    box-shadow: 0 14px 32px rgba(28, 18, 3, 0.24);
   }
 
   .alert-strip.visible {
@@ -478,7 +718,7 @@
   }
 
   .dashboard-wrap {
-    margin: 0 15px;
+    margin: 0;
     padding: 18px 0 8px;
   }
 
@@ -493,19 +733,21 @@
 
   .dashboard-head h3 {
     margin: 0;
+    color: #f2f8ff;
     font-size: 1.15rem;
   }
 
   .dashboard-head p {
     margin: 6px 0 0;
-    color: #55708b;
+    color: #8ba4b9;
   }
 
   .dashboard-tag {
     padding: 8px 12px;
     font-size: 0.84rem;
     font-weight: 700;
-    background: rgba(17, 34, 55, 0.06);
+    color: #cae6ff;
+    background: rgba(111, 229, 255, 0.08);
     border-radius: 999px;
   }
 
@@ -530,28 +772,44 @@
     .summary-strip {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    .quick-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   @media (max-width: 420px) {
     header {
+      padding-inline: 14px;
       font-size: 24px;
     }
 
     .header-btn {
-      font-size: 24px;
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
     }
 
     .grid {
       gap: 10px;
-      padding: 12px;
+      padding: 10px 14px 16px;
     }
 
     .card {
+      min-height: 156px;
       font-size: 16px;
     }
 
     .grid,
     .summary-strip {
+      grid-template-columns: 1fr;
+    }
+
+    .quick-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .health-card {
       grid-template-columns: 1fr;
     }
 
@@ -706,6 +964,16 @@
 
 <script>
   const params = ["NO3", "PO4", "KH", "Ca", "Mg", "pH", "Temp", "Salinity"];
+  const parameterMeta = {
+    NO3: { label: "Nitrate", unit: "ppm" },
+    PO4: { label: "Phosphate", unit: "ppm" },
+    KH: { label: "Alkalinity", unit: "dKH" },
+    Ca: { label: "Calcium", unit: "ppm" },
+    Mg: { label: "Magnesium", unit: "ppm" },
+    pH: { label: "pH", unit: "pH" },
+    Temp: { label: "Temperature", unit: "°C" },
+    Salinity: { label: "Salinity", unit: "sg" }
+  };
   const tankPresets = {
     softy: {
       NO3: { min: 5, max: 20 },
@@ -966,16 +1234,196 @@
     }
   };
 
+  document.querySelector("header").innerHTML = `
+    <span id="listBtn" class="header-btn" onclick="showMeasurements()">&#9776;</span>
+    <div class="header-title">
+      <strong>Blue Essence</strong>
+      <span class="header-subtitle">Reef control dashboard</span>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <span id="notesBtn" class="header-btn" onclick="openNotes()">&#9998;</span>
+      <span id="settingsBtn" class="header-btn" onclick="openSettings()">&#9881;</span>
+    </div>
+  `;
+
+  document.querySelector(".hero-panel").innerHTML = `
+    <div>
+      <div class="hero-title">Today</div>
+      <div class="hero-status" id="hero-status">Pregled stanja akvarija i kljucnih zadataka.</div>
+    </div>
+    <div class="hero-actions">
+      <button class="btn-add" onclick="openPopup('input-popup')">Dodaj mjerenje</button>
+      <button class="close-btn secondary-btn" onclick="showStaleWarning(true)">Upozorenja</button>
+    </div>
+  `;
+
+  document.querySelector("main").innerHTML = `
+    <div class="app-main">
+      <section class="hero-panel">
+        <div>
+          <div class="hero-title">Today</div>
+          <div class="hero-status" id="hero-status">Pregled stanja akvarija i kljucnih zadataka.</div>
+        </div>
+        <div class="hero-actions">
+          <button class="btn-add" onclick="openPopup('input-popup')">Dodaj mjerenje</button>
+          <button class="close-btn secondary-btn" onclick="showStaleWarning(true)">Upozorenja</button>
+        </div>
+      </section>
+
+      <section class="summary-strip" id="summary-strip"></section>
+      <section class="alert-strip" id="alert-strip"></section>
+
+      <section class="view active" id="view-home">
+        <div class="section-card">
+          <div class="health-card">
+            <div class="health-ring" id="health-ring">--</div>
+            <div class="health-copy">
+              <span class="hero-title">Health score</span>
+              <strong id="health-label">Loading...</strong>
+              <p id="health-copy">Pregled stabilnosti i prioriteta za danas.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <h3>Needs Attention</h3>
+              <p>Najvažnije stvari koje traže reakciju.</p>
+            </div>
+          </div>
+          <div class="attention-list" id="attention-list"></div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <h3>Quick Parameters</h3>
+              <p>Najbitnije vrijednosti za brzi pregled.</p>
+            </div>
+          </div>
+          <div class="quick-grid" id="quick-grid"></div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <h3>Parameter Trends</h3>
+              <p>Što raste, pada ili ostaje stabilno.</p>
+            </div>
+          </div>
+          <div class="trend-list" id="trend-list"></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-params">
+        <section class="dashboard-wrap">
+          <div class="dashboard-head">
+            <div>
+              <h3>Parameters</h3>
+              <p>Dodirni karticu za trend, status i preporuke.</p>
+            </div>
+            <div class="dashboard-tag" id="dashboard-tag">Updated -</div>
+          </div>
+          <div class="grid" id="dashboard"></div>
+        </section>
+      </section>
+
+      <section class="view" id="view-tasks">
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <h3>Tasks</h3>
+              <p>Rutine i zadaci koji dolaze na red.</p>
+            </div>
+          </div>
+          <div class="tasks-list" id="tasks-list"></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-logbook">
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <h3>Logbook</h3>
+              <p>Zadnje bilješke i ključni unosi.</p>
+            </div>
+          </div>
+          <div class="log-list" id="log-list"></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-more">
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <h3>More</h3>
+              <p>Postavke, mjerenja i dodatne opcije.</p>
+            </div>
+          </div>
+          <div class="tasks-list">
+            <div class="task-item">
+              <div class="task-row">
+                <div>
+                  <strong>Mjerenja</strong>
+                  <p>Pregled svih spremljenih mjerenja.</p>
+                </div>
+                <button class="task-done" onclick="showMeasurements()">Open</button>
+              </div>
+            </div>
+            <div class="task-item">
+              <div class="task-row">
+                <div>
+                  <strong>Bilješke</strong>
+                  <p>Dodaj ili pregledaj bilješke o tanku.</p>
+                </div>
+                <button class="task-done" onclick="openNotes()">Open</button>
+              </div>
+            </div>
+            <div class="task-item">
+              <div class="task-row">
+                <div>
+                  <strong>Postavke</strong>
+                  <p>Rasponi, Elitech i konfiguracija akvarija.</p>
+                </div>
+                <button class="task-done" onclick="openSettings()">Open</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  `;
+
+  document.querySelector("body").insertAdjacentHTML("beforeend", `
+    <nav class="tabbar" id="tabbar">
+      <button class="tab-btn active" data-view="home" onclick="setActiveView('home')">Home</button>
+      <button class="tab-btn" data-view="params" onclick="setActiveView('params')">Params</button>
+      <button class="tab-btn" data-view="tasks" onclick="setActiveView('tasks')">Tasks</button>
+      <button class="tab-btn" data-view="logbook" onclick="setActiveView('logbook')">Log</button>
+      <button class="tab-btn" data-view="more" onclick="setActiveView('more')">More</button>
+    </nav>
+  `);
+
   const dashboard = document.getElementById("dashboard");
   const summaryStrip = document.getElementById("summary-strip");
   const alertStrip = document.getElementById("alert-strip");
   const dashboardTag = document.getElementById("dashboard-tag");
   const heroStatus = document.getElementById("hero-status");
+  const attentionList = document.getElementById("attention-list");
+  const quickGrid = document.getElementById("quick-grid");
+  const trendList = document.getElementById("trend-list");
+  const tasksList = document.getElementById("tasks-list");
+  const logList = document.getElementById("log-list");
+  const healthRing = document.getElementById("health-ring");
+  const healthLabel = document.getElementById("health-label");
+  const healthCopy = document.getElementById("health-copy");
   let measurements = parseStoredArray("measurements");
   let notes = parseStoredArray("notes");
   let settings = parseStoredObject("settings");
   let chart;
   let liveTemperature = null;
+  let activeView = "home";
 
   function parseStoredArray(key) {
     try {
@@ -1160,6 +1608,214 @@
     }
   }
 
+  function getHealthScore(staleCount, outOfRangeCount) {
+    const score = 100 - (staleCount * 8) - (outOfRangeCount * 12);
+    return Math.max(42, Math.min(100, score));
+  }
+
+  function setActiveView(view) {
+    activeView = view;
+    document.querySelectorAll(".view").forEach((section) => {
+      section.classList.toggle("active", section.id === `view-${view}`);
+    });
+    document.querySelectorAll(".tab-btn").forEach((button) => {
+      button.classList.toggle("active", button.dataset.view === view);
+    });
+  }
+
+  function getTrendSummary(param) {
+    const relevant = getSortedMeasurements("asc")
+      .filter((measurement) => measurement[param] && !Number.isNaN(parseFloat(measurement[param])))
+      .slice(-2);
+
+    if (relevant.length < 2) {
+      return null;
+    }
+
+    const previous = parseFloat(relevant[0][param]);
+    const current = parseFloat(relevant[1][param]);
+    if (Number.isNaN(previous) || Number.isNaN(current)) {
+      return null;
+    }
+
+    const diff = current - previous;
+    if (Math.abs(diff) < 0.001) {
+      return { direction: "stable", text: `${param} je stabilan kroz zadnja ocitanja.` };
+    }
+
+    return diff > 0
+      ? { direction: "up", text: `${param} pokazuje uzlazni trend kroz zadnja ocitanja.` }
+      : { direction: "down", text: `${param} pokazuje silazni trend kroz zadnja ocitanja.` };
+  }
+
+  function renderHomeExtras() {
+    const latestValues = getLatestValues();
+    const staleItems = getStaleItems();
+    const outOfRange = params.filter((param) => {
+      const value = parseFloat(latestValues[param].value);
+      const min = parseFloat(settings[param]?.min);
+      const max = parseFloat(settings[param]?.max);
+      return !Number.isNaN(value) && ((!Number.isNaN(min) && value < min) || (!Number.isNaN(max) && value > max));
+    });
+    const healthScore = getHealthScore(staleItems.length, outOfRange.length);
+
+    healthRing.textContent = String(healthScore);
+    healthRing.style.setProperty("--ring-angle", `${Math.round((healthScore / 100) * 360)}deg`);
+    healthLabel.textContent = healthScore >= 86 ? "Looking Great" : healthScore >= 70 ? "Needs Light Attention" : "Stability At Risk";
+    healthCopy.textContent = staleItems.length > 0
+      ? `Najveći prioritet je osvježiti ${staleItems.length} zastarjela mjerenja i vratiti redovno testiranje.`
+      : outOfRange.length > 0
+        ? `Trenutno su ${outOfRange.length} parametra izvan raspona pa vrijedi reagirati postupno i pratiti trend.`
+        : "Zadnja očitanja izgledaju uredno i sustav djeluje stabilno kroz glavne parametre.";
+
+    const attentionItems = [];
+    staleItems.forEach((item) => {
+      attentionItems.push({
+        variant: "warning",
+        title: `${item.param} traži novo mjerenje`,
+        text: `Zadnje mjerenje je starije od 7 dana. Vrijeme je za novo očitanje i provjeru trenda.`
+      });
+    });
+
+    outOfRange.forEach((param) => {
+      const value = latestValues[param]?.value ?? "-";
+      attentionItems.push({
+        variant: "danger",
+        title: `${param} je izvan raspona`,
+        text: `Zadnja vrijednost je ${value}. Otvori parametar i pogledaj graf i preporuke za korekciju.`
+      });
+    });
+
+    attentionList.innerHTML = attentionItems.length
+      ? attentionItems.slice(0, 3).map((item) => `
+          <div class="attention-item ${item.variant}">
+            <strong>${escapeHtml(item.title)}</strong>
+            <p>${escapeHtml(item.text)}</p>
+          </div>
+        `).join("")
+      : `<div class="empty-state">Sve izgleda uredno. Trenutno nema hitnih upozorenja.</div>`;
+
+    quickGrid.innerHTML = ["Salinity", "pH", "KH", "Ca"].map((param) => {
+      const meta = parameterMeta[param];
+      const value = latestValues[param]?.value ?? "-";
+      const min = parseFloat(settings[param]?.min);
+      const max = parseFloat(settings[param]?.max);
+      const status = getStatusMarkup(parseFloat(value), min, max);
+      return `
+        <div class="mini-card" onclick="openGraph('${param}')">
+          <div class="mini-top"><span>${param}</span><span>${status.icon}</span></div>
+          <strong>${escapeHtml(String(value))}</strong>
+          <span>${escapeHtml(meta.label)}</span>
+        </div>
+      `;
+    }).join("");
+
+    const trendItems = params
+      .map((param) => ({ param, trend: getTrendSummary(param) }))
+      .filter((entry) => entry.trend)
+      .slice(0, 3);
+
+    trendList.innerHTML = trendItems.length
+      ? trendItems.map(({ param, trend }) => `
+          <div class="trend-item">
+            <strong>${escapeHtml(param)}</strong>
+            <p>${escapeHtml(trend.text)}</p>
+          </div>
+        `).join("")
+      : `<div class="empty-state">Još nema dovoljno mjerenja za trend analizu.</div>`;
+  }
+
+  function getTaskItems() {
+    const staleItems = getStaleItems().map((item) => ({
+      title: `Izmjeri ${item.param}`,
+      meta: "Priority task",
+      text: `Zadnje mjerenje je starije od 7 dana.`
+    }));
+
+    const routineTasks = [
+      { title: "Test water parameters", meta: "Weekly", text: "Odradi kompletno tjedno testiranje glavnih parametara." },
+      { title: "Water change (10%)", meta: "Weekly", text: "Rutinska izmjena vode za stabilnost sustava." },
+      { title: "Clean glass", meta: "Every few days", text: "Brzo čišćenje stakla i vizualna provjera tanka." },
+      { title: "Replace filter floss", meta: "Biweekly", text: "Zamijeni mehanički medij i provjeri protok." }
+    ];
+
+    return [...staleItems, ...routineTasks].slice(0, 6);
+  }
+
+  function renderTasksView() {
+    const tasks = getTaskItems();
+    tasksList.innerHTML = tasks.length
+      ? tasks.map((task) => `
+          <div class="task-item">
+            <div class="task-row">
+              <div>
+                <strong>${escapeHtml(task.title)}</strong>
+                <p>${escapeHtml(task.meta)} · ${escapeHtml(task.text)}</p>
+              </div>
+              <button class="task-done" onclick="openPopup('input-popup')">Done</button>
+            </div>
+          </div>
+        `).join("")
+      : `<div class="empty-state">Nema otvorenih zadataka. Sustav izgleda uredno.</div>`;
+  }
+
+  function renderLogbookView() {
+    const latestNotes = [...notes].reverse().slice(0, 5);
+    logList.innerHTML = latestNotes.length
+      ? latestNotes.map((note) => `
+          <div class="log-item">
+            <strong>${escapeHtml(formatDate(note.date))}</strong>
+            <p>${escapeHtml(note.text)}</p>
+          </div>
+        `).join("")
+      : `<div class="empty-state">Još nema bilješki. Dodaj opažanja, izmjene vode ili doziranje.</div>`;
+  }
+
+  function renderPremiumOverview() {
+    const latestValues = getLatestValues();
+    const staleItems = getStaleItems();
+    const lastMeasurement = measurements.length ? getSortedMeasurements("desc")[0].date : "-";
+    const outOfRange = params.filter((param) => {
+      const value = parseFloat(latestValues[param].value);
+      const min = parseFloat(settings[param]?.min);
+      const max = parseFloat(settings[param]?.max);
+      return !Number.isNaN(value) && ((!Number.isNaN(min) && value < min) || (!Number.isNaN(max) && value > max));
+    });
+    const healthScore = getHealthScore(staleItems.length, outOfRange.length);
+
+    summaryStrip.innerHTML = [
+      { label: "Health", value: `${healthScore}` },
+      { label: "Entries", value: String(measurements.length) },
+      { label: "Due", value: String(staleItems.length) },
+      { label: "Temp", value: liveTemperature?.temperature !== undefined ? `${liveTemperature.temperature}${liveTemperature.unit || "°C"}` : "Manual" }
+    ].map((item) => `
+      <div class="summary-box">
+        <span>${item.label}</span>
+        <strong>${escapeHtml(item.value)}</strong>
+      </div>
+    `).join("");
+
+    dashboardTag.textContent = `Updated ${formatDate(lastMeasurement)}`;
+
+    if (staleItems.length > 0) {
+      alertStrip.classList.add("visible");
+      alertStrip.innerHTML = `<strong>Needs attention</strong>${escapeHtml(staleItems.map((item) => item.param).join(", "))} cekaju novo mjerenje dulje od 7 dana.`;
+      heroStatus.textContent = `${staleItems.length} parametra cekaju novo mjerenje.`;
+    } else {
+      alertStrip.classList.remove("visible");
+      alertStrip.innerHTML = "";
+      heroStatus.textContent = outOfRange.length > 0
+        ? `${outOfRange.length} parametra su izvan raspona.`
+        : "Sustav izgleda stabilno i spreman je za brzi pregled.";
+    }
+
+    if (liveTemperature?.temperature !== undefined) {
+      setElitechStatus(`Live Temp: ${liveTemperature.temperature}${liveTemperature.unit || "°C"}`);
+    } else if (outOfRange.length > 0) {
+      setElitechStatus(`Provjeri: ${outOfRange.join(", ")}`);
+    }
+  }
+
   function getSortedMeasurements(direction = "asc") {
     const sorted = [...measurements];
     sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -1251,32 +1907,38 @@
       };
     }
 
-    params.forEach((param) => {
-      const value = parseFloat(lastValues[param].value);
-      const min = parseFloat(settings[param]?.min);
-      const max = parseFloat(settings[param]?.max);
-      const status = getStatusMarkup(value, min, max);
-      const daysSince = getDaysSince(lastValues[param].date);
-      const isStale = daysSince !== null && daysSince > 7;
-      const staleMarkup = isStale
-        ? `<span class="stale-note">Zadnje mjerenje prije ${daysSince} dana</span>`
-        : "";
+      params.forEach((param) => {
+        const value = parseFloat(lastValues[param].value);
+        const min = parseFloat(settings[param]?.min);
+        const max = parseFloat(settings[param]?.max);
+        const status = getStatusMarkup(value, min, max);
+        const meta = parameterMeta[param] || { label: param, unit: "" };
+        const daysSince = getDaysSince(lastValues[param].date);
+        const isStale = daysSince !== null && daysSince > 7;
+        const staleMarkup = isStale
+          ? `<span class="stale-note">Zadnje mjerenje prije ${daysSince} dana</span>`
+          : "";
       const cardClasses = [status.cardClass, isStale ? "stale-card" : ""].filter(Boolean).join(" ");
 
-      dashboard.innerHTML += `
-        <div class="card ${cardClasses}" onclick="openGraph('${param}')">
-          <div class="card-top">
-            <div class="param-name">${param}</div>
-            <div class="param-status">${status.icon}</div>
-          </div>
-          <div class="param-value">${escapeHtml(lastValues[param].value)}</div>
-          <small class="param-date">${escapeHtml(formatDate(lastValues[param].date))}</small>
-          ${staleMarkup}
-        </div>`;
-    });
-
-    renderOverview();
-  }
+        dashboard.innerHTML += `
+          <div class="card ${cardClasses}" onclick="openGraph('${param}')">
+            <div class="card-top">
+              <div class="param-name">${param}</div>
+              <div class="param-status">${status.icon}</div>
+            </div>
+            <div class="param-value">${escapeHtml(lastValues[param].value)}</div>
+            <span class="param-label">${escapeHtml(meta.label)}</span>
+            <span class="param-unit">${escapeHtml(meta.unit)}</span>
+            <small class="param-date">${escapeHtml(formatDate(lastValues[param].date))}</small>
+            ${staleMarkup}
+          </div>`;
+      });
+  
+        renderPremiumOverview();
+        renderHomeExtras();
+        renderTasksView();
+        renderLogbookView();
+      }
 
   function showStaleWarning() {
     const latestValues = getLatestValues();
