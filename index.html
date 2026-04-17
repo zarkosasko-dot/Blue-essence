@@ -2234,6 +2234,132 @@
     `;
   }
 
+  function renderHomeExtrasFixed() {
+    if (!healthRing || !healthLabel || !healthCopy || !attentionList || !quickGrid || !trendList) {
+      return;
+    }
+
+    const latestValues = getLatestValues();
+    const staleItems = getStaleItems();
+    const outOfRange = params.filter((param) => {
+      const value = parseFloat(latestValues[param].value);
+      const min = parseFloat(settings[param]?.min);
+      const max = parseFloat(settings[param]?.max);
+      return !Number.isNaN(value) && ((!Number.isNaN(min) && value < min) || (!Number.isNaN(max) && value > max));
+    });
+    const analysis = getHealthAnalysis();
+
+    healthRing.textContent = String(analysis.score);
+    healthRing.style.setProperty("--ring-angle", `${Math.round((analysis.score / 100) * 360)}deg`);
+    healthRing.style.setProperty("--ring-color", analysis.color);
+    healthLabel.textContent = analysis.label;
+    healthLabel.style.color = analysis.color;
+    healthCopy.textContent = analysis.staleCount > 0
+      ? `Najveći prioritet je osvježiti ${analysis.staleCount} zastarjela mjerenja i vratiti redovno testiranje.`
+      : analysis.severeCount > 0
+        ? "Ima ozbiljnijih odstupanja pa vrijedi reagirati postupno i pratiti trend, bez panike."
+        : analysis.mildCount > 0
+          ? "Postoje manja odstupanja unutar oko 5% tolerancije. Prati trend i ne radi nagle korekcije."
+          : "Zadnja očitanja izgledaju uredno i sustav djeluje stabilno kroz glavne parametre.";
+
+    const attentionItems = [];
+    staleItems.forEach((item) => {
+      attentionItems.push({
+        variant: "warning",
+        title: `${item.param} traži novo mjerenje`,
+        text: "Zadnje mjerenje je starije od 7 dana. Vrijeme je za novo očitanje i provjeru trenda."
+      });
+    });
+
+    outOfRange.forEach((param) => {
+      const value = latestValues[param]?.value ?? "-";
+      attentionItems.push({
+        variant: "danger",
+        title: `${param} je izvan raspona`,
+        text: `Zadnja vrijednost je ${value}. Otvori parametar i pogledaj graf i preporuke za korekciju.`
+      });
+    });
+
+    attentionList.innerHTML = attentionItems.length
+      ? attentionItems.slice(0, 3).map((item) => `
+          <div class="attention-item ${item.variant}">
+            <strong>${escapeHtml(item.title)}</strong>
+            <p>${escapeHtml(item.text)}</p>
+          </div>
+        `).join("")
+      : `<div class="empty-state">Sve izgleda uredno. Trenutno nema hitnih upozorenja.</div>`;
+
+    quickGrid.innerHTML = ["Salinity", "pH", "KH", "Ca"].map((param) => {
+      const meta = parameterMeta[param];
+      const value = latestValues[param]?.value ?? "-";
+      const min = parseFloat(settings[param]?.min);
+      const max = parseFloat(settings[param]?.max);
+      const status = getStatusMarkup(parseFloat(value), min, max);
+      return `
+        <div class="mini-card" onclick="openGraph('${param}')">
+          <div class="mini-top"><span>${param}</span><span>${status.icon}</span></div>
+          <strong>${escapeHtml(String(value))}</strong>
+          <span>${escapeHtml(meta.label)}</span>
+        </div>
+      `;
+    }).join("");
+
+    const trendItems = params
+      .map((param) => ({ param, trend: getTrendSummary(param) }))
+      .filter((entry) => entry.trend)
+      .slice(0, 3);
+
+    trendList.innerHTML = trendItems.length
+      ? trendItems.map(({ param, trend }) => `
+          <div class="trend-item">
+            <strong>${escapeHtml(param)}</strong>
+            <p>${escapeHtml(trend.text)}</p>
+          </div>
+        `).join("")
+      : `<div class="empty-state">Još nema dovoljno mjerenja za trend analizu.</div>`;
+  }
+
+  function renderPremiumOverviewFixed() {
+    const staleItems = getStaleItems();
+    const lastMeasurement = measurements.length ? getSortedMeasurements("desc")[0].date : "-";
+    const latestValues = getLatestValues();
+    const outOfRange = params.filter((param) => {
+      const value = parseFloat(latestValues[param].value);
+      const min = parseFloat(settings[param]?.min);
+      const max = parseFloat(settings[param]?.max);
+      return !Number.isNaN(value) && ((!Number.isNaN(min) && value < min) || (!Number.isNaN(max) && value > max));
+    });
+    const analysis = getHealthAnalysis();
+
+    summaryStrip.innerHTML = [
+      { label: "Stanje", value: `${analysis.score}` },
+      { label: "Unosi", value: String(measurements.length) },
+      { label: "Kasni", value: String(staleItems.length) },
+      { label: "Temp", value: "Ručni unos" }
+    ].map((item) => `
+      <div class="summary-box">
+        <span>${item.label}</span>
+        <strong>${escapeHtml(item.value)}</strong>
+      </div>
+    `).join("");
+
+    dashboardTag.textContent = `Ažurirano ${formatDate(lastMeasurement)}`;
+
+    if (staleItems.length > 0) {
+      alertStrip.classList.add("visible");
+      alertStrip.innerHTML = `<strong>Treba pažnju</strong>${escapeHtml(staleItems.map((item) => item.param).join(", "))} čekaju novo mjerenje dulje od 7 dana.`;
+      setHeroStatusText(`${staleItems.length} parametra čekaju novo mjerenje.`);
+    } else {
+      alertStrip.classList.remove("visible");
+      alertStrip.innerHTML = "";
+      setHeroStatusText(
+        outOfRange.length > 0
+          ? `${outOfRange.length} parametra su izvan raspona.`
+          : "Sustav izgleda stabilno i spreman je za brzi pregled."
+      );
+    }
+  }
+
   function renderDashboard() {
     dashboard.innerHTML = "";
     renderTankHero();
@@ -2275,8 +2401,8 @@
     });
 
     try {
-      renderPremiumOverview();
-      renderHomeExtras();
+      renderPremiumOverviewFixed();
+      renderHomeExtrasFixed();
       renderTasksView();
       renderLogbookView();
     } catch (error) {
