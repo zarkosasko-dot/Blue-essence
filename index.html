@@ -888,20 +888,20 @@
 </head>
 <body>
 <header>
-  <span id="listBtn" class="header-btn" onclick="showMeasurements()">📊</span>
+  <span id="listBtn" class="header-btn" onclick="showMeasurements()">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÂ </span>
   Blue Essence
-  <span id="notesBtn" class="header-btn" onclick="openNotes()">📝</span>
-  <span id="settingsBtn" class="header-btn" onclick="openSettings()">⚙️</span>
+  <span id="notesBtn" class="header-btn" onclick="openNotes()">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÄ„</span>
+  <span id="settingsBtn" class="header-btn" onclick="openSettings()">Ä‚ËÄąË‡Ă˘â€žËĂ„ĹąĂ‚Â¸ÄąÄ…</span>
 </header>
 
 <main>
   <section class="hero-panel">
     <h2 class="hero-title">Reef tank pregled bez kaosa.</h2>
-    <p class="hero-copy">Sve najbitnije vrijednosti, bilješke, upozorenja i priprema za Elitech temperaturu sada su složeni tako da odmah vidiš što je stabilno, što kasni i što trebaš izmjeriti dalje.</p>
-    <p class="hero-copy">Sve najbitnije vrijednosti, bilješke, upozorenja i priprema za Elitech temperaturu sada su složeni tako da odmah vidiš što je stabilno, što kasni i što trebaš izmjeriti dalje.</p>
+    <p class="hero-copy">Sve najbitnije vrijednosti, biljeĂ„Ä…Ă‹â€ˇke, upozorenja i priprema za Elitech temperaturu sada su sloĂ„Ä…Ă„Äľeni tako da odmah vidiĂ„Ä…Ă‹â€ˇ Ă„Ä…Ă‹â€ˇto je stabilno, Ă„Ä…Ă‹â€ˇto kasni i Ă„Ä…Ă‹â€ˇto trebaĂ„Ä…Ă‹â€ˇ izmjeriti dalje.</p>
+    <p class="hero-copy">Sve najbitnije vrijednosti, biljeĂ„Ä…Ă‹â€ˇke, upozorenja i priprema za Elitech temperaturu sada su sloĂ„Ä…Ă„Äľeni tako da odmah vidiĂ„Ä…Ă‹â€ˇ Ă„Ä…Ă‹â€ˇto je stabilno, Ă„Ä…Ă‹â€ˇto kasni i Ă„Ä…Ă‹â€ˇto trebaĂ„Ä…Ă‹â€ˇ izmjeriti dalje.</p>
     <div>
       <div class="hero-title">Blue Essence Dashboard</div>
-      <div class="hero-status" id="hero-status">Pregled stanja akvarija i ključnih zadataka.</div>
+      <div class="hero-status" id="hero-status">Pregled stanja akvarija i kljuÄ‚â€žÄąÂ¤nih zadataka.</div>
     </div>
     <div class="hero-actions">
       <button class="btn-add" onclick="openPopup('input-popup')">Dodaj mjerenje</button>
@@ -939,7 +939,7 @@
     <div class="popup-actions">
       <button class="close-btn secondary-btn" onclick="fillTempFromElitech()">Dohvati Elitech temp</button>
     </div>
-    <div class="helper-text" id="temp-sync-status">Elitech temperatura još nije dohvaćena.</div>
+    <div class="helper-text" id="temp-sync-status">Elitech temperatura joĂ„Ä…Ă‹â€ˇ nije dohvaÄ‚â€žĂ˘â‚¬Ë‡ena.</div>
     <div class="popup-actions">
       <button class="close-btn" onclick="saveMeasurement()">Spremi</button>
       <button class="close-btn" onclick="closePopup('input-popup')">Odustani</button>
@@ -968,9 +968,9 @@
       <tbody id="settings-table"></tbody>
     </table>
     <h4>Elitech temperatura</h4>
-    <label><input id="elitechEnabled" type="checkbox"> Uključi Elitech dohvat</label>
+    <label><input id="elitechEnabled" type="checkbox"> UkljuÄ‚â€žÄąÂ¤i Elitech dohvat</label>
     <input id="elitechProxyUrl" type="text" placeholder="https://tvoj-proxy.example.com/api/elitech-temperature">
-    <p class="helper-text">Upiši adresu svog Elitech proxy endpointa. Temperatura će se prikazati na postojećoj Temp kartici.</p>
+    <p class="helper-text">UpiĂ„Ä…Ă‹â€ˇi adresu svog Elitech proxy endpointa. Temperatura Ä‚â€žĂ˘â‚¬Ë‡e se prikazati na postojeÄ‚â€žĂ˘â‚¬Ë‡oj Temp kartici.</p>
     <div class="popup-actions">
       <button class="close-btn secondary-btn" onclick="testElitechConnection()">Testiraj Elitech vezu</button>
     </div>
@@ -1016,11 +1016,11 @@
 
 <div class="popup" id="notes-popup">
   <div class="popup-content">
-    <h3>Bilješke</h3>
+    <h3>BiljeĂ„Ä…Ă‹â€ˇke</h3>
     <input id="noteDate" type="date">
-    <textarea id="noteText" rows="3" placeholder="Upiši bilješku..."></textarea>
-    <button class="close-btn" onclick="saveNote()">Spremi bilješku</button>
-    <input id="noteSearch" type="text" placeholder="Pretraži bilješke..." oninput="filterNotes()">
+    <textarea id="noteText" rows="3" placeholder="UpiĂ„Ä…Ă‹â€ˇi biljeĂ„Ä…Ă‹â€ˇku..."></textarea>
+    <button class="close-btn" onclick="saveNote()">Spremi biljeĂ„Ä…Ă‹â€ˇku</button>
+    <input id="noteSearch" type="text" placeholder="PretraĂ„Ä…Ă„Äľi biljeĂ„Ä…Ă‹â€ˇke..." oninput="filterNotes()">
     <div id="notes-container"></div>
     <div class="popup-actions">
       <button class="close-btn" onclick="closePopup('notes-popup')">Zatvori</button>
@@ -1037,7 +1037,7 @@
     Ca: { label: "Calcium", unit: "ppm" },
     Mg: { label: "Magnesium", unit: "ppm" },
     pH: { label: "pH", unit: "pH" },
-    Temp: { label: "Temperature", unit: "°C" },
+    Temp: { label: "Temperature", unit: "Ä‚â€šĂ‚Â°C" },
     Salinity: { label: "Salinity", unit: "sg" }
   };
   const tankPresets = {
@@ -1077,48 +1077,48 @@
     NO3: {
       low: {
         title: "NO3 prenizak",
-        intro: "Prenizak nitrat često znači da je sustav previše sterilno čist za stabilan reef.",
+        intro: "Prenizak nitrat Ä‚â€žÄąÂ¤esto znaÄ‚â€žÄąÂ¤i da je sustav previĂ„Ä…Ă‹â€ˇe sterilno Ä‚â€žÄąÂ¤ist za stabilan reef.",
         actions: [
-          "Smanji agresivni export ako koristiš prejak skimmer ili previše medija.",
-          "Povećaj hranjenje postupno i promatraj reakciju kroz nekoliko dana.",
-          "Izbjegavaj nagle korekcije dok ne vidiš stabilan trend."
+          "Smanji agresivni export ako koristiĂ„Ä…Ă‹â€ˇ prejak skimmer ili previĂ„Ä…Ă‹â€ˇe medija.",
+          "PoveÄ‚â€žĂ˘â‚¬Ë‡aj hranjenje postupno i promatraj reakciju kroz nekoliko dana.",
+          "Izbjegavaj nagle korekcije dok ne vidiĂ„Ä…Ă‹â€ˇ stabilan trend."
         ]
       },
       high: {
         title: "NO3 previsok",
-        intro: "Povišen nitrat najčešće upućuje na višak organskog opterećenja ili slabiji export.",
+        intro: "PoviĂ„Ä…Ă‹â€ˇen nitrat najÄ‚â€žÄąÂ¤eĂ„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬Ë‡e upuÄ‚â€žĂ˘â‚¬Ë‡uje na viĂ„Ä…Ă‹â€ˇak organskog optereÄ‚â€žĂ˘â‚¬Ë‡enja ili slabiji export.",
         actions: [
-          "Provjeri količinu hrane i ostatke u akvariju.",
+          "Provjeri koliÄ‚â€žÄąÂ¤inu hrane i ostatke u akvariju.",
           "Napravi umjerenu izmjenu vode i provjeri radi li skimmer kako treba.",
-          "Čisti filtere i razmotri postupno pojačanje exporta."
+          "Ä‚â€žÄąĹˇisti filtere i razmotri postupno pojaÄ‚â€žÄąÂ¤anje exporta."
         ]
       },
       ok: {
         title: "NO3 je uredan",
         intro: "Vrijednost je u sigurnom rasponu.",
         actions: [
-          "Nastavi pratiti trend, ne samo jednu pojedinačnu vrijednost.",
-          "Bilježi promjene u hranjenju ili exportu kad god ih radiš."
+          "Nastavi pratiti trend, ne samo jednu pojedinaÄ‚â€žÄąÂ¤nu vrijednost.",
+          "BiljeĂ„Ä…Ă„Äľi promjene u hranjenju ili exportu kad god ih radiĂ„Ä…Ă‹â€ˇ."
         ]
       }
     },
     PO4: {
       low: {
         title: "PO4 prenizak",
-        intro: "Prenizak fosfat može dovesti do blijedih koralja i nestabilnog rasta.",
+        intro: "Prenizak fosfat moĂ„Ä…Ă„Äľe dovesti do blijedih koralja i nestabilnog rasta.",
         actions: [
-          "Smanji fosfatne medije ako ih koristiš.",
-          "Povećaj hranjenje pažljivo i prati promjenu kroz nekoliko dana.",
-          "Ne diži vrijednost naglo bez praćenja NO3 i općeg balansa."
+          "Smanji fosfatne medije ako ih koristiĂ„Ä…Ă‹â€ˇ.",
+          "PoveÄ‚â€žĂ˘â‚¬Ë‡aj hranjenje paĂ„Ä…Ă„Äľljivo i prati promjenu kroz nekoliko dana.",
+          "Ne diĂ„Ä…Ă„Äľi vrijednost naglo bez praÄ‚â€žĂ˘â‚¬Ë‡enja NO3 i opÄ‚â€žĂ˘â‚¬Ë‡eg balansa."
         ]
       },
       high: {
         title: "PO4 previsok",
-        intro: "Povišen fosfat često dolazi uz previše hrane, detritus ili slab export.",
+        intro: "PoviĂ„Ä…Ă‹â€ˇen fosfat Ä‚â€žÄąÂ¤esto dolazi uz previĂ„Ä…Ă‹â€ˇe hrane, detritus ili slab export.",
         actions: [
           "Provjeri hranjenje i nakupljanje otpada po dnu i filterima.",
           "Napravi umjerenu izmjenu vode i po potrebi uvedi fosfatni medij.",
-          "Snižavaj postupno da ne šokiraš sustav."
+          "SniĂ„Ä…Ă„Äľavaj postupno da ne Ă„Ä…Ă‹â€ˇokiraĂ„Ä…Ă‹â€ˇ sustav."
         ]
       },
       ok: {
@@ -1126,26 +1126,26 @@
         intro: "Fosfat izgleda stabilno.",
         actions: [
           "Prati odnos NO3 i PO4, ne samo jednu vrijednost.",
-          "Nastavi s istim ritmom održavanja ako su koralji stabilni."
+          "Nastavi s istim ritmom odrÄąÄľavanja ako su koralji stabilni."
         ]
       }
     },
     KH: {
       low: {
         title: "KH prenizak",
-        intro: "Nizak KH smanjuje stabilnost sustava i može uzrokovati stres koraljima.",
+        intro: "Nizak KH smanjuje stabilnost sustava i moĂ„Ä…Ă„Äľe uzrokovati stres koraljima.",
         actions: [
-          "Provjeri troši li akvarij više alkaliniteta nego što nadoknađuješ.",
-          "Povećaj doziranje postupno, bez naglih skokova.",
+          "Provjeri troĂ„Ä…Ă‹â€ˇi li akvarij viĂ„Ä…Ă‹â€ˇe alkaliniteta nego Ă„Ä…Ă‹â€ˇto nadoknaÄ‚â€žĂ˘â‚¬ÂujeĂ„Ä…Ă‹â€ˇ.",
+          "PoveÄ‚â€žĂ˘â‚¬Ë‡aj doziranje postupno, bez naglih skokova.",
           "Prati pH i Ca paralelno uz korekciju."
         ]
       },
       high: {
         title: "KH previsok",
-        intro: "Previsok KH zna izazvati nestabilnost i loše reakcije osjetljivijih koralja.",
+        intro: "Previsok KH zna izazvati nestabilnost i loĂ„Ä…Ă‹â€ˇe reakcije osjetljivijih koralja.",
         actions: [
-          "Provjeri da ne doziraš previše ili prečesto.",
-          "Smanji korekcije postupno i pusti sustav da troši višak.",
+          "Provjeri da ne doziraĂ„Ä…Ă‹â€ˇ previĂ„Ä…Ă‹â€ˇe ili preÄ‚â€žÄąÂ¤esto.",
+          "Smanji korekcije postupno i pusti sustav da troĂ„Ä…Ă‹â€ˇi viĂ„Ä…Ă‹â€ˇak.",
           "Nemoj raditi nagli pad kroz jedan dan."
         ]
       },
@@ -1153,91 +1153,91 @@
         title: "KH je uredan",
         intro: "Alkalinitet je unutar raspona.",
         actions: [
-          "Za reef je važnija stabilnost nego savršena brojka.",
-          "Prati dnevni ili tjedni pad ako imaš veći broj koralja."
+          "Za reef je vaĂ„Ä…Ă„Äľnija stabilnost nego savrĂ„Ä…Ă‹â€ˇena brojka.",
+          "Prati dnevni ili tjedni pad ako imaĂ„Ä…Ă‹â€ˇ veÄ‚â€žĂ˘â‚¬Ë‡i broj koralja."
         ]
       }
     },
     Ca: {
       low: {
         title: "Ca prenizak",
-        intro: "Nizak kalcij može usporiti rast i oporavak tvrdih koralja.",
+        intro: "Nizak kalcij moĂ„Ä…Ă„Äľe usporiti rast i oporavak tvrdih koralja.",
         actions: [
           "Provjeri doziranje kalcija i odnos s KH i Mg.",
           "Korigiraj postepeno, ne sve odjednom.",
-          "Ako se brzo troši, prati i stvarnu dnevnu potrošnju."
+          "Ako se brzo troĂ„Ä…Ă‹â€ˇi, prati i stvarnu dnevnu potroĂ„Ä…Ă‹â€ˇnju."
         ]
       },
       high: {
         title: "Ca previsok",
-        intro: "Previsok kalcij može narušiti balans s alkalinitetom i magnezijem.",
+        intro: "Previsok kalcij moĂ„Ä…Ă„Äľe naruĂ„Ä…Ă‹â€ˇiti balans s alkalinitetom i magnezijem.",
         actions: [
           "Smanji doziranje kalcija na neko vrijeme.",
-          "Provjeri jesu li testovi i doziranje točni.",
-          "Pusti sustav da prirodno potroši višak prije jačih intervencija."
+          "Provjeri jesu li testovi i doziranje toÄ‚â€žÄąÂ¤ni.",
+          "Pusti sustav da prirodno potroĂ„Ä…Ă‹â€ˇi viĂ„Ä…Ă‹â€ˇak prije jaÄ‚â€žÄąÂ¤ih intervencija."
         ]
       },
       ok: {
         title: "Ca je uredan",
         intro: "Kalcij izgleda stabilno.",
         actions: [
-          "Drži fokus na odnosu Ca, KH i Mg kao cjelini.",
-          "Ako koralji brzo rastu, prati trend trošenja."
+          "DrĂ„Ä…Ă„Äľi fokus na odnosu Ca, KH i Mg kao cjelini.",
+          "Ako koralji brzo rastu, prati trend troĂ„Ä…Ă‹â€ˇenja."
         ]
       }
     },
     Mg: {
       low: {
         title: "Mg prenizak",
-        intro: "Nizak magnezij otežava stabilnost kalcija i alkaliniteta.",
+        intro: "Nizak magnezij oteĂ„Ä…Ă„Äľava stabilnost kalcija i alkaliniteta.",
         actions: [
-          "Korigiraj magnezij postupno kroz više dana.",
-          "Provjeri i Ca/KH jer se često svi zajedno ponašaju nestabilno.",
-          "Ne pokušavaj rješavati Ca i KH bez stabilnog Mg."
+          "Korigiraj magnezij postupno kroz viĂ„Ä…Ă‹â€ˇe dana.",
+          "Provjeri i Ca/KH jer se Ä‚â€žÄąÂ¤esto svi zajedno ponaĂ„Ä…Ă‹â€ˇaju nestabilno.",
+          "Ne pokuĂ„Ä…Ă‹â€ˇavaj rjeĂ„Ä…Ă‹â€ˇavati Ca i KH bez stabilnog Mg."
         ]
       },
       high: {
         title: "Mg previsok",
-        intro: "Previsok magnezij rijetko traži paniku, ali ukazuje na predoziranje ili neusklađene dodatke.",
+        intro: "Previsok magnezij rijetko traĂ„Ä…Ă„Äľi paniku, ali ukazuje na predoziranje ili neusklaÄ‚â€žĂ˘â‚¬Âene dodatke.",
         actions: [
           "Pauziraj dodatak magnezija i prati pad kroz vrijeme.",
           "Provjeri sastav dodataka i rutinu doziranja.",
-          "Izbjegni naglo spuštanje ako nema vidljivog problema u sustavu."
+          "Izbjegni naglo spuĂ„Ä…Ă‹â€ˇtanje ako nema vidljivog problema u sustavu."
         ]
       },
       ok: {
         title: "Mg je uredan",
-        intro: "Magnezij izgleda uravnoteženo.",
+        intro: "Magnezij izgleda uravnoteĂ„Ä…Ă„Äľeno.",
         actions: [
           "Nastavi ga pratiti kao stabilizator Ca i KH odnosa.",
-          "Bilježi veću potrošnju ako mijenjaš rasvjetu ili broj koralja."
+          "BiljeĂ„Ä…Ă„Äľi veÄ‚â€žĂ˘â‚¬Ë‡u potroĂ„Ä…Ă‹â€ˇnju ako mijenjaĂ„Ä…Ă‹â€ˇ rasvjetu ili broj koralja."
         ]
       }
     },
     pH: {
       low: {
         title: "pH prenizak",
-        intro: "Nizak pH često je povezan s lošijom ventilacijom, viškom CO2 ili slabijom izmjenom plinova.",
+        intro: "Nizak pH Ä‚â€žÄąÂ¤esto je povezan s loĂ„Ä…Ă‹â€ˇijom ventilacijom, viĂ„Ä…Ă‹â€ˇkom CO2 ili slabijom izmjenom plinova.",
         actions: [
-          "Provjeri cirkulaciju i zračenje sustava.",
-          "Ako je moguće, poboljšaj izmjenu zraka u prostoru.",
-          "Ne pokušavaj rješavati samo brojku bez uzroka."
+          "Provjeri cirkulaciju i zraÄ‚â€žÄąÂ¤enje sustava.",
+          "Ako je moguÄ‚â€žĂ˘â‚¬Ë‡e, poboljĂ„Ä…Ă‹â€ˇaj izmjenu zraka u prostoru.",
+          "Ne pokuĂ„Ä…Ă‹â€ˇavaj rjeĂ„Ä…Ă‹â€ˇavati samo brojku bez uzroka."
         ]
       },
       high: {
         title: "pH previsok",
-        intro: "Previsok pH je rjeđi, ali može doći nakon agresivnih dodataka ili jakog doziranja.",
+        intro: "Previsok pH je rjeÄ‚â€žĂ˘â‚¬Âi, ali moĂ„Ä…Ă„Äľe doÄ‚â€žĂ˘â‚¬Ë‡i nakon agresivnih dodataka ili jakog doziranja.",
         actions: [
-          "Provjeri doziranje alkaliniteta i dodatke koji dižu pH.",
-          "Promatraj oscilacije kroz dan prije većih korekcija.",
-          "Provjeri mjeri li test ili sonda točno."
+          "Provjeri doziranje alkaliniteta i dodatke koji diĂ„Ä…Ă„Äľu pH.",
+          "Promatraj oscilacije kroz dan prije veÄ‚â€žĂ˘â‚¬Ë‡ih korekcija.",
+          "Provjeri mjeri li test ili sonda toÄ‚â€žÄąÂ¤no."
         ]
       },
       ok: {
         title: "pH je uredan",
         intro: "pH je u razumnom rasponu.",
         actions: [
-          "Važan je i dnevni raspon, ne samo jedna vrijednost.",
+          "VaĂ„Ä…Ă„Äľan je i dnevni raspon, ne samo jedna vrijednost.",
           "Ako je pH stabilan, ne diraj sustav bez razloga."
         ]
       }
@@ -1245,56 +1245,56 @@
     Temp: {
       low: {
         title: "Temperatura preniska",
-        intro: "Preniska temperatura usporava metabolizam i može stresirati osjetljive stanovnike.",
+        intro: "Preniska temperatura usporava metabolizam i moĂ„Ä…Ă„Äľe stresirati osjetljive stanovnike.",
         actions: [
-          "Provjeri grijač, termostat i cirkulaciju vode.",
-          "Podiži temperaturu postepeno, ne naglo.",
-          "Ako koristiš Elitech, provjeri trend i oscilacije tijekom dana."
+          "Provjeri grijaÄ‚â€žÄąÂ¤, termostat i cirkulaciju vode.",
+          "PodiĂ„Ä…Ă„Äľi temperaturu postepeno, ne naglo.",
+          "Ako koristiĂ„Ä…Ă‹â€ˇ Elitech, provjeri trend i oscilacije tijekom dana."
         ]
       },
       high: {
         title: "Temperatura previsoka",
-        intro: "Povišena temperatura brzo povećava stres i smanjuje količinu kisika u vodi.",
+        intro: "PoviĂ„Ä…Ă‹â€ˇena temperatura brzo poveÄ‚â€žĂ˘â‚¬Ë‡ava stres i smanjuje koliÄ‚â€žÄąÂ¤inu kisika u vodi.",
         actions: [
-          "Provjeri grijač, rasvjetu i ventilaciju poklopca ili ormarića.",
-          "Pojačaj cirkulaciju i hlađenje ako je potrebno.",
-          "Spuštaj temperaturu postupno, bez naglih šokova."
+          "Provjeri grijaÄ‚â€žÄąÂ¤, rasvjetu i ventilaciju poklopca ili ormariÄ‚â€žĂ˘â‚¬Ë‡a.",
+          "PojaÄ‚â€žÄąÂ¤aj cirkulaciju i hlaÄ‚â€žĂ˘â‚¬Âenje ako je potrebno.",
+          "SpuĂ„Ä…Ă‹â€ˇtaj temperaturu postupno, bez naglih Ă„Ä…Ă‹â€ˇokova."
         ]
       },
       ok: {
         title: "Temperatura je uredna",
         intro: "Temperatura izgleda stabilno.",
         actions: [
-          "Prati oscilacije tijekom dana, posebno ljeti i pod jačom rasvjetom.",
-          "Ako koristiš vanjski senzor, povremeno usporedi očitanja."
+          "Prati oscilacije tijekom dana, posebno ljeti i pod jaÄ‚â€žÄąÂ¤om rasvjetom.",
+          "Ako koristiĂ„Ä…Ă‹â€ˇ vanjski senzor, povremeno usporedi oÄ‚â€žÄąÂ¤itanja."
         ]
       }
     },
     Salinity: {
       low: {
         title: "Salinitet prenizak",
-        intro: "Prenizak salinitet može ozbiljno poremetiti osmoregulaciju organizama.",
+        intro: "Prenizak salinitet moĂ„Ä…Ă„Äľe ozbiljno poremetiti osmoregulaciju organizama.",
         actions: [
-          "Provjeri refraktometar ili mjerač i potvrdi očitanje.",
+          "Provjeri refraktometar ili mjeraÄ‚â€žÄąÂ¤ i potvrdi oÄ‚â€žÄąÂ¤itanje.",
           "Korigiraj slanu vodu postupno, ne odjednom.",
-          "Provjeri je li automatska nadoljevna voda pravilno podešena."
+          "Provjeri je li automatska nadoljevna voda pravilno podeĂ„Ä…Ă‹â€ˇena."
         ]
       },
       high: {
         title: "Salinitet previsok",
-        intro: "Previsok salinitet često nastaje zbog isparavanja ili netočnog dolijevanja.",
+        intro: "Previsok salinitet Ä‚â€žÄąÂ¤esto nastaje zbog isparavanja ili netoÄ‚â€žÄąÂ¤nog dolijevanja.",
         actions: [
           "Provjeri ATO i razinu isparavanja.",
-          "Spuštaj salinitet postepeno dodavanjem RO/DI vode prema planu.",
-          "Provjeri točnost mjerenja prije većih intervencija."
+          "SpuĂ„Ä…Ă‹â€ˇtaj salinitet postepeno dodavanjem RO/DI vode prema planu.",
+          "Provjeri toÄ‚â€žÄąÂ¤nost mjerenja prije veÄ‚â€žĂ˘â‚¬Ë‡ih intervencija."
         ]
       },
       ok: {
         title: "Salinitet je uredan",
         intro: "Salinitet izgleda stabilno.",
         actions: [
-          "Drži mjerni alat kalibriranim.",
-          "Prati trend nakon većih izmjena vode ili promjena ATO postavki."
+          "DrĂ„Ä…Ă„Äľi mjerni alat kalibriranim.",
+          "Prati trend nakon veÄ‚â€žĂ˘â‚¬Ë‡ih izmjena vode ili promjena ATO postavki."
         ]
       }
     }
@@ -1342,7 +1342,7 @@
             <div class="health-ring" id="health-ring">--</div>
             <div class="health-copy">
               <span class="hero-title">Ocjena stanja</span>
-              <strong id="health-label">Učitavanje...</strong>
+              <strong id="health-label">UÄ‚â€žÄąÂ¤itavanje...</strong>
               <p id="health-copy">Pregled stabilnosti i prioriteta za danas.</p>
             </div>
           </div>
@@ -1351,8 +1351,8 @@
         <div class="section-card">
           <div class="section-head">
             <div>
-              <h3>Treba pažnju</h3>
-              <p>Najvažnije stvari koje traže reakciju.</p>
+              <h3>Treba paĂ„Ä…Ă„Äľnju</h3>
+              <p>NajvaĂ„Ä…Ă„Äľnije stvari koje traĂ„Ä…Ă„Äľe reakciju.</p>
             </div>
           </div>
           <div class="attention-list" id="attention-list"></div>
@@ -1372,7 +1372,7 @@
           <div class="section-head">
             <div>
               <h3>Trendovi parametara</h3>
-              <p>Što raste, pada ili ostaje stabilno.</p>
+              <p>Ă„Ä…Ă‚Â to raste, pada ili ostaje stabilno.</p>
             </div>
           </div>
           <div class="trend-list" id="trend-list"></div>
@@ -1382,7 +1382,7 @@
           <div class="section-head">
             <div>
               <h3>Moji zadaci</h3>
-              <p>Ru?no dodani zadaci koje ?eli? pratiti.</p>
+              <p>RuĂ„Ĺ¤no dodani zadaci koje ÄąÄľeliÄąË‡ pratiti.</p>
             </div>
             <button class="task-done" onclick="setActiveView('tasks')">Otvori sve</button>
           </div>
@@ -1397,7 +1397,7 @@
               <h3>Parametri</h3>
               <p>Dodirni karticu za trend, status i preporuke.</p>
             </div>
-            <div class="dashboard-tag" id="dashboard-tag">Ažurirano -</div>
+            <div class="dashboard-tag" id="dashboard-tag">AĂ„Ä…Ă„Äľurirano -</div>
           </div>
           <div class="grid" id="dashboard"></div>
         </section>
@@ -1421,7 +1421,7 @@
           <div class="section-head">
             <div>
               <h3>Dnevnik</h3>
-              <p>Zadnje bilješke i ključni unosi.</p>
+              <p>Zadnje biljeĂ„Ä…Ă‹â€ˇke i kljuÄ‚â€žÄąÂ¤ni unosi.</p>
             </div>
           </div>
           <div class="log-list" id="log-list"></div>
@@ -1432,7 +1432,7 @@
         <div class="section-card">
           <div class="section-head">
             <div>
-              <h3>Više</h3>
+              <h3>ViĂ„Ä…Ă‹â€ˇe</h3>
               <p>Postavke, mjerenja i dodatne opcije.</p>
             </div>
           </div>
@@ -1449,8 +1449,8 @@
             <div class="task-item">
               <div class="task-row">
                 <div>
-                  <strong>Bilješke</strong>
-                  <p>Dodaj ili pregledaj bilješke o tanku.</p>
+                  <strong>BiljeĂ„Ä…Ă‹â€ˇke</strong>
+                  <p>Dodaj ili pregledaj biljeĂ„Ä…Ă‹â€ˇke o tanku.</p>
                 </div>
                 <button class="task-done" onclick="openNotes()">Otvori</button>
               </div>
@@ -1477,11 +1477,11 @@
 
   document.querySelector("body").insertAdjacentHTML("beforeend", `
     <nav class="tabbar" id="tabbar">
-      <button class="tab-btn active" data-view="home" onclick="setActiveView('home')">Početna</button>
+      <button class="tab-btn active" data-view="home" onclick="setActiveView('home')">PoÄ‚â€žÄąÂ¤etna</button>
       <button class="tab-btn" data-view="params" onclick="setActiveView('params')">Parametri</button>
       <button class="tab-btn" data-view="tasks" onclick="setActiveView('tasks')">Zadaci</button>
       <button class="tab-btn" data-view="logbook" onclick="setActiveView('logbook')">Dnevnik</button>
-      <button class="tab-btn" data-view="more" onclick="setActiveView('more')">Više</button>
+      <button class="tab-btn" data-view="more" onclick="setActiveView('more')">ViĂ„Ä…Ă‹â€ˇe</button>
     </nav>
   `);
 
@@ -1512,7 +1512,7 @@
           <option value="once">Jednom</option>
           <option value="daily">Dnevno</option>
           <option value="weekly">Tjedno</option>
-          <option value="monthly">Mjesečno</option>
+          <option value="monthly">MjeseÄ‚â€žÄąÂ¤no</option>
         </select>
         <input id="taskMetaInput" type="text" placeholder="Kratka oznaka, npr. Nedjelja">
         <textarea id="taskTextInput" rows="4" placeholder="Kratka napomena ili opis"></textarea>
@@ -1551,7 +1551,7 @@
   tasks = tasks.map((task) => ({
     id: task.id || Date.now() + Math.random(),
     title: task.title || "Zadatak",
-    meta: task.meta || "Ručni zadatak",
+    meta: task.meta || "RuÄ‚â€žÄąÂ¤ni zadatak",
     text: task.text || "Bez dodatne napomene.",
     done: Boolean(task.done),
     dueDate: task.dueDate || "",
@@ -1588,7 +1588,7 @@
       once: "Jednom",
       daily: "Dnevno",
       weekly: "Tjedno",
-      monthly: "Mjesečno"
+      monthly: "MjeseÄ‚â€žÄąÂ¤no"
     })[value] || "Jednom";
   }
 
@@ -1615,7 +1615,7 @@
         image.onerror = () => resolve(String(reader.result || ""));
         image.src = String(reader.result || "");
       };
-      reader.onerror = () => reject(new Error("Ne mogu učitati sliku."));
+      reader.onerror = () => reject(new Error("Ne mogu uÄ‚â€žÄąÂ¤itati sliku."));
       reader.readAsDataURL(file);
     });
   }
@@ -1669,7 +1669,7 @@
       <div>
         <div class="hero-title">Pregled danas</div>
         <div class="hero-status">${escapeHtml(profile.name)}</div>
-        <div class="helper-text" id="hero-status">Pregled stanja akvarija i ključnih zadataka.</div>
+        <div class="helper-text" id="hero-status">Pregled stanja akvarija i kljuÄ‚â€žÄąÂ¤nih zadataka.</div>
       </div>
     `;
   }
@@ -1821,7 +1821,7 @@
       { label: "Mjerenja", value: String(measurements.length) },
       { label: "Zadnji test", value: formatDate(lastMeasurement) },
       { label: "Kasne parametri", value: String(staleItems.length) },
-      { label: "Temp", value: liveTemperature?.temperature !== undefined ? `${liveTemperature.temperature}${liveTemperature.unit || "°C"}` : "Ručni unos" }
+      { label: "Temp", value: liveTemperature?.temperature !== undefined ? `${liveTemperature.temperature}${liveTemperature.unit || "Ä‚â€šĂ‚Â°C"}` : "RuÄ‚â€žÄąÂ¤ni unos" }
     ].map((item) => `
       <div class="summary-box">
         <span>${item.label}</span>
@@ -1834,7 +1834,7 @@
     if (staleItems.length > 0) {
       alertStrip.classList.add("visible");
       alertStrip.innerHTML = `<strong>Vrijeme je za novo testiranje</strong>${escapeHtml(staleItems.map((item) => item.param).join(", "))} nisu mjereni dulje od 7 dana.`;
-      setHeroStatusText(`${staleItems.length} parametra čekaju novo mjerenje.`);
+      setHeroStatusText(`${staleItems.length} parametra Ä‚â€žÄąÂ¤ekaju novo mjerenje.`);
     } else {
       alertStrip.classList.remove("visible");
       alertStrip.innerHTML = "";
@@ -1844,7 +1844,7 @@
     }
 
     if (liveTemperature?.temperature !== undefined) {
-      setElitechStatus(`Live Temp: ${liveTemperature.temperature}${liveTemperature.unit || "°C"}`);
+      setElitechStatus(`Live Temp: ${liveTemperature.temperature}${liveTemperature.unit || "Ä‚â€šĂ‚Â°C"}`);
     } else if (outOfRange.length > 0) {
       setElitechStatus(`Provjeri: ${outOfRange.join(", ")}`);
     }
@@ -1870,21 +1870,26 @@
     return 0;
   }
 
+  function getMeasurementFreshnessDays(param) {
+    return ["Ca", "Mg"].includes(param) ? 14 : 7;
+  }
   function getStaleItems() {
     const latestValues = getLatestValues();
 
     return params.map((param) => {
       const latest = latestValues[param];
       const daysSince = getDaysSince(latest?.date);
+      const freshnessDays = getMeasurementFreshnessDays(param);
 
-      if (daysSince === null || daysSince <= 7) {
+      if (daysSince === null || daysSince <= freshnessDays) {
         return null;
       }
 
       return {
         param,
         date: latest.date,
-        daysSince
+        daysSince,
+        freshnessDays
       };
     }).filter(Boolean);
   }
@@ -1937,7 +1942,7 @@
 
     const score = Math.max(52, Math.min(100, Math.round(100 - penalty)));
     const color = score >= 85 ? "#42e0b0" : score >= 68 ? "#f2c94c" : "#ff7a7a";
-    const label = score >= 85 ? "Vrlo stabilno" : score >= 68 ? "Traži pažnju" : "Izvan kontrole";
+    const label = score >= 85 ? "Vrlo stabilno" : score >= 68 ? "TraĂ„Ä…Ă„Äľi paĂ„Ä…Ă„Äľnju" : "Izvan kontrole";
 
     return {
       score,
@@ -2050,7 +2055,7 @@
     const sortedIssues = issues.sort((a, b) => b.points - a.points);
     const score = Math.max(0, Math.min(100, Math.round(100 - penalty)));
     const color = score >= 85 ? "#4bd37b" : score >= 60 ? "#f2c94c" : "#ff6b6b";
-    const label = score >= 85 ? "Stabilno" : score >= 60 ? "Trazi paznju" : "Kriticno";
+    const label = score >= 85 ? "Stabilno" : score >= 60 ? "TraĹľi paĹľnju" : "KritiÄŤno";
 
     return {
       score,
@@ -2091,12 +2096,12 @@
 
     const diff = current - previous;
     if (Math.abs(diff) < 0.001) {
-      return { direction: "stable", text: `${param} je stabilan kroz zadnja ocitanja.` };
+      return { direction: "stable", text: `${param} je stabilan kroz zadnja o?itanja.` };
     }
 
     return diff > 0
-      ? { direction: "up", text: `${param} pokazuje uzlazni trend kroz zadnja ocitanja.` }
-      : { direction: "down", text: `${param} pokazuje silazni trend kroz zadnja ocitanja.` };
+      ? { direction: "up", text: `${param} pokazuje uzlazni trend kroz zadnja o?itanja.` }
+      : { direction: "down", text: `${param} pokazuje silazni trend kroz zadnja o?itanja.` };
   }
 
   function renderHomeExtras() {
@@ -2114,19 +2119,19 @@
     });
     const obsoleteAnalysis = getHealthAnalysis();
 
-    healthLabel.textContent = healthScore >= 86 ? "Izgleda odlično" : healthScore >= 70 ? "Traži laganu pažnju" : "Traži brzu reakciju";
+    healthLabel.textContent = healthScore >= 86 ? "Izgleda odliÄ‚â€žÄąÂ¤no" : healthScore >= 70 ? "TraĂ„Ä…Ă„Äľi laganu paĂ„Ä…Ă„Äľnju" : "TraĂ„Ä…Ă„Äľi brzu reakciju";
     healthCopy.textContent = staleItems.length > 0
-      ? `Najveći prioritet je osvježiti ${staleItems.length} zastarjela mjerenja i vratiti redovno testiranje.`
+      ? `NajveÄ‚â€žĂ˘â‚¬Ë‡i prioritet je osvjeĂ„Ä…Ă„Äľiti ${staleItems.length} zastarjela mjerenja i vratiti redovno testiranje.`
       : outOfRange.length > 0
         ? `Trenutno su ${outOfRange.length} parametra izvan raspona pa vrijedi reagirati postupno i pratiti trend.`
-        : "Zadnja očitanja izgledaju uredno i sustav djeluje stabilno kroz glavne parametre.";
+        : "Zadnja oÄ‚â€žÄąÂ¤itanja izgledaju uredno i sustav djeluje stabilno kroz glavne parametre.";
 
-    healthLabel.textContent = healthScore >= 90 ? "Vrlo stabilno" : healthScore >= 78 ? "Uredno stanje" : healthScore >= 66 ? "Traži pažnju" : "Vrijedi provjeriti";
+    healthLabel.textContent = healthScore >= 90 ? "Vrlo stabilno" : healthScore >= 78 ? "Uredno stanje" : healthScore >= 66 ? "TraĂ„Ä…Ă„Äľi paĂ„Ä…Ă„Äľnju" : "Vrijedi provjeriti";
     healthCopy.textContent = staleItems.length > 0
-      ? `Najveći prioritet je osvježiti ${staleItems.length} zastarjela mjerenja i vratiti redovno testiranje.`
+      ? `NajveÄ‚â€žĂ˘â‚¬Ë‡i prioritet je osvjeĂ„Ä…Ă„Äľiti ${staleItems.length} zastarjela mjerenja i vratiti redovno testiranje.`
       : outOfRange.length > 0
         ? `Trenutno su ${outOfRange.length} parametra izvan raspona pa vrijedi reagirati postupno i pratiti trend, bez panike.`
-        : "Zadnja očitanja izgledaju uredno i sustav djeluje stabilno kroz glavne parametre.";
+        : "Zadnja oÄ‚â€žÄąÂ¤itanja izgledaju uredno i sustav djeluje stabilno kroz glavne parametre.";
 
     const analysis = getHealthAnalysis();
     healthRing.textContent = String(analysis.score);
@@ -2135,19 +2140,19 @@
     healthLabel.textContent = analysis.label;
     healthLabel.style.color = analysis.color;
     healthCopy.textContent = analysis.staleCount > 0
-      ? `Najveći prioritet je osvježiti ${analysis.staleCount} zastarjela mjerenja i vratiti redovno testiranje.`
+      ? `NajveÄ‚â€žĂ˘â‚¬Ë‡i prioritet je osvjeĂ„Ä…Ă„Äľiti ${analysis.staleCount} zastarjela mjerenja i vratiti redovno testiranje.`
       : analysis.severeCount > 0
         ? `Ima odstupanja koja prelaze sigurnu zonu pa vrijedi reagirati postupno i pratiti trend, bez panike.`
         : analysis.mildCount > 0
           ? "Postoje manja odstupanja unutar oko 5% tolerancije. Prati trend i ne radi nagle korekcije."
-          : "Zadnja očitanja izgledaju uredno i sustav djeluje stabilno kroz glavne parametre.";
+          : "Zadnja oÄ‚â€žÄąÂ¤itanja izgledaju uredno i sustav djeluje stabilno kroz glavne parametre.";
 
     const attentionItems = [];
     staleItems.forEach((item) => {
       attentionItems.push({
         variant: "warning",
-        title: `${item.param} traži novo mjerenje`,
-        text: `Zadnje mjerenje je starije od 7 dana. Vrijeme je za novo očitanje i provjeru trenda.`
+        title: `${item.param} traĂ„Ä…Ă„Äľi novo mjerenje`,
+        text: `Zadnje mjerenje je starije od 7 dana. Vrijeme je za novo oÄ‚â€žÄąÂ¤itanje i provjeru trenda.`
       });
     });
 
@@ -2167,7 +2172,7 @@
             <p>${escapeHtml(item.text)}</p>
           </div>
         `).join("")
-      : `<div class="empty-state">Trenutno nema kriti?nih alarma. Ako ?eli? dodatnu sigurnost, prvo provjeri temperaturu, salinitet i KH.</div>`;
+      : `<div class="empty-state">Trenutno nema kritiĂ„Ĺ¤nih alarma. Ako ÄąÄľeliÄąË‡ dodatnu sigurnost, prvo provjeri temperaturu, salinitet i KH.</div>`;
 
     quickGrid.innerHTML = ["Salinity", "pH", "KH", "Ca"].map((param) => {
       const meta = parameterMeta[param];
@@ -2196,7 +2201,7 @@
             <p>${escapeHtml(trend.text)}</p>
           </div>
         `).join("")
-      : `<div class="empty-state">Još nema dovoljno mjerenja za trend analizu.</div>`;
+      : `<div class="empty-state">JoĂ„Ä…Ă‹â€ˇ nema dovoljno mjerenja za trend analizu.</div>`;
   }
 
   function getTaskItems() {
@@ -2209,8 +2214,8 @@
     const routineTasks = [
       { title: "Testiraj parametre vode", meta: "Tjedno", text: "Odradi kompletno tjedno testiranje glavnih parametara." },
       { title: "Zamjena vode (10%)", meta: "Tjedno", text: "Rutinska izmjena vode za stabilnost sustava." },
-      { title: "Očisti staklo", meta: "Svakih nekoliko dana", text: "Brzo čišćenje stakla i vizualna provjera tanka." },
-      { title: "Zamijeni filter vatu", meta: "Svaka 2 tjedna", text: "Zamijeni mehanički medij i provjeri protok." }
+      { title: "OÄ‚â€žÄąÂ¤isti staklo", meta: "Svakih nekoliko dana", text: "Brzo Ä‚â€žÄąÂ¤iĂ„Ä…Ă‹â€ˇÄ‚â€žĂ˘â‚¬Ë‡enje stakla i vizualna provjera tanka." },
+      { title: "Zamijeni filter vatu", meta: "Svaka 2 tjedna", text: "Zamijeni mehaniÄ‚â€žÄąÂ¤ki medij i provjeri protok." }
     ];
 
     return {
@@ -2231,7 +2236,7 @@
             <div class="task-row">
               <div>
                 <strong>${escapeHtml(task.title)}</strong>
-                <p>${escapeHtml(task.meta)} · ${escapeHtml(task.text)}</p>
+                <p>${escapeHtml(task.meta)} Ă‚Â· ${escapeHtml(task.text)}</p>
               </div>
             </div>
           </div>
@@ -2250,27 +2255,27 @@
             <div class="task-row">
               <div>
                 <strong>${escapeHtml(task.title)}</strong>
-                <p>${escapeHtml(task.meta)} · ${escapeHtml(task.text)}</p>
-                <span class="task-badge">${task.dueDate ? `Rok ${escapeHtml(formatDate(task.dueDate))}` : "Bez roka"} · ${escapeHtml(getRepeatLabel(task.repeat))}${task.done ? " · Gotovo" : ""}</span>
+                <p>${escapeHtml(task.meta)} Ă‚Â· ${escapeHtml(task.text)}</p>
+                <span class="task-badge">${task.dueDate ? `Rok ${escapeHtml(formatDate(task.dueDate))}` : "Bez roka"} Ă‚Â· ${escapeHtml(getRepeatLabel(task.repeat))}${task.done ? " Ă‚Â· Gotovo" : ""}</span>
               </div>
               <div style="display:flex; gap:8px;">
                 <button class="task-done" onclick="toggleTaskDone(${task.id})">${task.done ? "Vrati" : "Gotovo"}</button>
-                <button class="task-done" onclick="deleteTask(${task.id})">Briši</button>
+                <button class="task-done" onclick="deleteTask(${task.id})">BriÄąË‡i</button>
               </div>
             </div>
           </div>
         `).join("")
-      : `<div class="empty-state">Još nema ručno dodanih zadataka.</div>`;
+      : `<div class="empty-state">JoÄąË‡ nema ruĂ„Ĺ¤no dodanih zadataka.</div>`;
 
     tasksList.innerHTML = `
       <div class="task-item">
         <strong>Automatski zadaci</strong>
-        <p>Podsjetnici izvedeni iz mjerenja i osnovne rutine održavanja.</p>
+        <p>Podsjetnici izvedeni iz mjerenja i osnovne rutine odrÄąÄľavanja.</p>
       </div>
       ${autoMarkup}
         <div class="task-item">
           <strong>Moji zadaci</strong>
-          <p>Ručni zadaci koje si sam dodao u aplikaciju.</p>
+          <p>RuĂ„Ĺ¤ni zadaci koje si sam dodao u aplikaciju.</p>
         </div>
         <div class="task-filters">
           <button class="task-filter ${taskFilter === "open" ? "active" : ""}" onclick="setTaskFilter('open')">Otvoreni</button>
@@ -2294,7 +2299,7 @@
             <p>${escapeHtml(note.text)}</p>
           </div>
         `).join("")
-      : `<div class="empty-state">Još nema bilješki. Dodaj opažanja, izmjene vode ili doziranje.</div>`;
+      : `<div class="empty-state">JoĂ„Ä…Ă‹â€ˇ nema biljeĂ„Ä…Ă‹â€ˇki. Dodaj opaĂ„Ä…Ă„Äľanja, izmjene vode ili doziranje.</div>`;
   }
 
   function renderPremiumOverview() {
@@ -2313,7 +2318,7 @@
       { label: "Stanje", value: `${analysis.score}` },
       { label: "Unosi", value: String(measurements.length) },
       { label: "Kasni", value: String(staleItems.length) },
-      { label: "Temp", value: liveTemperature?.temperature !== undefined ? `${liveTemperature.temperature}${liveTemperature.unit || "°C"}` : "Manual" }
+      { label: "Temp", value: liveTemperature?.temperature !== undefined ? `${liveTemperature.temperature}${liveTemperature.unit || "Ä‚â€šĂ‚Â°C"}` : "Manual" }
     ].map((item) => `
       <div class="summary-box">
         <span>${item.label}</span>
@@ -2321,12 +2326,12 @@
       </div>
     `).join("");
 
-    dashboardTag.textContent = `Ažurirano ${formatDate(lastMeasurement)}`;
+    dashboardTag.textContent = `AĂ„Ä…Ă„Äľurirano ${formatDate(lastMeasurement)}`;
 
     if (staleItems.length > 0) {
       alertStrip.classList.add("visible");
-      alertStrip.innerHTML = `<strong>Treba pažnju</strong>${escapeHtml(staleItems.map((item) => item.param).join(", "))} čekaju novo mjerenje dulje od 7 dana.`;
-      heroStatus.textContent = `${staleItems.length} parametra čekaju novo mjerenje.`;
+      alertStrip.innerHTML = `<strong>Treba paĂ„Ä…Ă„Äľnju</strong>${escapeHtml(staleItems.map((item) => item.param).join(", "))} Ä‚â€žÄąÂ¤ekaju novo mjerenje dulje od 7 dana.`;
+      heroStatus.textContent = `${staleItems.length} parametra Ä‚â€žÄąÂ¤ekaju novo mjerenje.`;
     } else {
       alertStrip.classList.remove("visible");
       alertStrip.innerHTML = "";
@@ -2338,7 +2343,7 @@
     }
 
     if (liveTemperature?.temperature !== undefined) {
-      setElitechStatus(`Live Temp: ${liveTemperature.temperature}${liveTemperature.unit || "°C"}`);
+      setElitechStatus(`Live Temp: ${liveTemperature.temperature}${liveTemperature.unit || "Ä‚â€šĂ‚Â°C"}`);
     } else if (outOfRange.length > 0) {
       setElitechStatus(`Provjeri: ${outOfRange.join(", ")}`);
     }
@@ -2362,14 +2367,14 @@
 
     if ((!Number.isNaN(min) && value < min) || (!Number.isNaN(max) && value > max)) {
       return {
-        icon: '<span class="warning">⚠️</span>',
+        icon: '<span class="warning">Ä‚ËÄąË‡Ă‚Â Ă„ĹąĂ‚Â¸ÄąÄ…</span>',
         cardClass: "warning-card"
       };
     }
 
     if (!Number.isNaN(min) || !Number.isNaN(max)) {
       return {
-        icon: '<span class="check">✅</span>',
+        icon: '<span class="check">Ä‚ËÄąâ€şĂ˘â‚¬Â¦</span>',
         cardClass: "check-card"
       };
     }
@@ -2446,27 +2451,27 @@
     healthCopy.textContent = analysis.score >= 85
       ? (
           analysis.staleCount > 0
-            ? `Stanje izgleda stabilno, ali ${analysis.staleCount} parametra nisu svježe mjerena.`
-            : "Tank izgleda stabilno, a manja odstupanja su jo? unutar sigurne zone."
+            ? `Stanje izgleda stabilno, ali ${analysis.staleCount} parametra nisu svjeĹľe mjerena.`
+            : "Tank izgleda stabilno, a manja odstupanja su joĹˇ unutar sigurne zone."
         )
       : analysis.score >= 60
         ? (
             analysis.recommendations.length
               ? analysis.recommendations.join(" ")
-              : "Ima odstupanja koja tra?e postupnu korekciju i pra?enje trenda."
+              : "Ima odstupanja koja traĹľe postupnu korekciju i praÄ‡enje trenda."
           )
         : (
             analysis.recommendations.length
               ? `Kreni od ovoga: ${analysis.recommendations.join(" ")}`
-              : "Vi?e bitnih parametara je van raspona i treba ih mirno vratiti pod kontrolu."
+              : "ViĹˇe bitnih parametara je van raspona i treba ih mirno vratiti pod kontrolu."
           );
 
     const attentionItems = [];
     staleItems.forEach((item) => {
       attentionItems.push({
         variant: "warning",
-        title: `${item.param} traži novo mjerenje`,
-        text: "Zadnje mjerenje je starije od 7 dana. Vrijeme je za novo očitanje i provjeru trenda."
+        title: `${item.param} traĹľi novo mjerenje`,
+        text: `Zadnje mjerenje je starije od preporuÄŤenog intervala od ${item.freshnessDays} dana. Vrijeme je za novo oÄŤitanje i provjeru trenda.`
       });
     });
 
@@ -2515,9 +2520,8 @@
             <p>${escapeHtml(trend.text)}</p>
           </div>
         `).join("")
-      : `<div class="empty-state">Još nema dovoljno mjerenja za trend analizu.</div>`;
+      : `<div class="empty-state">JoĹˇ nema dovoljno mjerenja za trend analizu.</div>`;
   }
-
   function renderTasksView() {
     if (!tasksList) {
       return;
@@ -2579,7 +2583,6 @@
       ${autoMarkup}
     `;
   }
-
   function renderHomeTasksPreview() {
     if (!homeTasksPreview) {
       return;
@@ -2605,7 +2608,6 @@
         `).join("")
       : `<div class="empty-state">JoĹˇ nema ruÄŤno dodanih zadataka. Otvori Zadaci i dodaj prvi podsjetnik.</div>`;
   }
-
   function renderPremiumOverviewFixed() {
     const staleItems = getStaleItems();
     const lastMeasurement = measurements.length ? getSortedMeasurements("desc")[0].date : "-";
@@ -2626,7 +2628,7 @@
       { label: "Stanje", value: `${analysis.score}` },
       { label: "Unosi", value: String(measurements.length) },
       { label: "Kasni", value: String(staleItems.length) },
-      { label: "Temp", value: "Ručni unos" }
+      { label: "Temp", value: "RuÄ‚â€žÄąÂ¤ni unos" }
     ].map((item) => `
       <div class="summary-box">
         <span>${item.label}</span>
@@ -2634,12 +2636,12 @@
       </div>
     `).join("");
 
-    dashboardTag.textContent = `Ažurirano ${formatDate(lastMeasurement)}`;
+    dashboardTag.textContent = `AĂ„Ä…Ă„Äľurirano ${formatDate(lastMeasurement)}`;
 
     if (staleItems.length > 0) {
       alertStrip.classList.add("visible");
-      alertStrip.innerHTML = `<strong>Treba pažnju</strong>${escapeHtml(staleItems.map((item) => item.param).join(", "))} čekaju novo mjerenje dulje od 7 dana.`;
-      setHeroStatusText(`${staleItems.length} parametra čekaju novo mjerenje.`);
+      alertStrip.innerHTML = `<strong>Treba paĂ„Ä…Ă„Äľnju</strong>${escapeHtml(staleItems.map((item) => item.param).join(", "))} Ä‚â€žÄąÂ¤ekaju novo mjerenje dulje od 7 dana.`;
+      setHeroStatusText(`${staleItems.length} parametra Ä‚â€žÄąÂ¤ekaju novo mjerenje.`);
     } else {
       alertStrip.classList.remove("visible");
       alertStrip.innerHTML = "";
@@ -2707,12 +2709,13 @@
     const staleItems = params.map((param) => {
       const latest = latestValues[param];
       const daysSince = getDaysSince(latest.date);
+      const freshnessDays = getMeasurementFreshnessDays(param);
 
-      if (daysSince === null || daysSince <= 7) {
+      if (daysSince === null || daysSince <= freshnessDays) {
         return "";
       }
 
-      return `<div><strong>${param}</strong>: zadnje mjerenje prije ${daysSince} dana (${escapeHtml(formatDate(latest.date))})</div>`;
+      return `<div><strong>${param}</strong>: zadnje mjerenje prije ${daysSince} dana (${escapeHtml(formatDate(latest.date))}). PreporuÄŤeni ritam je svakih ${freshnessDays} dana.</div>`;
     }).filter(Boolean);
 
     if (staleItems.length === 0) {
@@ -2722,7 +2725,6 @@
     document.getElementById("stale-warning-list").innerHTML = staleItems.join("");
     openPopup("stale-warning-popup");
   }
-
   function openPopup(id) {
     document.getElementById(id).style.display = "flex";
 
@@ -2782,7 +2784,7 @@
     tasks.push({
       id: Date.now(),
       title,
-      meta: meta || "Ručni zadatak",
+      meta: meta || "RuÄ‚â€žÄąÂ¤ni zadatak",
       text: text || "Bez dodatne napomene.",
       done: false,
       dueDate,
@@ -2924,7 +2926,7 @@
 
       return `
         <div class="measurement-card">
-          <span class="delete-btn" onclick="deleteMeasurement(${actualIndex})">🗑</span>
+          <span class="delete-btn" onclick="deleteMeasurement(${actualIndex})">Ă„â€ÄąĹźĂ˘â‚¬â€ťĂ˘â‚¬Â</span>
           <strong>${escapeHtml(formatDate(measurement.date))}</strong><br>
           ${values}
         </div>`;
@@ -2948,7 +2950,7 @@
     const container = document.getElementById("notes-container");
 
     if (list.length === 0) {
-      container.innerHTML = "<em>Nema bilješki.</em>";
+      container.innerHTML = "<em>Nema biljeĂ„Ä…Ă‹â€ˇki.</em>";
       return;
     }
 
@@ -2956,7 +2958,7 @@
       const actualIndex = notes.indexOf(note);
       return `
         <div class="note-card">
-          <span class="delete-btn" onclick="deleteNote(${actualIndex})">🗑</span>
+          <span class="delete-btn" onclick="deleteNote(${actualIndex})">Ă„â€ÄąĹźĂ˘â‚¬â€ťĂ˘â‚¬Â</span>
           <strong>${escapeHtml(formatDate(note.date))}</strong><br>${escapeHtml(note.text)}
         </div>`;
     }).join("");
@@ -3014,7 +3016,7 @@
       <input id="tankImageInput" type="file" accept="image/*" capture="environment" onchange="previewTankImage(event)">
       <div id="tankImagePreview" style="margin:10px 0 6px;"></div>
       <div class="helper-text" id="tankImageStatus">Odaberi sliku pa spremi postavke.</div>
-      <p class="helper-text">Po želji dodaj sliku tanka. Sprema se lokalno u aplikaciji.</p>
+      <p class="helper-text">Po Ă„Ä…Ă„Äľelji dodaj sliku tanka. Sprema se lokalno u aplikaciji.</p>
       <label for="tankType">Tip akvarija:</label>
       <select id="tankType" onchange="applyTankType()">
         <option value="custom">Custom</option>
@@ -3035,7 +3037,7 @@
       <h4>Elitech temperatura</h4>
       <label><input id="elitechEnabled" type="checkbox"> Uklju?i Elitech dohvat</label>
       <input id="elitechProxyUrl" type="text" placeholder="https://tvoj-proxy.example.com/api/elitech-temperature">
-      <p class="helper-text">Upi?i adresu svog Elitech proxy endpointa. Temperatura ce se prikazati na postoje?oj Temp kartici.</p>
+      <p class="helper-text">Upi?i adresu svog Elitech proxy endpointa. Temperatura ?e se prikazati na postoje?oj Temp kartici.</p>
       <div class="popup-actions">
         <button class="close-btn secondary-btn" onclick="testElitechConnection()">Testiraj Elitech vezu</button>
       </div>
@@ -3136,8 +3138,8 @@
 
 <div class="footer">
   <div>
-    <div>© ŽŠ | <a href="https://www.facebook.com/groups/2138221309559208/?ref=share" target="_blank">powered by HReef</a></div>
-    <small>Reef tank dashboard, bilješke i trendovi na jednom mjestu.</small>
+    <div>Ä‚â€šĂ‚Â© Ă„Ä…Ă‹ĹĄĂ„Ä…Ă‚Â  | <a href="https://www.facebook.com/groups/2138221309559208/?ref=share" target="_blank">powered by HReef</a></div>
+    <small>Reef tank dashboard, biljeĂ„Ä…Ă‹â€ˇke i trendovi na jednom mjestu.</small>
   </div>
   <div class="footer-version">v1.3</div>
 </div>
