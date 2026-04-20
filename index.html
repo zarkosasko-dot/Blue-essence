@@ -645,6 +645,50 @@
     font-weight: bold;
   }
 
+  .card-actions {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .icon-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 999px;
+    background: rgba(16, 40, 59, 0.08);
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  .icon-action.edit-action {
+    color: #145d75;
+  }
+
+  .icon-action.delete-action {
+    color: var(--danger);
+  }
+
+  .task-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .task-danger {
+    color: #ffd3d3;
+    background: rgba(118, 24, 24, 0.56);
+    border-color: rgba(255, 151, 151, 0.2);
+  }
+
   .footer {
     display: none;
   }
@@ -1016,10 +1060,10 @@
 
 <div class="popup" id="notes-popup">
   <div class="popup-content">
-    <h3>Bilješke</h3>
+    <h3 id="notes-popup-title">Bilješke</h3>
     <input id="noteDate" type="date">
     <textarea id="noteText" rows="3" placeholder="Upiši bilješku..."></textarea>
-    <button class="close-btn" onclick="saveNote()">Spremi bilješku</button>
+    <button class="close-btn" id="note-save-btn" onclick="saveNote()">Spremi bilješku</button>
     <input id="noteSearch" type="text" placeholder="Pretraži bilješke..." oninput="filterNotes()">
     <div id="notes-container"></div>
     <div class="popup-actions">
@@ -1486,7 +1530,7 @@
   `);
 
   document.getElementById("input-popup").querySelector(".popup-content").innerHTML = `
-    <h3>Dodaj mjerenje</h3>
+    <h3 id="measurement-popup-title">Dodaj mjerenje</h3>
     <input id="dateInput" type="date">
     <input id="no3" type="number" step="any" placeholder="NO3">
     <input id="po4" type="number" step="any" placeholder="PO4">
@@ -1497,7 +1541,7 @@
     <input id="temp" type="number" step="any" placeholder="Temp">
     <input id="salinity" type="number" step="any" placeholder="Salinitet">
     <div class="popup-actions">
-      <button class="close-btn" onclick="saveMeasurement()">Spremi</button>
+      <button class="close-btn" id="measurement-save-btn" onclick="saveMeasurement()">Spremi</button>
       <button class="close-btn" onclick="closePopup('input-popup')">Odustani</button>
     </div>
   `;
@@ -1505,7 +1549,7 @@
   document.querySelector("body").insertAdjacentHTML("beforeend", `
     <div class="popup" id="task-popup">
       <div class="popup-content">
-        <h3>Novi zadatak</h3>
+        <h3 id="task-popup-title">Novi zadatak</h3>
         <input id="taskTitleInput" type="text" placeholder="Naziv zadatka">
         <input id="taskDueInput" type="date">
         <select id="taskRepeatInput">
@@ -1517,7 +1561,7 @@
         <input id="taskMetaInput" type="text" placeholder="Kratka oznaka, npr. Nedjelja">
         <textarea id="taskTextInput" rows="4" placeholder="Kratka napomena ili opis"></textarea>
         <div class="popup-actions">
-          <button class="close-btn" onclick="saveTask()">Spremi zadatak</button>
+          <button class="close-btn" id="task-save-btn" onclick="saveTask()">Spremi zadatak</button>
           <button class="close-btn" onclick="closePopup('task-popup')">Odustani</button>
         </div>
       </div>
@@ -1547,6 +1591,9 @@
   let liveTemperature = null;
   let activeView = "home";
   let taskFilter = "open";
+  let editingMeasurementIndex = null;
+  let editingNoteIndex = null;
+  let editingTaskId = null;
 
   tasks = tasks.map((task) => ({
     id: task.id || Date.now() + Math.random(),
@@ -1588,8 +1635,91 @@
       once: "Jednom",
       daily: "Dnevno",
       weekly: "Tjedno",
-      monthly: "Mjesečno"
+      monthly: "Mjese?no"
     })[value] || "Jednom";
+  }
+
+  function updateMeasurementFormState() {
+    const title = document.getElementById("measurement-popup-title");
+    const saveButton = document.getElementById("measurement-save-btn");
+    if (title) {
+      title.textContent = editingMeasurementIndex === null ? "Dodaj mjerenje" : "Uredi mjerenje";
+    }
+    if (saveButton) {
+      saveButton.textContent = editingMeasurementIndex === null ? "Spremi" : "Spremi izmjene";
+    }
+  }
+
+  function resetMeasurementForm() {
+    const dateInput = document.getElementById("dateInput");
+    if (dateInput) {
+      dateInput.valueAsDate = new Date();
+    }
+    params.forEach((param) => {
+      const field = document.getElementById(param.toLowerCase());
+      if (field) {
+        field.value = "";
+      }
+    });
+    updateMeasurementFormState();
+  }
+
+  function updateNoteFormState() {
+    const title = document.getElementById("notes-popup-title");
+    const saveButton = document.getElementById("note-save-btn");
+    if (title) {
+      title.textContent = editingNoteIndex === null ? "Bilje?ke" : "Uredi bilje?ku";
+    }
+    if (saveButton) {
+      saveButton.textContent = editingNoteIndex === null ? "Spremi bilje?ku" : "Spremi izmjene";
+    }
+  }
+
+  function resetNoteForm() {
+    const noteDate = document.getElementById("noteDate");
+    const noteText = document.getElementById("noteText");
+    if (noteDate) {
+      noteDate.valueAsDate = new Date();
+    }
+    if (noteText) {
+      noteText.value = "";
+    }
+    updateNoteFormState();
+  }
+
+  function updateTaskFormState() {
+    const title = document.getElementById("task-popup-title");
+    const saveButton = document.getElementById("task-save-btn");
+    if (title) {
+      title.textContent = editingTaskId === null ? "Novi zadatak" : "Uredi zadatak";
+    }
+    if (saveButton) {
+      saveButton.textContent = editingTaskId === null ? "Spremi zadatak" : "Spremi izmjene";
+    }
+  }
+
+  function resetTaskForm() {
+    const titleInput = document.getElementById("taskTitleInput");
+    const dueInput = document.getElementById("taskDueInput");
+    const repeatInput = document.getElementById("taskRepeatInput");
+    const metaInput = document.getElementById("taskMetaInput");
+    const textInput = document.getElementById("taskTextInput");
+    if (titleInput) {
+      titleInput.value = "";
+    }
+    if (dueInput) {
+      dueInput.valueAsDate = new Date();
+    }
+    if (repeatInput) {
+      repeatInput.value = "once";
+    }
+    if (metaInput) {
+      metaInput.value = "";
+    }
+    if (textInput) {
+      textInput.value = "";
+    }
+    updateTaskFormState();
   }
 
   function readFileAsDataUrl(file) {
@@ -2538,17 +2668,18 @@
             <div class="task-row">
               <div>
                 <strong>${escapeHtml(task.title)}</strong>
-                <p>${escapeHtml(task.meta)} · ${escapeHtml(task.text)}</p>
-                <span class="task-badge">${task.dueDate ? `Rok ${escapeHtml(formatDate(task.dueDate))}` : "Bez roka"} · ${escapeHtml(getRepeatLabel(task.repeat))}${task.done ? " · Gotovo" : ""}</span>
+                <p>${escapeHtml(task.meta)} ? ${escapeHtml(task.text)}</p>
+                <span class="task-badge">${task.dueDate ? `Rok ${escapeHtml(formatDate(task.dueDate))}` : "Bez roka"} ? ${escapeHtml(getRepeatLabel(task.repeat))}${task.done ? " ? Gotovo" : ""}</span>
               </div>
-              <div style="display:flex; gap:8px;">
+              <div class="task-actions">
+                <button class="task-done" onclick="editTask(${task.id})" title="Uredi zadatak" aria-label="Uredi zadatak">&#9998;</button>
                 <button class="task-done" onclick="toggleTaskDone(${task.id})">${task.done ? "Vrati" : "Gotovo"}</button>
-                <button class="task-done" onclick="deleteTask(${task.id})">Briši</button>
+                <button class="task-done task-danger" onclick="deleteTask(${task.id})" title="Obri?i zadatak" aria-label="Obri?i zadatak">&#128465;</button>
               </div>
             </div>
           </div>
         `).join("")
-      : `<div class="empty-state">Još nema ručno dodanih zadataka.</div>`;
+      : `<div class="empty-state">Jo? nema ru?no dodanih zadataka.</div>`;
 
     const autoMarkup = taskGroups.auto.length
       ? taskGroups.auto.map((task) => `
@@ -2556,7 +2687,7 @@
             <div class="task-row">
               <div>
                 <strong>${escapeHtml(task.title)}</strong>
-                <p>${escapeHtml(task.meta)} · ${escapeHtml(task.text)}</p>
+                <p>${escapeHtml(task.meta)} ? ${escapeHtml(task.text)}</p>
               </div>
             </div>
           </div>
@@ -2566,7 +2697,7 @@
     tasksList.innerHTML = `
       <div class="task-item">
         <strong>Moji zadaci</strong>
-        <p>Ručni zadaci koje si sam dodao u aplikaciju.</p>
+        <p>Ru?ni zadaci koje si sam dodao u aplikaciju.</p>
       </div>
       <div class="task-filters">
         <button class="task-filter ${taskFilter === "open" ? "active" : ""}" onclick="setTaskFilter('open')">Otvoreni</button>
@@ -2574,9 +2705,9 @@
         <button class="task-filter ${taskFilter === "all" ? "active" : ""}" onclick="setTaskFilter('all')">Svi</button>
       </div>
       ${customMarkup}
-      <div class="task-item">
+      <div class="task-item" style="margin-top: 14px;">
         <strong>Automatski zadaci</strong>
-        <p>Podsjetnici izvedeni iz mjerenja i osnovne rutine održavanja.</p>
+        <p>Zadaci generirani iz ritma odr?avanja i ka?njenja mjerenja.</p>
       </div>
       ${autoMarkup}
     `;
@@ -2726,30 +2857,46 @@
     document.getElementById(id).style.display = "flex";
 
     if (id === "input-popup") {
-      document.getElementById("dateInput").valueAsDate = new Date();
-      params.forEach((param) => {
-        document.getElementById(param.toLowerCase()).value = "";
-      });
+      if (editingMeasurementIndex === null) {
+        resetMeasurementForm();
+      }
+      updateMeasurementFormState();
     }
 
     if (id === "notes-popup") {
-      document.getElementById("noteDate").valueAsDate = new Date();
-      document.getElementById("noteText").value = "";
+      if (editingNoteIndex === null) {
+        resetNoteForm();
+      }
       document.getElementById("noteSearch").value = "";
+      updateNoteFormState();
       showNotes();
     }
 
     if (id === "task-popup") {
-      document.getElementById("taskTitleInput").value = "";
-      document.getElementById("taskDueInput").valueAsDate = new Date();
-      document.getElementById("taskRepeatInput").value = "once";
-      document.getElementById("taskMetaInput").value = "";
-      document.getElementById("taskTextInput").value = "";
+      if (editingTaskId === null) {
+        resetTaskForm();
+      }
+      updateTaskFormState();
     }
   }
 
   function closePopup(id) {
     document.getElementById(id).style.display = "none";
+
+    if (id === "input-popup") {
+      editingMeasurementIndex = null;
+      resetMeasurementForm();
+    }
+
+    if (id === "notes-popup") {
+      editingNoteIndex = null;
+      resetNoteForm();
+    }
+
+    if (id === "task-popup") {
+      editingTaskId = null;
+      resetTaskForm();
+    }
   }
 
   function saveMeasurement() {
@@ -2761,10 +2908,22 @@
       measurement[param] = document.getElementById(param.toLowerCase()).value;
     });
 
-    measurements.push(measurement);
+    if (editingMeasurementIndex !== null && measurements[editingMeasurementIndex]) {
+      measurements[editingMeasurementIndex] = measurement;
+    } else {
+      measurements.push(measurement);
+    }
+
+    const shouldRefreshMeasurements = document.getElementById("measurements-popup").style.display === "flex";
+
     persistMeasurements();
+    editingMeasurementIndex = null;
     closePopup("input-popup");
     renderDashboard();
+
+    if (shouldRefreshMeasurements) {
+      showMeasurements();
+    }
   }
 
   function saveTask() {
@@ -2778,17 +2937,31 @@
       return;
     }
 
-    tasks.push({
-      id: Date.now(),
-      title,
-      meta: meta || "Ručni zadatak",
-      text: text || "Bez dodatne napomene.",
-      done: false,
-      dueDate,
-      repeat
-    });
+    if (editingTaskId !== null) {
+      tasks = tasks.map((task) => task.id === editingTaskId
+        ? {
+            ...task,
+            title,
+            meta: meta || "Ru?ni zadatak",
+            text: text || "Bez dodatne napomene.",
+            dueDate,
+            repeat
+          }
+        : task);
+    } else {
+      tasks.push({
+        id: Date.now(),
+        title,
+        meta: meta || "Ru?ni zadatak",
+        text: text || "Bez dodatne napomene.",
+        done: false,
+        dueDate,
+        repeat
+      });
+    }
 
     persistTasks();
+    editingTaskId = null;
     closePopup("task-popup");
     renderDashboard();
     taskFilter = "open";
@@ -2808,10 +2981,56 @@
 
   function deleteTask(taskId) {
     tasks = tasks.filter((task) => task.id !== taskId);
+    if (editingTaskId === taskId) {
+      editingTaskId = null;
+    }
     persistTasks();
     renderDashboard();
   }
 
+  function editMeasurement(index) {
+    const measurement = measurements[index];
+    if (!measurement) {
+      return;
+    }
+
+    editingMeasurementIndex = index;
+    openPopup("input-popup");
+    document.getElementById("dateInput").value = measurement.date || "";
+    params.forEach((param) => {
+      document.getElementById(param.toLowerCase()).value = measurement[param] || "";
+    });
+    updateMeasurementFormState();
+  }
+
+  function editNote(index) {
+    const note = notes[index];
+    if (!note) {
+      return;
+    }
+
+    editingNoteIndex = index;
+    openPopup("notes-popup");
+    document.getElementById("noteDate").value = note.date || "";
+    document.getElementById("noteText").value = note.text || "";
+    updateNoteFormState();
+  }
+
+  function editTask(taskId) {
+    const task = tasks.find((item) => item.id === taskId);
+    if (!task) {
+      return;
+    }
+
+    editingTaskId = taskId;
+    openPopup("task-popup");
+    document.getElementById("taskTitleInput").value = task.title || "";
+    document.getElementById("taskDueInput").value = task.dueDate || "";
+    document.getElementById("taskRepeatInput").value = task.repeat || "once";
+    document.getElementById("taskMetaInput").value = task.meta || "";
+    document.getElementById("taskTextInput").value = task.text || "";
+    updateTaskFormState();
+  }
   async function fillTempFromElitech() {
     try {
       setTempSyncStatus("Dohvacam Elitech temperaturu...");
@@ -2923,7 +3142,10 @@
 
       return `
         <div class="measurement-card">
-          <span class="delete-btn" onclick="deleteMeasurement(${actualIndex})">đź—‘</span>
+          <div class="card-actions">
+            <button class="icon-action edit-action" type="button" title="Uredi mjerenje" aria-label="Uredi mjerenje" onclick="editMeasurement(${actualIndex})">&#9998;</button>
+            <button class="icon-action delete-action" type="button" title="Obri?i mjerenje" aria-label="Obri?i mjerenje" onclick="deleteMeasurement(${actualIndex})">&#128465;</button>
+          </div>
           <strong>${escapeHtml(formatDate(measurement.date))}</strong><br>
           ${values}
         </div>`;
@@ -2934,6 +3156,9 @@
 
   function deleteMeasurement(index) {
     measurements.splice(index, 1);
+    if (editingMeasurementIndex === index) {
+      editingMeasurementIndex = null;
+    }
     persistMeasurements();
     renderDashboard();
     showMeasurements();
@@ -2947,7 +3172,7 @@
     const container = document.getElementById("notes-container");
 
     if (list.length === 0) {
-      container.innerHTML = "<em>Nema bilješki.</em>";
+      container.innerHTML = "<em>Nema bilje?ki.</em>";
       return;
     }
 
@@ -2955,7 +3180,10 @@
       const actualIndex = notes.indexOf(note);
       return `
         <div class="note-card">
-          <span class="delete-btn" onclick="deleteNote(${actualIndex})">đź—‘</span>
+          <div class="card-actions">
+            <button class="icon-action edit-action" type="button" title="Uredi bilje?ku" aria-label="Uredi bilje?ku" onclick="editNote(${actualIndex})">&#9998;</button>
+            <button class="icon-action delete-action" type="button" title="Obri?i bilje?ku" aria-label="Obri?i bilje?ku" onclick="deleteNote(${actualIndex})">&#128465;</button>
+          </div>
           <strong>${escapeHtml(formatDate(note.date))}</strong><br>${escapeHtml(note.text)}
         </div>`;
     }).join("");
@@ -2975,14 +3203,24 @@
       return;
     }
 
-    notes.push(note);
+    if (editingNoteIndex !== null && notes[editingNoteIndex]) {
+      notes[editingNoteIndex] = note;
+    } else {
+      notes.push(note);
+    }
+
     persistNotes();
-    document.getElementById("noteText").value = "";
+    editingNoteIndex = null;
+    resetNoteForm();
     showNotes();
   }
 
   function deleteNote(index) {
     notes.splice(index, 1);
+    if (editingNoteIndex === index) {
+      editingNoteIndex = null;
+      resetNoteForm();
+    }
     persistNotes();
     filterNotes();
   }
