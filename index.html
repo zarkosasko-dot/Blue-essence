@@ -1307,7 +1307,7 @@
 <div class="popup" id="stale-warning-popup">
   <div class="popup-content">
     <h3 id="stale-warning-title">Upozorenja</h3>
-    <p id="stale-warning-copy">Parametri koji tra?e pa?nju:</p>
+    <p id="stale-warning-copy">Parametri koji tra&#382;e pa&#382;nju:</p>
     <div id="stale-warning-list" class="attention-list"></div>
     <div class="popup-actions">
       <button class="close-btn" onclick="closePopup('stale-warning-popup')">U redu</button>
@@ -3241,7 +3241,7 @@
       items.push({
         variant: "warning",
         title: item.param + " treba novo mjerenje",
-        text: "Zadnje mjerenje je prije " + item.daysSince + " dana (" + formatDate(item.date) + "). Preporu?eni ritam je svakih " + item.freshnessDays + " dana."
+        text: "Zadnje mjerenje je prije " + item.daysSince + " dana (" + formatDate(item.date) + "). Preporu\u010deni ritam je svakih " + item.freshnessDays + " dana."
       });
     });
 
@@ -3295,8 +3295,8 @@
     }
     if (copy) {
       copy.textContent = warningItems.length
-        ? "Ovo su stvari koje trenutno tra?e pa?nju:"
-        : "Klik je radio, samo trenutno nema ni?ega kriti?nog za prikaz.";
+        ? "Ovo su stvari koje trenutno tra\u017ee pa\u017enju:"
+        : "Klik je radio, samo trenutno nema ni\u010dega kriti\u010dnog za prikaz.";
     }
 
     list.innerHTML = warningItems.length
@@ -3306,7 +3306,7 @@
             "<p>" + escapeHtml(item.text) + "</p>" +
           "</div>"
         ).join("")
-      : "<div class=\"empty-state\">Ocjena stanja je " + analysis.score + "/100 (" + escapeHtml(analysis.label) + "). Ako ?eli? dodatnu sigurnost, provjeri trend temperature, saliniteta i KH.</div>";
+      : "<div class=\"empty-state\">Ocjena stanja je " + analysis.score + "/100 (" + escapeHtml(analysis.label) + "). Ako \u017eeli\u0161 dodatnu sigurnost, provjeri trend temperature, saliniteta i KH.</div>";
 
     openPopup("stale-warning-popup");
   }
