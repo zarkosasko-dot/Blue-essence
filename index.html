@@ -393,6 +393,37 @@
     margin-bottom: 12px;
   }
 
+  .section-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .logbook-tools {
+    margin-bottom: 12px;
+  }
+
+  .logbook-tools input {
+    width: 100%;
+    padding: 12px 14px;
+    color: #f2f8ff;
+    background: rgba(12, 40, 59, 0.72);
+    border: 1px solid rgba(111, 229, 255, 0.12);
+    border-radius: 14px;
+    font: inherit;
+  }
+
+  .log-photo {
+    display: block;
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    margin-top: 10px;
+    border-radius: 16px;
+    border: 1px solid rgba(111, 229, 255, 0.12);
+  }
+
   .section-head h3,
   .section-head h4 {
     margin: 0;
@@ -749,6 +780,12 @@
   body.light-theme .tab-btn.active {
     color: #0d6476;
     background: rgba(13, 100, 118, 0.08);
+  }
+
+  body.light-theme .logbook-tools input {
+    color: #123044;
+    background: rgba(255, 255, 255, 0.82);
+    border-color: rgba(13, 100, 118, 0.14);
   }
 
 
@@ -1747,8 +1784,15 @@
           <div class="section-head">
             <div>
               <h3>Dnevnik</h3>
-              <p>Zadnje bilješke i ključni unosi.</p>
+              <p>Pretraži, otvori i uredi bilješke bez odlaska u Više.</p>
             </div>
+            <div class="section-actions">
+              <button class="task-done" onclick="openNotes()">Otvori bilješke</button>
+              <button class="task-done" onclick="showMeasurements()">Mjerenja</button>
+            </div>
+          </div>
+          <div class="logbook-tools">
+            <input id="logbookSearchInput" type="text" placeholder="Pretraži bilješke..." oninput="setLogbookSearchTerm(this.value)">
           </div>
           <div class="log-list" id="log-list"></div>
         </div>
@@ -1882,6 +1926,7 @@
   let liveTemperature = null;
   let activeView = "home";
   let taskFilter = "open";
+  let logbookSearchTerm = "";
   let activeTheme = localStorage.getItem("theme") === "light" ? "light" : "dark";
   let editingMeasurementIndex = null;
   let editingNoteIndex = null;
@@ -2786,19 +2831,63 @@
   }
 
   function renderLogbookView() {
+    const searchInput = document.getElementById("logbookSearchInput");
+    if (searchInput && searchInput.value !== logbookSearchTerm) {
+      searchInput.value = logbookSearchTerm;
+    }
+    renderLogbookEntries();
+  }
+
+
+  function setLogbookSearchTerm(value) {
+    logbookSearchTerm = value || "";
+    renderLogbookEntries();
+  }
+
+  function renderLogbookEntries() {
     if (!logList) {
       return;
     }
 
-    const latestNotes = [...notes].reverse().slice(0, 5);
-    logList.innerHTML = latestNotes.length
-      ? latestNotes.map((note) => `
-          <div class="log-item">
-            <strong>${escapeHtml(formatDate(note.date))}</strong>
-            <p>${escapeHtml(note.text)}</p>
+    const search = logbookSearchTerm.trim().toLowerCase();
+    const allNotes = notes
+      .map((note, index) => ({ note, index }))
+      .reverse();
+    const filteredNotes = allNotes.filter(({ note }) => {
+      if (!search) {
+        return true;
+      }
+      return (
+        (note.text || "").toLowerCase().includes(search) ||
+        formatDate(note.date).toLowerCase().includes(search)
+      );
+    });
+    const visibleNotes = search ? filteredNotes : filteredNotes.slice(0, 8);
+
+    if (visibleNotes.length === 0) {
+      logList.innerHTML = search
+        ? `<div class="empty-state">Nema bilje?ki za "${escapeHtml(logbookSearchTerm)}".</div>`
+        : `<div class="empty-state">Još nema bilje?ki. Dodaj opažanja, fotke, izmjene vode ili doziranje.</div>`;
+      return;
+    }
+
+    logList.innerHTML = visibleNotes.map(({ note, index }) => {
+      const photoMarkup = note.image
+        ? `<img class="log-photo" src="${note.image}" alt="Fotka uz bilješku">`
+        : "";
+      return `
+        <div class="log-item">
+          <div class="task-row">
+            <div>
+              <strong>${escapeHtml(formatDate(note.date))}</strong>
+              <p>${escapeHtml(note.text || "Bilješka s fotkom")}</p>
+            </div>
+            <button class="task-done" onclick="editNote(${index})">Otvori</button>
           </div>
-        `).join("")
-      : `<div class="empty-state">Još nema bilješki. Dodaj opažanja, izmjene vode ili doziranje.</div>`;
+          ${photoMarkup}
+        </div>
+      `;
+    }).join("");
   }
 
   function renderPremiumOverviewLegacy() {
@@ -3573,8 +3662,8 @@
       return `
         <div class="note-card">
           <div class="card-actions">
-            <button class="icon-action edit-action" type="button" title="Uredi bilje?ku" aria-label="Uredi bilje?ku" onclick="editNote(${actualIndex})">&#9998;</button>
-            <button class="icon-action delete-action" type="button" title="Obri?i bilje?ku" aria-label="Obri?i bilje?ku" onclick="deleteNote(${actualIndex})">&#128465;</button>
+            <button class="icon-action edit-action" type="button" title="Uredi bilješku" aria-label="Uredi bilješku" onclick="editNote(${actualIndex})">&#9998;</button>
+            <button class="icon-action delete-action" type="button" title="Obriši bilješku" aria-label="Obriši bilješku" onclick="deleteNote(${actualIndex})">&#128465;</button>
           </div>
           <strong>${escapeHtml(formatDate(note.date))}</strong><br>${escapeHtml(note.text || "Bez teksta")}
           ${photoMarkup}
