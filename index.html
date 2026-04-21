@@ -1306,9 +1306,9 @@
 
 <div class="popup" id="stale-warning-popup">
   <div class="popup-content">
-    <h3>Upozorenje</h3>
-    <p>Ovim parametrima je zadnje mjerenje starije od preporučenog intervala:</p>
-    <div id="stale-warning-list"></div>
+    <h3 id="stale-warning-title">Upozorenja</h3>
+    <p id="stale-warning-copy">Parametri koji tra?e pa?nju:</p>
+    <div id="stale-warning-list" class="attention-list"></div>
     <div class="popup-actions">
       <button class="close-btn" onclick="closePopup('stale-warning-popup')">U redu</button>
     </div>
@@ -3233,25 +3233,81 @@
       console.error("Dashboard render error", error);
     }
   }
-  function showStaleWarning() {
+  function getWarningItems() {
     const latestValues = getLatestValues();
-    const staleItems = params.map((param) => {
-      const latest = latestValues[param];
-      const daysSince = getDaysSince(latest.date);
-      const freshnessDays = getMeasurementFreshnessDays(param);
+    const items = [];
 
-      if (daysSince === null || daysSince <= freshnessDays) {
-        return "";
+    getStaleItems().forEach((item) => {
+      items.push({
+        variant: "warning",
+        title: item.param + " treba novo mjerenje",
+        text: "Zadnje mjerenje je prije " + item.daysSince + " dana (" + formatDate(item.date) + "). Preporu?eni ritam je svakih " + item.freshnessDays + " dana."
+      });
+    });
+
+    params.forEach((param) => {
+      const latest = latestValues[param] || { value: "-", date: "-" };
+      const value = parseFloat(latest.value);
+      const min = parseFloat(settings[param]?.min);
+      const max = parseFloat(settings[param]?.max);
+
+      if (Number.isNaN(value) || (Number.isNaN(min) && Number.isNaN(max))) {
+        return;
       }
 
-      return `<div><strong>${param}</strong>: zadnje mjerenje prije ${daysSince} dana (${escapeHtml(formatDate(latest.date))}). Preporučeni ritam je svakih ${freshnessDays} dana.</div>`;
-    }).filter(Boolean);
+      const isLow = !Number.isNaN(min) && value < min;
+      const isHigh = !Number.isNaN(max) && value > max;
+      if (!isLow && !isHigh) {
+        return;
+      }
 
-    if (staleItems.length === 0) {
+      const meta = parameterMeta[param] || { unit: "" };
+      const unit = meta.unit ? " " + meta.unit : "";
+      const rangeText = !Number.isNaN(min) && !Number.isNaN(max)
+        ? min + " - " + max + unit
+        : !Number.isNaN(min)
+          ? "iznad " + min + unit
+          : "ispod " + max + unit;
+
+      items.push({
+        variant: "danger",
+        title: param + " je " + (isLow ? "prenizak" : "previsok"),
+        text: "Zadnja vrijednost je " + latest.value + unit + ", mjereno " + formatDate(latest.date) + ". Ciljani raspon je " + rangeText + "."
+      });
+    });
+
+    return items;
+  }
+
+  function showStaleWarning() {
+    const title = document.getElementById("stale-warning-title");
+    const copy = document.getElementById("stale-warning-copy");
+    const list = document.getElementById("stale-warning-list");
+    if (!list) {
       return;
     }
 
-    document.getElementById("stale-warning-list").innerHTML = staleItems.join("");
+    const warningItems = getWarningItems();
+    const analysis = getHealthAnalysis();
+
+    if (title) {
+      title.textContent = warningItems.length ? "Upozorenja" : "Nema aktivnih upozorenja";
+    }
+    if (copy) {
+      copy.textContent = warningItems.length
+        ? "Ovo su stvari koje trenutno tra?e pa?nju:"
+        : "Klik je radio, samo trenutno nema ni?ega kriti?nog za prikaz.";
+    }
+
+    list.innerHTML = warningItems.length
+      ? warningItems.map((item) =>
+          "<div class=\"attention-item " + item.variant + "\">" +
+            "<strong>" + escapeHtml(item.title) + "</strong>" +
+            "<p>" + escapeHtml(item.text) + "</p>" +
+          "</div>"
+        ).join("")
+      : "<div class=\"empty-state\">Ocjena stanja je " + analysis.score + "/100 (" + escapeHtml(analysis.label) + "). Ako ?eli? dodatnu sigurnost, provjeri trend temperature, saliniteta i KH.</div>";
+
     openPopup("stale-warning-popup");
   }
   function openPopup(id) {
