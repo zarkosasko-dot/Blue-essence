@@ -53,101 +53,9 @@
     margin-left: auto;
   }
 
-  .header-scene {
-    position: absolute;
-    left: 50%;
-    top: 14px;
-    width: 116px;
-    height: 34px;
-    overflow: hidden;
-    transform: translateX(-50%);
-    border: 1px solid rgba(111, 229, 255, 0.18);
-    border-radius: 999px;
-    background:
-      radial-gradient(circle at 22% 28%, rgba(255, 255, 255, 0.46), transparent 9px),
-      linear-gradient(180deg, rgba(169, 231, 238, 0.4) 0%, rgba(12, 117, 151, 0.72) 48%, rgba(4, 38, 67, 0.92) 100%);
-    box-shadow: 0 10px 22px rgba(2, 12, 24, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.18);
-    pointer-events: none;
-  }
-
-  .header-scene::before,
-  .header-scene::after,
-  .scene-surface,
-  .scene-wave,
-  .scene-turtle,
-  .scene-turtle::before,
-  .scene-turtle::after {
-    content: "";
-    position: absolute;
-    display: block;
-  }
-
-  .scene-surface {
-    left: 0;
-    top: 8px;
-    width: 100%;
-    height: 9px;
-    background: linear-gradient(90deg, transparent 0 8%, rgba(236, 255, 255, 0.68) 9% 20%, transparent 21% 31%, rgba(236, 255, 255, 0.52) 32% 48%, transparent 49% 62%, rgba(236, 255, 255, 0.6) 63% 82%, transparent 83%);
-    opacity: 0.8;
-  }
-
-  .scene-wave {
-    left: 8px;
-    right: 8px;
-    bottom: 7px;
-    height: 8px;
-    border-top: 2px solid rgba(126, 232, 255, 0.72);
-    border-radius: 50% 50% 0 0;
-  }
-
-  .scene-turtle {
-    left: 47px;
-    top: 13px;
-    width: 30px;
-    height: 14px;
-    border-radius: 60% 48% 50% 52%;
-    background: linear-gradient(135deg, rgba(214, 188, 93, 0.96), rgba(117, 106, 48, 0.94));
-    box-shadow: inset -5px -2px 0 rgba(76, 68, 34, 0.18);
-    transform: rotate(-8deg);
-  }
-
-  .scene-turtle::before {
-    left: -8px;
-    top: 4px;
-    width: 9px;
-    height: 7px;
-    border-radius: 50%;
-    background: rgba(180, 174, 96, 0.96);
-  }
-
-  .scene-turtle::after {
-    right: -11px;
-    top: 5px;
-    width: 14px;
-    height: 4px;
-    border-radius: 999px;
-    background: rgba(180, 174, 96, 0.72);
-    transform: rotate(12deg);
-  }
-
-  .header-scene::before {
-    left: 54px;
-    top: 7px;
-    width: 12px;
-    height: 20px;
-    border-radius: 999px;
-    background: rgba(169, 158, 79, 0.84);
-    transform: rotate(-36deg);
-  }
-
-  .header-scene::after {
-    left: 57px;
-    top: 20px;
-    width: 11px;
-    height: 18px;
-    border-radius: 999px;
-    background: rgba(169, 158, 79, 0.74);
-    transform: rotate(38deg);
+  .header-spacer {
+    flex: 1;
+    min-width: 12px;
   }
 
   .header-btn {  .header-btn {  .header-btn {
@@ -663,15 +571,7 @@
     box-shadow: 0 10px 24px rgba(37, 87, 111, 0.16);
   }
 
-  body.light-theme .header-scene {
-    border-color: rgba(13, 100, 118, 0.16);
-    background:
-      radial-gradient(circle at 22% 28%, rgba(255, 255, 255, 0.8), transparent 10px),
-      linear-gradient(180deg, rgba(243, 255, 255, 0.9) 0%, rgba(91, 194, 211, 0.5) 50%, rgba(36, 135, 162, 0.62) 100%);
-    box-shadow: 0 10px 22px rgba(37, 87, 111, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.72);
-  }
-
-  body.light-theme .hero-panel,  body.light-theme .hero-panel,  body.light-theme .hero-panel,
+  body.light-theme .hero-panel,  body.light-theme .hero-panel,  body.light-theme .hero-panel,  body.light-theme .hero-panel,
   body.light-theme .summary-strip,
   body.light-theme .dashboard-wrap,
   body.light-theme .section-card {
@@ -1239,7 +1139,7 @@
 <body>
 <header>
   <span id="listBtn" class="header-btn" onclick="showMeasurements()">&#128202;</span>
-  <span class="header-scene" aria-hidden="true"><span class="scene-surface"></span><span class="scene-turtle"></span><span class="scene-wave"></span></span>
+  <span class="header-spacer" aria-hidden="true"></span>
   <div class="header-actions">
     <span id="notesBtn" class="header-btn" onclick="openNotes()">&#128221;</span>
     <span id="settingsBtn" class="header-btn" onclick="openSettings()">&#9881;&#65039;</span>
@@ -1660,7 +1560,7 @@
 
   document.querySelector("header").innerHTML = `
     <span id="listBtn" class="header-btn" onclick="showMeasurements()">&#9776;</span>
-    <span class="header-scene" aria-hidden="true"><span class="scene-surface"></span><span class="scene-turtle"></span><span class="scene-wave"></span></span>
+    <span class="header-spacer" aria-hidden="true"></span>
     <div class="header-actions">
       <span id="notesBtn" class="header-btn" onclick="openNotes()">&#9998;</span>
       <span id="settingsBtn" class="header-btn" onclick="openSettings()">&#9881;</span>
