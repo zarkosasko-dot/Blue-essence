@@ -22,6 +22,13 @@
     box-sizing: border-box;
   }
 
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   body {
     margin: 0;
     min-height: 100vh;
@@ -31,6 +38,13 @@
       linear-gradient(180deg, rgba(3, 12, 22, 0.78), rgba(4, 18, 30, 0.9)),
       radial-gradient(circle at top, rgba(41, 119, 176, 0.2), transparent 34%),
       url("background.png") center/cover fixed no-repeat;
+  }
+
+  main,
+  .app-main {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   header {
@@ -571,7 +585,7 @@
     box-shadow: 0 10px 24px rgba(37, 87, 111, 0.16);
   }
 
-  body.light-theme .hero-panel,  body.light-theme .hero-panel,  body.light-theme .hero-panel,  body.light-theme .hero-panel,
+  body.light-theme .hero-panel,
   body.light-theme .summary-strip,
   body.light-theme .dashboard-wrap,
   body.light-theme .section-card {
@@ -963,11 +977,21 @@
     display: flex;
     align-items: center;
     gap: 14px;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .tank-hero > div {
+    min-width: 0;
   }
 
   .tank-photo {
-    width: 64px;
-    height: 64px;
+    flex: 0 0 64px;
+    width: 64px !important;
+    max-width: 64px !important;
+    height: 64px !important;
+    max-height: 64px !important;
     object-fit: cover;
     border-radius: 18px;
     border: 1px solid rgba(111, 229, 255, 0.16);
@@ -1127,6 +1151,31 @@
 
     .health-card {
       grid-template-columns: 1fr;
+    }
+
+    .hero-panel {
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .tank-hero {
+      width: 100%;
+    }
+
+    .tank-photo {
+      flex-basis: 52px;
+      width: 52px !important;
+      max-width: 52px !important;
+      height: 52px !important;
+      max-height: 52px !important;
+      border-radius: 15px;
+    }
+
+    .tank-hero .hero-status {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .footer {
@@ -2066,7 +2115,7 @@
     }
 
     if (imageDataUrl) {
-      preview.innerHTML = `<img class="tank-photo" src="${imageDataUrl}" alt="Preview slike tanka">`;
+      preview.innerHTML = `<img class="tank-photo" src="${imageDataUrl}" alt="Preview slike tanka" width="64" height="64">`;
       status.textContent = "Nova ili trenutna slika je spremna. Za potvrdu klikni Spremi postavke.";
       return;
     }
@@ -2099,7 +2148,7 @@
 
     const profile = getTankProfile();
     const photoMarkup = profile.image
-      ? `<img class="tank-photo" src="${profile.image}" alt="${escapeHtml(profile.name)}">`
+      ? `<img class="tank-photo" src="${profile.image}" alt="${escapeHtml(profile.name)}" width="64" height="64" loading="lazy">`
       : `<div class="tank-photo placeholder">TANK</div>`;
 
     tankHero.innerHTML = `
