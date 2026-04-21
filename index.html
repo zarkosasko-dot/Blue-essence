@@ -882,6 +882,36 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
   }
 
+  .note-photo,
+  .note-image-preview img {
+    display: block;
+    width: 100%;
+    max-height: 260px;
+    object-fit: cover;
+    margin-top: 12px;
+    border: 1px solid rgba(16, 40, 59, 0.12);
+    border-radius: 16px;
+    box-shadow: 0 10px 22px rgba(16, 40, 59, 0.12);
+  }
+
+  .note-image-preview {
+    margin: 8px 0 0;
+  }
+
+  .note-image-placeholder {
+    margin-top: 8px;
+    padding: 12px;
+    color: #607489;
+    background: rgba(16, 40, 59, 0.06);
+    border: 1px dashed rgba(16, 40, 59, 0.16);
+    border-radius: 14px;
+    font-size: 0.9rem;
+  }
+
+  .note-image-actions {
+    margin-top: 8px;
+  }
+
   .delete-btn {
     position: absolute;
     top: 6px;
@@ -1312,6 +1342,12 @@
     <h3 id="notes-popup-title">Bilješke</h3>
     <input id="noteDate" type="date">
     <textarea id="noteText" rows="3" placeholder="Upiši bilješku..."></textarea>
+    <input id="noteImageInput" type="file" accept="image/*" onchange="previewNoteImage(event)">
+    <div id="noteImagePreview" class="note-image-preview"></div>
+    <div class="popup-actions note-image-actions">
+      <button class="close-btn secondary-btn" type="button" onclick="removeNoteImage()">Makni fotku</button>
+    </div>
+    <div class="helper-text" id="noteImageStatus">Fotka nije obavezna. Možeš dodati sliku iz galerije.</div>
     <button class="close-btn" id="note-save-btn" onclick="saveNote()">Spremi bilješku</button>
     <input id="noteSearch" type="text" placeholder="Pretraži bilješke..." oninput="filterNotes()">
     <div id="notes-container"></div>
@@ -1849,6 +1885,7 @@
   let activeTheme = localStorage.getItem("theme") === "light" ? "light" : "dark";
   let editingMeasurementIndex = null;
   let editingNoteIndex = null;
+  let editingNoteImage = "";
   let editingTaskId = null;
   let returnToMeasurementsAfterEdit = false;
 
@@ -1954,13 +1991,71 @@
   function resetNoteForm() {
     const noteDate = document.getElementById("noteDate");
     const noteText = document.getElementById("noteText");
+    const noteImageInput = document.getElementById("noteImageInput");
     if (noteDate) {
       noteDate.valueAsDate = new Date();
     }
     if (noteText) {
       noteText.value = "";
     }
+    if (noteImageInput) {
+      noteImageInput.value = "";
+    }
+    editingNoteImage = "";
+    updateNoteImagePreview("");
     updateNoteFormState();
+  }
+
+
+
+  function updateNoteImagePreview(image) {
+    const preview = document.getElementById("noteImagePreview");
+    const status = document.getElementById("noteImageStatus");
+    if (!preview) {
+      return;
+    }
+
+    if (image) {
+      preview.innerHTML = `<img src="${image}" alt="Fotka uz bilje\u0161ku">`;
+      if (status) {
+        status.textContent = "Fotka je spremna uz bilje\u0161ku.";
+      }
+      return;
+    }
+
+    preview.innerHTML = `<div class="note-image-placeholder">Nema dodane fotke.</div>`;
+    if (status) {
+      status.textContent = "Fotka nije obavezna. Mo\u017ee\u0161 dodati sliku iz galerije.";
+    }
+  }
+
+  function previewNoteImage(event) {
+    const file = event?.target?.files?.[0];
+    if (!file) {
+      updateNoteImagePreview(editingNoteImage);
+      return;
+    }
+
+    readFileAsDataUrl(file)
+      .then((dataUrl) => {
+        editingNoteImage = dataUrl;
+        updateNoteImagePreview(editingNoteImage);
+      })
+      .catch(() => {
+        const status = document.getElementById("noteImageStatus");
+        if (status) {
+          status.textContent = "Ne mogu u\u010ditati odabranu fotku.";
+        }
+      });
+  }
+
+  function removeNoteImage() {
+    const noteImageInput = document.getElementById("noteImageInput");
+    if (noteImageInput) {
+      noteImageInput.value = "";
+    }
+    editingNoteImage = "";
+    updateNoteImagePreview("");
   }
 
   function updateTaskFormState() {
@@ -3298,9 +3393,15 @@
     }
 
     editingNoteIndex = index;
+    editingNoteImage = note.image || "";
     openPopup("notes-popup");
     document.getElementById("noteDate").value = note.date || "";
     document.getElementById("noteText").value = note.text || "";
+    const noteImageInput = document.getElementById("noteImageInput");
+    if (noteImageInput) {
+      noteImageInput.value = "";
+    }
+    updateNoteImagePreview(editingNoteImage);
     updateNoteFormState();
   }
 
@@ -3460,19 +3561,23 @@
     const container = document.getElementById("notes-container");
 
     if (list.length === 0) {
-      container.innerHTML = "<em>Nema bilješki.</em>";
+      container.innerHTML = "<em>Nema bilje?ki.</em>";
       return;
     }
 
     container.innerHTML = list.map((note) => {
       const actualIndex = notes.indexOf(note);
+      const photoMarkup = note.image
+        ? `<img class="note-photo" src="${note.image}" alt="Fotka uz bilje\u0161ku">`
+        : "";
       return `
         <div class="note-card">
           <div class="card-actions">
-            <button class="icon-action edit-action" type="button" title="Uredi bilješku" aria-label="Uredi bilješku" onclick="editNote(${actualIndex})">&#9998;</button>
-            <button class="icon-action delete-action" type="button" title="Obriši bilješku" aria-label="Obriši bilješku" onclick="deleteNote(${actualIndex})">&#128465;</button>
+            <button class="icon-action edit-action" type="button" title="Uredi bilje?ku" aria-label="Uredi bilje?ku" onclick="editNote(${actualIndex})">&#9998;</button>
+            <button class="icon-action delete-action" type="button" title="Obri?i bilje?ku" aria-label="Obri?i bilje?ku" onclick="deleteNote(${actualIndex})">&#128465;</button>
           </div>
-          <strong>${escapeHtml(formatDate(note.date))}</strong><br>${escapeHtml(note.text)}
+          <strong>${escapeHtml(formatDate(note.date))}</strong><br>${escapeHtml(note.text || "Bez teksta")}
+          ${photoMarkup}
         </div>`;
     }).join("");
   }
@@ -3481,13 +3586,21 @@
     renderNotesList([...notes].reverse());
   }
 
-  function saveNote() {
+  async function saveNote() {
+    const noteImageInput = document.getElementById("noteImageInput");
+    let image = editingNoteImage;
+
+    if (noteImageInput?.files?.[0]) {
+      image = await readFileAsDataUrl(noteImageInput.files[0]);
+    }
+
     const note = {
       date: document.getElementById("noteDate").value,
-      text: document.getElementById("noteText").value.trim()
+      text: document.getElementById("noteText").value.trim(),
+      image
     };
 
-    if (!note.text) {
+    if (!note.text && !note.image) {
       return;
     }
 
@@ -3517,7 +3630,7 @@
     const searchTerm = document.getElementById("noteSearch").value.trim().toLowerCase();
     const filtered = notes.filter((note) => {
       return (
-        note.text.toLowerCase().includes(searchTerm) ||
+        (note.text || "").toLowerCase().includes(searchTerm) ||
         formatDate(note.date).toLowerCase().includes(searchTerm)
       );
     }).reverse();
