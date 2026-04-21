@@ -54,42 +54,106 @@
   }
 
   .reef-mark {
+    --reef-bg-1: rgba(12, 54, 77, 0.96);
+    --reef-bg-2: rgba(7, 22, 37, 0.82);
+    --reef-wave: rgba(126, 232, 255, 0.86);
+    --reef-coral: rgba(255, 139, 93, 0.96);
+    --reef-coral-soft: rgba(255, 194, 125, 0.9);
     position: absolute;
     left: 50%;
-    top: 14px;
+    top: 12px;
+    width: 72px;
+    height: 40px;
+    overflow: hidden;
     transform: translateX(-50%);
-    width: 58px;
-    height: 34px;
     border: 1px solid rgba(111, 229, 255, 0.18);
     border-radius: 999px;
     background:
-      radial-gradient(circle at 32% 45%, rgba(255, 148, 101, 0.95) 0 5px, transparent 6px),
-      radial-gradient(circle at 56% 42%, rgba(67, 217, 175, 0.9) 0 4px, transparent 5px),
-      linear-gradient(135deg, rgba(18, 77, 99, 0.88), rgba(8, 24, 41, 0.72));
-    box-shadow: 0 10px 24px rgba(2, 12, 24, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      radial-gradient(circle at 74% 24%, rgba(89, 213, 204, 0.24), transparent 28%),
+      linear-gradient(135deg, var(--reef-bg-1), var(--reef-bg-2));
+    box-shadow: 0 12px 26px rgba(2, 12, 24, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.08);
     pointer-events: none;
   }
 
   .reef-mark::before,
-  .reef-mark::after {
+  .reef-mark::after,
+  .reef-wave,
+  .reef-wave::before,
+  .reef-coral,
+  .reef-coral::before,
+  .reef-coral::after {
     content: "";
     position: absolute;
+    display: block;
+  }
+
+  .reef-wave {
+    right: 10px;
     bottom: 9px;
-    height: 2px;
-    border-radius: 999px;
-    background: rgba(126, 232, 255, 0.72);
+    width: 38px;
+    height: 15px;
+    border-bottom: 3px solid var(--reef-wave);
+    border-radius: 0 0 999px 999px;
+    transform: rotate(-5deg);
+  }
+
+  .reef-wave::before {
+    right: 7px;
+    bottom: 5px;
+    width: 28px;
+    height: 12px;
+    border-bottom: 2px solid rgba(126, 232, 255, 0.54);
+    border-radius: 0 0 999px 999px;
   }
 
   .reef-mark::before {
-    left: 13px;
-    width: 31px;
+    left: 18px;
+    bottom: 9px;
+    width: 5px;
+    height: 18px;
+    background: linear-gradient(180deg, var(--reef-coral-soft), var(--reef-coral));
+    border-radius: 999px 999px 5px 5px;
   }
 
   .reef-mark::after {
-    left: 22px;
-    bottom: 14px;
-    width: 22px;
-    opacity: 0.6;
+    left: 13px;
+    bottom: 17px;
+    width: 17px;
+    height: 17px;
+    border-top: 4px solid var(--reef-coral);
+    border-left: 4px solid var(--reef-coral);
+    border-radius: 14px 0 0 0;
+    transform: rotate(-18deg);
+  }
+
+  .reef-coral {
+    left: 27px;
+    bottom: 10px;
+    width: 4px;
+    height: 15px;
+    background: var(--reef-coral-soft);
+    border-radius: 999px;
+    transform: rotate(12deg);
+  }
+
+  .reef-coral::before {
+    left: -8px;
+    top: 4px;
+    width: 13px;
+    height: 4px;
+    background: var(--reef-coral);
+    border-radius: 999px;
+    transform: rotate(-28deg);
+  }
+
+  .reef-coral::after {
+    right: -8px;
+    top: 2px;
+    width: 12px;
+    height: 4px;
+    background: var(--reef-coral-soft);
+    border-radius: 999px;
+    transform: rotate(34deg);
   }
 
   .header-btn {
@@ -575,11 +639,12 @@
   }
 
   body.light-theme .reef-mark {
+    --reef-bg-1: rgba(205, 244, 244, 0.96);
+    --reef-bg-2: rgba(255, 255, 255, 0.8);
+    --reef-wave: rgba(18, 128, 151, 0.78);
+    --reef-coral: rgba(239, 111, 78, 0.94);
+    --reef-coral-soft: rgba(245, 162, 92, 0.9);
     border-color: rgba(13, 100, 118, 0.16);
-    background:
-      radial-gradient(circle at 32% 45%, rgba(255, 139, 88, 0.92) 0 5px, transparent 6px),
-      radial-gradient(circle at 56% 42%, rgba(34, 174, 139, 0.86) 0 4px, transparent 5px),
-      linear-gradient(135deg, rgba(202, 243, 243, 0.94), rgba(255, 255, 255, 0.78));
     box-shadow: 0 12px 24px rgba(37, 87, 111, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.7);
   }
 
@@ -1115,7 +1180,7 @@
 <body>
 <header>
   <span id="listBtn" class="header-btn" onclick="showMeasurements()">&#128202;</span>
-  <span class="reef-mark" aria-hidden="true"></span>
+  <span class="reef-mark" aria-hidden="true"><span class="reef-wave"></span><span class="reef-coral"></span></span>
   <div class="header-actions">
     <span id="notesBtn" class="header-btn" onclick="openNotes()">&#128221;</span>
     <span id="settingsBtn" class="header-btn" onclick="openSettings()">&#9881;&#65039;</span>
@@ -1530,7 +1595,7 @@
 
   document.querySelector("header").innerHTML = `
     <span id="listBtn" class="header-btn" onclick="showMeasurements()">&#9776;</span>
-    <span class="reef-mark" aria-hidden="true"></span>
+    <span class="reef-mark" aria-hidden="true"><span class="reef-wave"></span><span class="reef-coral"></span></span>
     <div class="header-actions">
       <span id="notesBtn" class="header-btn" onclick="openNotes()">&#9998;</span>
       <span id="settingsBtn" class="header-btn" onclick="openSettings()">&#9881;</span>
@@ -1975,7 +2040,7 @@
     }
 
     preview.innerHTML = `<div class="tank-photo placeholder">TANK</div>`;
-    status.textContent = "Odaberi sliku pa spremi postavke.";
+    status.textContent = "Odaberi sliku iz galerije pa spremi postavke.";
   }
 
   function previewTankImage(event) {
@@ -3471,9 +3536,9 @@
       <h3>Postavke parametara</h3>
       <h4>Profil tanka</h4>
       <input id="tankNameInput" type="text" placeholder="Naziv tanka">
-      <input id="tankImageInput" type="file" accept="image/*" capture="environment" onchange="previewTankImage(event)">
+      <input id="tankImageInput" type="file" accept="image/*" onchange="previewTankImage(event)">
       <div id="tankImagePreview" style="margin:10px 0 6px;"></div>
-      <div class="helper-text" id="tankImageStatus">Odaberi sliku pa spremi postavke.</div>
+      <div class="helper-text" id="tankImageStatus">Odaberi sliku iz galerije pa spremi postavke.</div>
       <p class="helper-text">Po želji dodaj sliku tanka. Sprema se lokalno u aplikaciji.</p>
       <label for="tankType">Tip akvarija:</label>
       <select id="tankType" onchange="applyTankType()">
