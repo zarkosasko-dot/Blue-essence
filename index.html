@@ -1205,7 +1205,7 @@
       <div class="hero-status" id="hero-status">Pregled stanja akvarija i ključnih zadataka.</div>
     </div>
     <div class="hero-actions">
-      <button class="btn-add" onclick="openPopup('input-popup')">Dodaj mjerenje</button>
+      <button class="btn-add" data-i18n="action.addMeasurement" onclick="openPopup('input-popup')">Dodaj mjerenje</button>
       <button class="close-btn secondary-btn" onclick="showStaleWarning(true)">Pregled upozorenja</button>
     </div>
   </section>
@@ -1243,7 +1243,7 @@
     <div class="helper-text" id="temp-sync-status">Elitech temperatura još nije dohvaćena.</div>
     <div class="popup-actions">
       <button class="close-btn" onclick="saveMeasurement()">Spremi</button>
-      <button class="close-btn" onclick="closePopup('input-popup')">Odustani</button>
+      <button class="close-btn" data-i18n="action.cancel" onclick="closePopup('input-popup')">Odustani</button>
     </div>
   </div>
 </div>
@@ -1251,7 +1251,7 @@
 <div class="popup" id="settings-popup">
   <div class="popup-content">
     <h3>Postavke parametara</h3>
-    <label for="tankType">Tip akvarija:</label>
+    <label for="tankType" data-i18n="settings.tankType">Tip akvarija:</label>
     <select id="tankType" onchange="applyTankType()">
       <option value="custom">Custom</option>
       <option value="softy">Softy tank</option>
@@ -1261,24 +1261,24 @@
     <table>
       <thead>
         <tr>
-          <th>Parametar</th>
+          <th data-i18n="settings.parameter">Parametar</th>
           <th>Min</th>
           <th>Max</th>
         </tr>
       </thead>
       <tbody id="settings-table"></tbody>
     </table>
-    <h4>Elitech temperatura</h4>
+    <h4 data-i18n="settings.elitechTitle">Elitech temperatura</h4>
     <label><input id="elitechEnabled" type="checkbox"> Uključi Elitech dohvat</label>
     <input id="elitechProxyUrl" type="text" placeholder="https://tvoj-proxy.example.com/api/elitech-temperature">
     <p class="helper-text">Upiši adresu svog Elitech proxy endpointa. Temperatura će se prikazati na postojećoj Temp kartici.</p>
     <div class="popup-actions">
-      <button class="close-btn secondary-btn" onclick="testElitechConnection()">Testiraj Elitech vezu</button>
+      <button class="close-btn secondary-btn" data-i18n="action.testElitech" onclick="testElitechConnection()">Testiraj Elitech vezu</button>
     </div>
-    <div class="elitech-status" id="elitech-status">Elitech nije konfiguriran.</div>
+    <div class="elitech-status" id="elitech-status" data-i18n="settings.elitechNotConfigured">Elitech nije konfiguriran.</div>
     <div class="popup-actions">
-      <button class="close-btn" onclick="saveSettings()">Spremi postavke</button>
-      <button class="close-btn" onclick="closePopup('settings-popup')">Zatvori</button>
+      <button class="close-btn" data-i18n="action.saveSettings" onclick="saveSettings()">Spremi postavke</button>
+      <button class="close-btn" data-i18n="action.close" onclick="closePopup('settings-popup')">Zatvori</button>
     </div>
   </div>
 </div>
@@ -1607,6 +1607,75 @@
     }
   };
 
+
+  const translations = {
+    hr: {
+      "lang.hr": "Hrvatski", "lang.en": "English",
+      "action.add": "Dodaj", "action.addMeasurement": "Dodaj mjerenje", "action.alerts": "Upozorenja", "action.open": "Otvori", "action.openAll": "Otvori sve", "action.openNotes": "Otvori bilje\u0161ke", "action.measurements": "Mjerenja", "action.save": "Spremi", "action.saveChanges": "Spremi izmjene", "action.saveSettings": "Spremi postavke", "action.saveTask": "Spremi zadatak", "action.cancel": "Odustani", "action.close": "Zatvori", "action.testElitech": "Testiraj Elitech vezu",
+      "nav.home": "Po\u010detna", "nav.params": "Parametri", "nav.tasks": "Zadaci", "nav.logbook": "Dnevnik", "nav.more": "Vi\u0161e",
+      "home.healthScore": "Ocjena stanja", "home.loading": "U\u010ditavanje...", "home.healthIntro": "Pregled stabilnosti i prioriteta za danas.", "home.needsAttention": "Treba pa\u017enju", "home.needsAttentionCopy": "Najva\u017enije stvari koje tra\u017ee reakciju.", "home.quickParams": "Brzi parametri", "home.quickParamsCopy": "Najbitnije vrijednosti za brzi pregled.", "home.trends": "Trendovi parametara", "home.trendsCopy": "\u0160to raste, pada ili ostaje stabilno.", "home.myTasks": "Moji zadaci", "home.myTasksCopy": "Ru\u010dno dodani zadaci koje \u017eeli\u0161 pratiti.",
+      "params.title": "Parametri", "params.copy": "Dodirni karticu za trend, status i preporuke.", "params.updatedDash": "A\u017eurirano -",
+      "tasks.title": "Zadaci", "tasks.copy": "Rutine i zadaci koji dolaze na red.",
+      "logbook.title": "Dnevnik", "logbook.copy": "Pretra\u017ei, otvori i uredi bilje\u0161ke bez odlaska u Vi\u0161e.", "logbook.searchPlaceholder": "Pretra\u017ei bilje\u0161ke...",
+      "more.title": "Vi\u0161e", "more.copy": "Postavke, mjerenja i dodatne opcije.", "more.measurementsCopy": "Pregled svih spremljenih mjerenja.", "more.notesCopy": "Dodaj ili pregledaj bilje\u0161ke o tanku.", "more.settingsCopy": "Rasponi i konfiguracija akvarija.", "more.theme": "Tema", "more.themeCopy": "Prebaci izme\u0111u tamnog reef pogleda i svjetlije dnevne teme.", "more.info": "Info", "more.version": "Verzija: v1.3", "more.author": "Izradio: Zarko",
+      "theme.light": "Svijetla tema", "theme.dark": "Tamna tema",
+      "measurement.addTitle": "Dodaj mjerenje", "measurement.editTitle": "Uredi mjerenje", "measurement.salinityPlaceholder": "Salinitet",
+      "task.newTitle": "Novi zadatak", "task.editTitle": "Uredi zadatak", "task.titlePlaceholder": "Naziv zadatka", "task.metaPlaceholder": "Kratka oznaka, npr. Nedjelja", "task.textPlaceholder": "Kratka napomena ili opis",
+      "repeat.once": "Jednom", "repeat.daily": "Dnevno", "repeat.weekly": "Tjedno", "repeat.monthly": "Mjese\u010dno",
+      "settings.title": "Postavke parametara", "settings.language": "Jezik", "settings.appLanguage": "Jezik aplikacije:", "settings.profile": "Profil tanka", "settings.tankNamePlaceholder": "Naziv tanka", "settings.tankImageStatus": "Odaberi sliku iz galerije pa spremi postavke.", "settings.tankImageHelp": "Po \u017eelji dodaj sliku tanka. Sprema se lokalno u aplikaciji.", "settings.tankType": "Tip akvarija:", "settings.parameter": "Parametar", "settings.elitechTitle": "Elitech temperatura", "settings.elitechEnabled": "Uklju\u010di Elitech dohvat", "settings.elitechHelp": "Upi\u0161i adresu svog Elitech proxy endpointa. Temperatura \u0107e se prikazati na postoje\u0107oj Temp kartici.", "settings.elitechNotConfigured": "Elitech nije konfiguriran.",
+      "hero.today": "Pregled danas", "hero.statusIntro": "Pregled stanja akvarija i klju\u010dnih zadataka.",
+      "dashboard.updated": "A\u017eurirano", "dashboard.staleSuffix": "\u010dekaju novo mjerenje dulje od preporu\u010denog ritma.", "dashboard.staleHero": "{count} parametra \u010dekaju novo mjerenje.", "dashboard.outOfRangeHero": "{count} parametra su izvan raspona.", "dashboard.stableHero": "Sustav izgleda stabilno i spreman je za brzi pregled.",
+      "health.stableWithStale": "Stanje izgleda stabilno, ali {count} parametra nisu svje\u017ee mjerena.", "health.stable": "Tank izgleda stabilno, a manja odstupanja su jo\u0161 unutar sigurne zone.", "health.medium": "Ima odstupanja koja tra\u017ee postupnu korekciju i pra\u0107enje trenda.", "health.criticalPrefix": "Kreni od ovoga:", "health.critical": "Vi\u0161e bitnih parametara je van raspona i treba ih mirno vratiti pod kontrolu.",
+      "attention.staleTitle": "{param} tra\u017ei novo mjerenje", "attention.staleText": "Zadnje mjerenje je starije od preporu\u010denog intervala od {days} dana. Vrijeme je za novo o\u010ditanje i provjeru trenda.", "attention.outOfRangeTitle": "{param} je izvan raspona", "attention.outOfRangeText": "Zadnja vrijednost je {value}. Otvori parametar i pogledaj graf i preporuke za korekciju.", "attention.empty": "Sve izgleda uredno. Trenutno nema hitnih upozorenja.",
+      "trend.stable": "{param} je stabilan kroz zadnja o\u010ditanja.", "trend.up": "{param} pokazuje uzlazni trend kroz zadnja o\u010ditanja.", "trend.down": "{param} pokazuje silazni trend kroz zadnja o\u010ditanja.", "trend.empty": "Jo\u0161 nema dovoljno mjerenja za trend analizu.",
+      "tasks.my": "Moji zadaci", "tasks.myCopy": "Ru\u010dni zadaci koje si sam dodao u aplikaciju.", "tasks.open": "Otvoreni", "tasks.done": "Gotovi", "tasks.all": "Svi", "tasks.auto": "Automatski zadaci", "tasks.autoCopy": "Zadaci generirani iz ritma odr\u017eavanja i ka\u0161njenja mjerenja.", "tasks.noCustom": "Jo\u0161 nema ru\u010dno dodanih zadataka.", "tasks.noAuto": "Nema automatskih zadataka za prikaz.", "tasks.due": "Rok", "tasks.noDue": "Bez roka", "tasks.completed": "Gotovo", "tasks.restore": "Vrati", "tasks.editTitle": "Uredi zadatak", "tasks.deleteTitle": "Obri\u0161i zadatak", "tasks.homeEmpty": "Jo\u0161 nema ru\u010dno dodanih zadataka. Otvori Zadaci i dodaj prvi podsjetnik.",
+      "warnings.title": "Upozorenja", "warnings.noneTitle": "Nema aktivnih upozorenja", "warnings.copy": "Ovo su stvari koje trenutno tra\u017ee pa\u017enju:", "warnings.noneCopy": "Klik je radio, samo trenutno nema ni\u010dega kriti\u010dnog za prikaz.", "warnings.staleTitle": "{param} treba novo mjerenje", "warnings.staleText": "Zadnje mjerenje je prije {days} dana ({date}). Preporu\u010deni ritam je svakih {freshness} dana.", "warnings.low": "prenizak", "warnings.high": "previsok", "warnings.rangeAbove": "iznad", "warnings.rangeBelow": "ispod", "warnings.rangeText": "Zadnja vrijednost je {value}{unit}, mjereno {date}. Ciljani raspon je {range}.", "warnings.empty": "Ocjena stanja je {score}/100 ({label}). Ako \u017eeli\u0161 dodatnu sigurnost, provjeri trend temperature, saliniteta i KH.",
+      "rec.temp": "Provjeri grija\u010d, rashladu i dnevne oscilacije temperature.", "rec.salinity": "Provjeri refraktometar i ATO prije korekcije saliniteta.", "rec.kh": "Provjeri doziranje i potro\u0161nju alkaliniteta prije ve\u0107e korekcije.", "rec.ph": "Provjeri ventilaciju prostora i dnevne oscilacije pH.", "rec.ca": "Provjeri doziranje kalcija i odnos s KH.", "rec.mg": "Provjeri magnezij postupno, bez naglih korekcija.", "rec.no3": "Provjeri hranjenje i export ako NO3 nastavlja bje\u017eati.", "rec.po4": "Provjeri hranjenje, detritus i fosfatni medij ako ga koristi\u0161.",
+      "auto.measureTitle": "Izmjeri {param}", "auto.priority": "Automatski prioritet", "auto.staleText": "Zadnje mjerenje je starije od preporu\u010denog intervala od {days} dana.", "auto.testTitle": "Testiraj parametre vode", "auto.testText": "Odradi kompletno tjedno testiranje glavnih parametara.", "auto.waterChangeTitle": "Zamjena vode (10%)", "auto.waterChangeText": "Rutinska izmjena vode za stabilnost sustava.", "auto.cleanGlassTitle": "O\u010disti staklo", "auto.cleanGlassMeta": "Svakih nekoliko dana", "auto.cleanGlassText": "Brzo \u010di\u0161\u0107enje stakla i vizualna provjera tanka.", "auto.filterFlossTitle": "Zamijeni filter vatu", "auto.filterFlossMeta": "Svaka 2 tjedna", "auto.filterFlossText": "Zamijeni mehani\u010dki medij i provjeri protok.",
+      "notes.empty": "Nema bilje\u0161ki.", "notes.editTitle": "Uredi bilje\u0161ku", "notes.deleteTitle": "Obri\u0161i bilje\u0161ku", "notes.noText": "Bez teksta", "logbook.noResults": "Nema bilje\u0161ki za \"{term}\".", "logbook.emptyState": "Jo\u0161 nema bilje\u0161ki. Dodaj opa\u017eanja, fotke, izmjene vode ili doziranje.", "logbook.photoAlt": "Fotka uz bilje\u0161ku", "logbook.photoNote": "Bilje\u0161ka s fotkom", "measurement.empty": "Nema mjerenja.", "measurement.deleteTitle": "Obri\u0161i mjerenje",
+      "settings.elitechProxyReady": "Proxy spreman:", "settings.elitechUnavailable": "Elitech trenutno nije dostupan.",
+      "status.stable": "Stabilno", "status.attention": "Tra\u017ei pa\u017enju", "status.critical": "Kriti\u010dno", "dashboard.status": "Stanje", "dashboard.entries": "Unosi", "dashboard.late": "Kasni", "dashboard.manualEntry": "Ru\u010dni unos"
+    },
+    en: {
+      "lang.hr": "Hrvatski", "lang.en": "English",
+      "action.add": "Add", "action.addMeasurement": "Add measurement", "action.alerts": "Alerts", "action.open": "Open", "action.openAll": "Open all", "action.openNotes": "Open notes", "action.measurements": "Measurements", "action.save": "Save", "action.saveChanges": "Save changes", "action.saveSettings": "Save settings", "action.saveTask": "Save task", "action.cancel": "Cancel", "action.close": "Close", "action.testElitech": "Test Elitech connection",
+      "nav.home": "Home", "nav.params": "Parameters", "nav.tasks": "Tasks", "nav.logbook": "Logbook", "nav.more": "More",
+      "home.healthScore": "Health score", "home.loading": "Loading...", "home.healthIntro": "Stability and priority overview for today.", "home.needsAttention": "Needs attention", "home.needsAttentionCopy": "The most important items that need action.", "home.quickParams": "Quick parameters", "home.quickParamsCopy": "Key values for a fast check.", "home.trends": "Parameter trends", "home.trendsCopy": "What is rising, falling, or staying stable.", "home.myTasks": "My tasks", "home.myTasksCopy": "Manual tasks you want to track.",
+      "params.title": "Parameters", "params.copy": "Tap a card for trend, status, and recommendations.", "params.updatedDash": "Updated -", "tasks.title": "Tasks", "tasks.copy": "Routines and tasks coming up next.", "logbook.title": "Logbook", "logbook.copy": "Search, open, and edit notes without going to More.", "logbook.searchPlaceholder": "Search notes...",
+      "more.title": "More", "more.copy": "Settings, measurements, and extra options.", "more.measurementsCopy": "View all saved measurements.", "more.notesCopy": "Add or review tank notes.", "more.settingsCopy": "Ranges and aquarium configuration.", "more.theme": "Theme", "more.themeCopy": "Switch between the dark reef view and a lighter daytime theme.", "more.info": "Info", "more.version": "Version: v1.3", "more.author": "Created by: Zarko",
+      "theme.light": "Light theme", "theme.dark": "Dark theme", "measurement.addTitle": "Add measurement", "measurement.editTitle": "Edit measurement", "measurement.salinityPlaceholder": "Salinity", "task.newTitle": "New task", "task.editTitle": "Edit task", "task.titlePlaceholder": "Task name", "task.metaPlaceholder": "Short label, e.g. Sunday", "task.textPlaceholder": "Short note or description", "repeat.once": "Once", "repeat.daily": "Daily", "repeat.weekly": "Weekly", "repeat.monthly": "Monthly",
+      "settings.title": "Parameter settings", "settings.language": "Language", "settings.appLanguage": "App language:", "settings.profile": "Tank profile", "settings.tankNamePlaceholder": "Tank name", "settings.tankImageStatus": "Choose an image from gallery, then save settings.", "settings.tankImageHelp": "Optionally add a tank photo. It is stored locally in the app.", "settings.tankType": "Aquarium type:", "settings.parameter": "Parameter", "settings.elitechTitle": "Elitech temperature", "settings.elitechEnabled": "Enable Elitech fetch", "settings.elitechHelp": "Enter your Elitech proxy endpoint. Temperature will be shown on the existing Temp card.", "settings.elitechNotConfigured": "Elitech is not configured.",
+      "hero.today": "Today overview", "hero.statusIntro": "Aquarium status and key task overview.",
+      "dashboard.updated": "Updated", "dashboard.staleSuffix": "are waiting for a new measurement longer than the recommended rhythm.", "dashboard.staleHero": "{count} parameters need a new measurement.", "dashboard.outOfRangeHero": "{count} parameters are out of range.", "dashboard.stableHero": "The system looks stable and ready for a quick review.",
+      "health.stableWithStale": "Status looks stable, but {count} parameters are not freshly measured.", "health.stable": "The tank looks stable, and minor deviations are still inside the safe zone.", "health.medium": "Some deviations need gradual correction and trend monitoring.", "health.criticalPrefix": "Start here:", "health.critical": "Several important parameters are out of range and should be calmly brought back under control.",
+      "attention.staleTitle": "{param} needs a new measurement", "attention.staleText": "The last measurement is older than the recommended {days}-day interval. It is time for a new reading and trend check.", "attention.outOfRangeTitle": "{param} is out of range", "attention.outOfRangeText": "Last value is {value}. Open the parameter to review the chart and correction recommendations.", "attention.empty": "Everything looks orderly. There are no urgent alerts right now.",
+      "trend.stable": "{param} is stable across the latest readings.", "trend.up": "{param} is trending upward across the latest readings.", "trend.down": "{param} is trending downward across the latest readings.", "trend.empty": "There are not enough measurements for trend analysis yet.",
+      "tasks.my": "My tasks", "tasks.myCopy": "Manual tasks you added to the app.", "tasks.open": "Open", "tasks.done": "Done", "tasks.all": "All", "tasks.auto": "Automatic tasks", "tasks.autoCopy": "Tasks generated from maintenance rhythm and delayed measurements.", "tasks.noCustom": "There are no manually added tasks yet.", "tasks.noAuto": "No automatic tasks to show.", "tasks.due": "Due", "tasks.noDue": "No due date", "tasks.completed": "Done", "tasks.restore": "Restore", "tasks.editTitle": "Edit task", "tasks.deleteTitle": "Delete task", "tasks.homeEmpty": "There are no manually added tasks yet. Open Tasks and add the first reminder.",
+      "warnings.title": "Alerts", "warnings.noneTitle": "No active alerts", "warnings.copy": "These items currently need attention:", "warnings.noneCopy": "The click worked; there is simply nothing critical to show right now.", "warnings.staleTitle": "{param} needs a new measurement", "warnings.staleText": "Last measurement was {days} days ago ({date}). Recommended rhythm is every {freshness} days.", "warnings.low": "too low", "warnings.high": "too high", "warnings.rangeAbove": "above", "warnings.rangeBelow": "below", "warnings.rangeText": "Last value is {value}{unit}, measured on {date}. Target range is {range}.", "warnings.empty": "Health score is {score}/100 ({label}). For extra confidence, check temperature, salinity, and KH trends.",
+      "rec.temp": "Check heater, cooling, and daily temperature swings.", "rec.salinity": "Check the refractometer and ATO before correcting salinity.", "rec.kh": "Check dosing and alkalinity consumption before a larger correction.", "rec.ph": "Check room ventilation and daily pH swings.", "rec.ca": "Check calcium dosing and its relationship with KH.", "rec.mg": "Correct magnesium gradually, without sudden changes.", "rec.no3": "Check feeding and export if NO3 keeps drifting.", "rec.po4": "Check feeding, detritus, and phosphate media if you use it.",
+      "auto.measureTitle": "Measure {param}", "auto.priority": "Automatic priority", "auto.staleText": "The last measurement is older than the recommended {days}-day interval.", "auto.testTitle": "Test water parameters", "auto.testText": "Run the full weekly test of the main parameters.", "auto.waterChangeTitle": "Water change (10%)", "auto.waterChangeText": "Routine water change for system stability.", "auto.cleanGlassTitle": "Clean the glass", "auto.cleanGlassMeta": "Every few days", "auto.cleanGlassText": "Quick glass cleaning and visual tank check.", "auto.filterFlossTitle": "Replace filter floss", "auto.filterFlossMeta": "Every 2 weeks", "auto.filterFlossText": "Replace mechanical media and check flow.",
+      "notes.empty": "No notes.", "notes.editTitle": "Edit note", "notes.deleteTitle": "Delete note", "notes.noText": "No text", "logbook.noResults": "No notes for \"{term}\".", "logbook.emptyState": "No notes yet. Add observations, photos, water changes, or dosing.", "logbook.photoAlt": "Photo attached to note", "logbook.photoNote": "Photo note", "measurement.empty": "No measurements.", "measurement.deleteTitle": "Delete measurement",
+      "settings.elitechProxyReady": "Proxy ready:", "settings.elitechUnavailable": "Elitech is currently unavailable.",
+      "status.stable": "Stable", "status.attention": "Needs attention", "status.critical": "Critical", "dashboard.status": "Status", "dashboard.entries": "Entries", "dashboard.late": "Late", "dashboard.manualEntry": "Manual entry"
+    }
+  };
+
+  let activeLanguage = ["hr", "en"].includes(localStorage.getItem("language")) ? localStorage.getItem("language") : "hr";
+  function t(key, fallback) { return translations[activeLanguage]?.[key] || translations.hr[key] || fallback || key; }
+  function ti(key, values = {}, fallback) {
+    return Object.entries(values).reduce((text, [token, value]) => text.replaceAll(`{${token}}`, value), t(key, fallback));
+  }
+  function applyTranslations(root = document) {
+    root.querySelectorAll("[data-i18n]").forEach((node) => { node.textContent = t(node.dataset.i18n, node.textContent); });
+    root.querySelectorAll("[data-i18n-placeholder]").forEach((node) => { node.setAttribute("placeholder", t(node.dataset.i18nPlaceholder, node.getAttribute("placeholder") || "")); });
+    document.documentElement.lang = activeLanguage === "en" ? "en" : "hr";
+  }
+  function setAppLanguage(language) {
+    activeLanguage = ["hr", "en"].includes(language) ? language : "hr";
+    localStorage.setItem("language", activeLanguage);
+    applyTranslations(); updateThemeToggleLabel(); updateMeasurementFormState(); updateNoteFormState(); updateTaskFormState(); renderDashboard();
+  }
+
   document.querySelector("header").innerHTML = `
     <span id="listBtn" class="header-btn" onclick="showMeasurements()">&#9776;</span>
     <span class="header-spacer" aria-hidden="true"></span>
@@ -1622,8 +1691,8 @@
       <div class="hero-status" id="hero-status">Pregled stanja akvarija i ključnih zadataka.</div>
     </div>
     <div class="hero-actions">
-      <button class="btn-add" onclick="openPopup('input-popup')">Dodaj mjerenje</button>
-      <button class="close-btn secondary-btn" onclick="showStaleWarning(true)">Upozorenja</button>
+      <button class="btn-add" data-i18n="action.addMeasurement" onclick="openPopup('input-popup')">Dodaj mjerenje</button>
+      <button class="close-btn secondary-btn" data-i18n="action.alerts" onclick="showStaleWarning(true)">Upozorenja</button>
     </div>
   `;
 
@@ -1632,8 +1701,8 @@
       <section class="hero-panel">
         <div class="tank-hero" id="tank-hero"></div>
         <div class="hero-actions">
-          <button class="btn-add" onclick="openPopup('input-popup')">Dodaj mjerenje</button>
-          <button class="close-btn secondary-btn" onclick="showStaleWarning(true)">Upozorenja</button>
+          <button class="btn-add" data-i18n="action.addMeasurement" onclick="openPopup('input-popup')">Dodaj mjerenje</button>
+          <button class="close-btn secondary-btn" data-i18n="action.alerts" onclick="showStaleWarning(true)">Upozorenja</button>
         </div>
       </section>
 
@@ -1645,9 +1714,9 @@
           <div class="health-card">
             <div class="health-ring" id="health-ring">--</div>
             <div class="health-copy">
-              <span class="hero-title">Ocjena stanja</span>
-              <strong id="health-label">Učitavanje...</strong>
-              <p id="health-copy">Pregled stabilnosti i prioriteta za danas.</p>
+              <span class="hero-title" data-i18n="home.healthScore">Ocjena stanja</span>
+              <strong id="health-label" data-i18n="home.loading">Učitavanje...</strong>
+              <p id="health-copy" data-i18n="home.healthIntro">Pregled stabilnosti i prioriteta za danas.</p>
             </div>
           </div>
         </div>
@@ -1655,8 +1724,8 @@
         <div class="section-card">
           <div class="section-head">
             <div>
-              <h3>Treba pažnju</h3>
-              <p>Najvažnije stvari koje traže reakciju.</p>
+              <h3 data-i18n="home.needsAttention">Treba pažnju</h3>
+              <p data-i18n="home.needsAttentionCopy">Najvažnije stvari koje traže reakciju.</p>
             </div>
           </div>
           <div class="attention-list" id="attention-list"></div>
@@ -1665,8 +1734,8 @@
         <div class="section-card">
           <div class="section-head">
             <div>
-              <h3>Brzi parametri</h3>
-              <p>Najbitnije vrijednosti za brzi pregled.</p>
+              <h3 data-i18n="home.quickParams">Brzi parametri</h3>
+              <p data-i18n="home.quickParamsCopy">Najbitnije vrijednosti za brzi pregled.</p>
             </div>
           </div>
           <div class="quick-grid" id="quick-grid"></div>
@@ -1675,8 +1744,8 @@
         <div class="section-card">
           <div class="section-head">
             <div>
-              <h3>Trendovi parametara</h3>
-              <p>Što raste, pada ili ostaje stabilno.</p>
+              <h3 data-i18n="home.trends">Trendovi parametara</h3>
+              <p data-i18n="home.trendsCopy">Što raste, pada ili ostaje stabilno.</p>
             </div>
           </div>
           <div class="trend-list" id="trend-list"></div>
@@ -1685,10 +1754,10 @@
         <div class="section-card">
           <div class="section-head">
             <div>
-              <h3>Moji zadaci</h3>
-              <p>Ručno dodani zadaci koje želiš pratiti.</p>
+              <h3 data-i18n="home.myTasks">Moji zadaci</h3>
+              <p data-i18n="home.myTasksCopy">Ručno dodani zadaci koje želiš pratiti.</p>
             </div>
-            <button class="task-done" onclick="setActiveView('tasks')">Otvori sve</button>
+            <button class="task-done" data-i18n="action.openAll" onclick="setActiveView('tasks')">Otvori sve</button>
           </div>
           <div class="tasks-list" id="home-tasks-preview"></div>
         </div>
@@ -1698,10 +1767,10 @@
         <section class="dashboard-wrap">
           <div class="dashboard-head">
             <div>
-              <h3>Parametri</h3>
-              <p>Dodirni karticu za trend, status i preporuke.</p>
+              <h3 data-i18n="params.title">Parametri</h3>
+              <p data-i18n="params.copy">Dodirni karticu za trend, status i preporuke.</p>
             </div>
-            <div class="dashboard-tag" id="dashboard-tag">Ažurirano -</div>
+            <div class="dashboard-tag" id="dashboard-tag" data-i18n="params.updatedDash">Ažurirano -</div>
           </div>
           <div class="grid" id="dashboard"></div>
         </section>
@@ -1711,10 +1780,10 @@
         <div class="section-card">
           <div class="section-head">
             <div>
-              <h3>Zadaci</h3>
-              <p>Rutine i zadaci koji dolaze na red.</p>
+              <h3 data-i18n="tasks.title">Zadaci</h3>
+              <p data-i18n="tasks.copy">Rutine i zadaci koji dolaze na red.</p>
             </div>
-            <button class="task-done" onclick="openPopup('task-popup')">Dodaj</button>
+            <button class="task-done" data-i18n="action.add" onclick="openPopup('task-popup')">Dodaj</button>
           </div>
           <div class="tasks-list" id="tasks-list"></div>
         </div>
@@ -1724,16 +1793,16 @@
         <div class="section-card">
           <div class="section-head">
             <div>
-              <h3>Dnevnik</h3>
-              <p>Pretraži, otvori i uredi bilješke bez odlaska u Više.</p>
+              <h3 data-i18n="logbook.title">Dnevnik</h3>
+              <p data-i18n="logbook.copy">Pretraži, otvori i uredi bilješke bez odlaska u Više.</p>
             </div>
             <div class="section-actions">
-              <button class="task-done" onclick="openNotes()">Otvori bilješke</button>
-              <button class="task-done" onclick="showMeasurements()">Mjerenja</button>
+              <button class="task-done" data-i18n="action.openNotes" onclick="openNotes()">Otvori bilješke</button>
+              <button class="task-done" data-i18n="action.measurements" onclick="showMeasurements()">Mjerenja</button>
             </div>
           </div>
           <div class="logbook-tools">
-            <input id="logbookSearchInput" type="text" placeholder="Pretraži bilješke..." oninput="setLogbookSearchTerm(this.value)">
+            <input id="logbookSearchInput" type="text" data-i18n-placeholder="logbook.searchPlaceholder" placeholder="Pretraži bilješke..." oninput="setLogbookSearchTerm(this.value)">
           </div>
           <div class="log-list" id="log-list"></div>
         </div>
@@ -1797,11 +1866,11 @@
 
   document.querySelector("body").insertAdjacentHTML("beforeend", `
     <nav class="tabbar" id="tabbar">
-      <button class="tab-btn active" data-view="home" onclick="setActiveView('home')">Početna</button>
-      <button class="tab-btn" data-view="params" onclick="setActiveView('params')">Parametri</button>
-      <button class="tab-btn" data-view="tasks" onclick="setActiveView('tasks')">Zadaci</button>
-      <button class="tab-btn" data-view="logbook" onclick="setActiveView('logbook')">Dnevnik</button>
-      <button class="tab-btn" data-view="more" onclick="setActiveView('more')">Više</button>
+      <button class="tab-btn active" data-view="home" data-i18n="nav.home" onclick="setActiveView('home')">Početna</button>
+      <button class="tab-btn" data-view="params" data-i18n="nav.params" onclick="setActiveView('params')">Parametri</button>
+      <button class="tab-btn" data-view="tasks" data-i18n="nav.tasks" onclick="setActiveView('tasks')">Zadaci</button>
+      <button class="tab-btn" data-view="logbook" data-i18n="nav.logbook" onclick="setActiveView('logbook')">Dnevnik</button>
+      <button class="tab-btn" data-view="more" data-i18n="nav.more" onclick="setActiveView('more')">Više</button>
     </nav>
   `);
 
@@ -1815,10 +1884,10 @@
     <input id="mg" type="number" step="any" placeholder="Mg">
     <input id="ph" type="number" step="any" placeholder="pH">
     <input id="temp" type="number" step="any" placeholder="Temp">
-    <input id="salinity" type="number" step="any" placeholder="Salinitet">
+    <input id="salinity" type="number" step="any" data-i18n-placeholder="measurement.salinityPlaceholder" placeholder="Salinitet">
     <div class="popup-actions">
       <button class="close-btn" id="measurement-save-btn" onclick="saveMeasurement()">Spremi</button>
-      <button class="close-btn" onclick="closePopup('input-popup')">Odustani</button>
+      <button class="close-btn" data-i18n="action.cancel" onclick="closePopup('input-popup')">Odustani</button>
     </div>
   `;
 
@@ -1843,6 +1912,8 @@
       </div>
     </div>
   `);
+
+  applyTranslations();
 
   const dashboard = document.getElementById("dashboard");
   const summaryStrip = document.getElementById("summary-strip");
@@ -1912,17 +1983,17 @@
 
   function getRepeatLabel(value) {
     return ({
-      once: "Jednom",
-      daily: "Dnevno",
-      weekly: "Tjedno",
-      monthly: "Mjesečno"
-    })[value] || "Jednom";
+      once: t("repeat.once"),
+      daily: t("repeat.daily"),
+      weekly: t("repeat.weekly"),
+      monthly: t("repeat.monthly")
+    })[value] || t("repeat.once");
   }
 
   function updateThemeToggleLabel() {
     const button = document.getElementById("theme-toggle-btn");
     if (button) {
-      button.textContent = activeTheme === "light" ? "Tamna tema" : "Svijetla tema";
+      button.textContent = activeTheme === "light" ? t("theme.dark") : t("theme.light");
     }
   }
 
@@ -1942,10 +2013,10 @@
     const title = document.getElementById("measurement-popup-title");
     const saveButton = document.getElementById("measurement-save-btn");
     if (title) {
-      title.textContent = editingMeasurementIndex === null ? "Dodaj mjerenje" : "Uredi mjerenje";
+      title.textContent = editingMeasurementIndex === null ? t("measurement.addTitle") : t("measurement.editTitle");
     }
     if (saveButton) {
-      saveButton.textContent = editingMeasurementIndex === null ? "Spremi" : "Spremi izmjene";
+      saveButton.textContent = editingMeasurementIndex === null ? t("action.save") : t("action.saveChanges");
     }
   }
 
@@ -2048,10 +2119,10 @@
     const title = document.getElementById("task-popup-title");
     const saveButton = document.getElementById("task-save-btn");
     if (title) {
-      title.textContent = editingTaskId === null ? "Novi zadatak" : "Uredi zadatak";
+      title.textContent = editingTaskId === null ? t("task.newTitle") : t("task.editTitle");
     }
     if (saveButton) {
-      saveButton.textContent = editingTaskId === null ? "Spremi zadatak" : "Spremi izmjene";
+      saveButton.textContent = editingTaskId === null ? t("action.saveTask") : t("action.saveChanges");
     }
   }
 
@@ -2154,13 +2225,12 @@
     tankHero.innerHTML = `
       ${photoMarkup}
       <div>
-        <div class="hero-title">Pregled danas</div>
+        <div class="hero-title">${escapeHtml(t("hero.today"))}</div>
         <div class="hero-status">${escapeHtml(profile.name)}</div>
-        <div class="helper-text" id="hero-status">Pregled stanja akvarija i ključnih zadataka.</div>
+        <div class="helper-text" id="hero-status">${escapeHtml(t("hero.statusIntro"))}</div>
       </div>
     `;
   }
-
   function setHeroStatusText(message) {
     const node = document.getElementById("hero-status");
     if (node) {
@@ -2210,7 +2280,7 @@
       return dateStr;
     }
 
-    return date.toLocaleDateString("hr-HR");
+    return date.toLocaleDateString(activeLanguage === "en" ? "en-US" : "hr-HR");
   }
 
   function getDaysSince(dateStr) {
@@ -2305,10 +2375,10 @@
     });
 
     summaryStrip.innerHTML = [
-      { label: "Mjerenja", value: String(measurements.length) },
-      { label: "Zadnji test", value: formatDate(lastMeasurement) },
-      { label: "Kasne parametri", value: String(staleItems.length) },
-      { label: "Temp", value: liveTemperature?.temperature !== undefined ? `${liveTemperature.temperature}${liveTemperature.unit || "°C"}` : "Ručni unos" }
+      { label: t("dashboard.status"), value: `${analysis.score}` },
+      { label: t("dashboard.entries"), value: String(measurements.length) },
+      { label: t("dashboard.late"), value: String(staleItems.length) },
+      { label: "Temp", value: liveTemperature?.temperature !== undefined ? `${liveTemperature.temperature}${liveTemperature.unit || "\u00b0C"}` : t("dashboard.manualEntry") }
     ].map((item) => `
       <div class="summary-box">
         <span>${item.label}</span>
@@ -2455,14 +2525,14 @@
       PO4: 0.8
     };
     const recommendationMap = {
-      Temp: "Provjeri grijac, rashladu i dnevne oscilacije temperature.",
-      Salinity: "Provjeri refraktometar i ATO prije korekcije saliniteta.",
-      KH: "Provjeri doziranje i potrosnju alkaliniteta prije vece korekcije.",
-      pH: "Provjeri ventilaciju prostora i dnevne oscilacije pH.",
-      Ca: "Provjeri doziranje kalcija i odnos s KH.",
-      Mg: "Provjeri magnezij postupno, bez naglih korekcija.",
-      NO3: "Provjeri hranjenje i export ako NO3 nastavlja bjezati.",
-      PO4: "Provjeri hranjenje, detritus i fosfatni medij ako ga koristis."
+      Temp: t("rec.temp"),
+      Salinity: t("rec.salinity"),
+      KH: t("rec.kh"),
+      pH: t("rec.ph"),
+      Ca: t("rec.ca"),
+      Mg: t("rec.mg"),
+      NO3: t("rec.no3"),
+      PO4: t("rec.po4")
     };
     const toleranceBands = {
       Temp: { warn: 0.5, major: 1.0, critical: 1.8 },
@@ -2542,7 +2612,7 @@
     const sortedIssues = issues.sort((a, b) => b.points - a.points);
     const score = Math.max(0, Math.min(100, Math.round(100 - penalty)));
     const color = score >= 85 ? "#4bd37b" : score >= 60 ? "#f2c94c" : "#ff6b6b";
-    const label = score >= 85 ? "Stabilno" : score >= 60 ? "Traži pažnju" : "Kritično";
+    const label = score >= 85 ? t("status.stable") : score >= 60 ? t("status.attention") : t("status.critical");
 
     return {
       score,
@@ -2583,12 +2653,12 @@
 
     const diff = current - previous;
     if (Math.abs(diff) < 0.001) {
-      return { direction: "stable", text: `${param} je stabilan kroz zadnja očitanja.` };
+      return { direction: "stable", text: ti("trend.stable", { param }) };
     }
 
     return diff > 0
-      ? { direction: "up", text: `${param} pokazuje uzlazni trend kroz zadnja očitanja.` }
-      : { direction: "down", text: `${param} pokazuje silazni trend kroz zadnja očitanja.` };
+      ? { direction: "up", text: ti("trend.up", { param }) }
+      : { direction: "down", text: ti("trend.down", { param }) };
   }
   function renderHomeExtrasLegacy() {
     if (!healthRing || !healthLabel || !healthCopy || !attentionList || !quickGrid || !trendList) {
@@ -2692,16 +2762,16 @@
 
   function getTaskItems() {
     const staleItems = getStaleItems().map((item) => ({
-      title: `Izmjeri ${item.param}`,
-      meta: "Automatski prioritet",
-      text: `Zadnje mjerenje je starije od preporučenog intervala od ${item.freshnessDays} dana.`
+      title: ti("auto.measureTitle", { param: item.param }),
+      meta: t("auto.priority"),
+      text: ti("auto.staleText", { days: item.freshnessDays })
     }));
 
     const routineTasks = [
-      { title: "Testiraj parametre vode", meta: "Tjedno", text: "Odradi kompletno tjedno testiranje glavnih parametara." },
-      { title: "Zamjena vode (10%)", meta: "Tjedno", text: "Rutinska izmjena vode za stabilnost sustava." },
-      { title: "Očisti staklo", meta: "Svakih nekoliko dana", text: "Brzo čišćenje stakla i vizualna provjera tanka." },
-      { title: "Zamijeni filter vatu", meta: "Svaka 2 tjedna", text: "Zamijeni mehanički medij i provjeri protok." }
+      { title: t("auto.testTitle"), meta: t("repeat.weekly"), text: t("auto.testText") },
+      { title: t("auto.waterChangeTitle"), meta: t("repeat.weekly"), text: t("auto.waterChangeText") },
+      { title: t("auto.cleanGlassTitle"), meta: t("auto.cleanGlassMeta"), text: t("auto.cleanGlassText") },
+      { title: t("auto.filterFlossTitle"), meta: t("auto.filterFlossMeta"), text: t("auto.filterFlossText") }
     ];
 
     return {
@@ -2807,30 +2877,29 @@
 
     if (visibleNotes.length === 0) {
       logList.innerHTML = search
-        ? `<div class="empty-state">Nema bilje?ki za "${escapeHtml(logbookSearchTerm)}".</div>`
-        : `<div class="empty-state">Još nema bilje?ki. Dodaj opažanja, fotke, izmjene vode ili doziranje.</div>`;
+        ? `<div class="empty-state">${escapeHtml(ti("logbook.noResults", { term: logbookSearchTerm }))}</div>`
+        : `<div class="empty-state">${escapeHtml(t("logbook.emptyState"))}</div>`;
       return;
     }
 
     logList.innerHTML = visibleNotes.map(({ note, index }) => {
       const photoMarkup = note.image
-        ? `<img class="log-photo" src="${note.image}" alt="Fotka uz bilješku">`
+        ? `<img class="log-photo" src="${note.image}" alt="${escapeHtml(t("logbook.photoAlt"))}">`
         : "";
       return `
         <div class="log-item">
           <div class="task-row">
             <div>
               <strong>${escapeHtml(formatDate(note.date))}</strong>
-              <p>${escapeHtml(note.text || "Bilješka s fotkom")}</p>
+              <p>${escapeHtml(note.text || t("logbook.photoNote"))}</p>
             </div>
-            <button class="task-done" onclick="editNote(${index})">Otvori</button>
+            <button class="task-done" onclick="editNote(${index})">${escapeHtml(t("action.open"))}</button>
           </div>
           ${photoMarkup}
         </div>
       `;
     }).join("");
   }
-
   function renderPremiumOverviewLegacy() {
     const latestValues = getLatestValues();
     const staleItems = getStaleItems();
@@ -2980,27 +3049,27 @@
     healthCopy.textContent = analysis.score >= 85
       ? (
           analysis.staleCount > 0
-            ? `Stanje izgleda stabilno, ali ${analysis.staleCount} parametra nisu svježe mjerena.`
-            : "Tank izgleda stabilno, a manja odstupanja su još unutar sigurne zone."
+            ? ti("health.stableWithStale", { count: analysis.staleCount })
+            : t("health.stable")
         )
       : analysis.score >= 60
         ? (
             analysis.recommendations.length
               ? analysis.recommendations.join(" ")
-              : "Ima odstupanja koja traže postupnu korekciju i praćenje trenda."
+              : t("health.medium")
           )
         : (
             analysis.recommendations.length
-              ? `Kreni od ovoga: ${analysis.recommendations.join(" ")}`
-              : "Više bitnih parametara je van raspona i treba ih mirno vratiti pod kontrolu."
+              ? `${t("health.criticalPrefix")} ${analysis.recommendations.join(" ")}`
+              : t("health.critical")
           );
 
     const attentionItems = [];
     staleItems.forEach((item) => {
       attentionItems.push({
         variant: "warning",
-        title: `${item.param} traži novo mjerenje`,
-        text: `Zadnje mjerenje je starije od preporučenog intervala od ${item.freshnessDays} dana. Vrijeme je za novo očitanje i provjeru trenda.`
+        title: ti("attention.staleTitle", { param: item.param }),
+        text: ti("attention.staleText", { days: item.freshnessDays })
       });
     });
 
@@ -3008,8 +3077,8 @@
       const value = latestValues[param]?.value ?? "-";
       attentionItems.push({
         variant: "danger",
-        title: `${param} je izvan raspona`,
-        text: `Zadnja vrijednost je ${value}. Otvori parametar i pogledaj graf i preporuke za korekciju.`
+        title: ti("attention.outOfRangeTitle", { param }),
+        text: ti("attention.outOfRangeText", { value })
       });
     });
 
@@ -3020,7 +3089,7 @@
             <p>${escapeHtml(item.text)}</p>
           </div>
         `).join("")
-      : `<div class="empty-state">Sve izgleda uredno. Trenutno nema hitnih upozorenja.</div>`;
+      : `<div class="empty-state">${escapeHtml(t("attention.empty"))}</div>`;
 
     quickGrid.innerHTML = ["Salinity", "pH", "KH", "Ca"].map((param) => {
       const meta = parameterMeta[param];
@@ -3049,7 +3118,7 @@
             <p>${escapeHtml(trend.text)}</p>
           </div>
         `).join("")
-      : `<div class="empty-state">Još nema dovoljno mjerenja za trend analizu.</div>`;
+      : `<div class="empty-state">${escapeHtml(t("trend.empty"))}</div>`;
   }
   function renderTasksView() {
     if (!tasksList) {
@@ -3069,18 +3138,18 @@
             <div class="task-row">
               <div>
                 <strong>${escapeHtml(task.title)}</strong>
-                <p>${escapeHtml(task.meta)} · ${escapeHtml(task.text)}</p>
-                <span class="task-badge">${task.dueDate ? `Rok ${escapeHtml(formatDate(task.dueDate))}` : "Bez roka"} · ${escapeHtml(getRepeatLabel(task.repeat))}${task.done ? " · Gotovo" : ""}</span>
+                <p>${escapeHtml(task.meta)} ? ${escapeHtml(task.text)}</p>
+                <span class="task-badge">${task.dueDate ? `${t("tasks.due")} ${escapeHtml(formatDate(task.dueDate))}` : t("tasks.noDue")} ? ${escapeHtml(getRepeatLabel(task.repeat))}${task.done ? ` ? ${t("tasks.completed")}` : ""}</span>
               </div>
               <div class="task-actions">
-                <button class="task-done" onclick="editTask(${task.id})" title="Uredi zadatak" aria-label="Uredi zadatak">&#9998;</button>
-                <button class="task-done" onclick="toggleTaskDone(${task.id})">${task.done ? "Vrati" : "Gotovo"}</button>
-                <button class="task-done task-danger" onclick="deleteTask(${task.id})" title="Obriši zadatak" aria-label="Obriši zadatak">&#128465;</button>
+                <button class="task-done" onclick="editTask(${task.id})" title="${escapeHtml(t("tasks.editTitle"))}" aria-label="${escapeHtml(t("tasks.editTitle"))}">&#9998;</button>
+                <button class="task-done" onclick="toggleTaskDone(${task.id})">${task.done ? t("tasks.restore") : t("tasks.completed")}</button>
+                <button class="task-done task-danger" onclick="deleteTask(${task.id})" title="${escapeHtml(t("tasks.deleteTitle"))}" aria-label="${escapeHtml(t("tasks.deleteTitle"))}">&#128465;</button>
               </div>
             </div>
           </div>
         `).join("")
-      : `<div class="empty-state">Još nema ručno dodanih zadataka.</div>`;
+      : `<div class="empty-state">${escapeHtml(t("tasks.noCustom"))}</div>`;
 
     const autoMarkup = taskGroups.auto.length
       ? taskGroups.auto.map((task) => `
@@ -3088,27 +3157,27 @@
             <div class="task-row">
               <div>
                 <strong>${escapeHtml(task.title)}</strong>
-                <p>${escapeHtml(task.meta)} · ${escapeHtml(task.text)}</p>
+                <p>${escapeHtml(task.meta)} ? ${escapeHtml(task.text)}</p>
               </div>
             </div>
           </div>
         `).join("")
-      : `<div class="empty-state">Nema automatskih zadataka za prikaz.</div>`;
+      : `<div class="empty-state">${escapeHtml(t("tasks.noAuto"))}</div>`;
 
     tasksList.innerHTML = `
       <div class="task-item">
-        <strong>Moji zadaci</strong>
-        <p>Ručni zadaci koje si sam dodao u aplikaciju.</p>
+        <strong>${escapeHtml(t("tasks.my"))}</strong>
+        <p>${escapeHtml(t("tasks.myCopy"))}</p>
       </div>
       <div class="task-filters">
-        <button class="task-filter ${taskFilter === "open" ? "active" : ""}" onclick="setTaskFilter('open')">Otvoreni</button>
-        <button class="task-filter ${taskFilter === "done" ? "active" : ""}" onclick="setTaskFilter('done')">Gotovi</button>
-        <button class="task-filter ${taskFilter === "all" ? "active" : ""}" onclick="setTaskFilter('all')">Svi</button>
+        <button class="task-filter ${taskFilter === "open" ? "active" : ""}" onclick="setTaskFilter('open')">${escapeHtml(t("tasks.open"))}</button>
+        <button class="task-filter ${taskFilter === "done" ? "active" : ""}" onclick="setTaskFilter('done')">${escapeHtml(t("tasks.done"))}</button>
+        <button class="task-filter ${taskFilter === "all" ? "active" : ""}" onclick="setTaskFilter('all')">${escapeHtml(t("tasks.all"))}</button>
       </div>
       ${customMarkup}
       <div class="task-item" style="margin-top: 14px;">
-        <strong>Automatski zadaci</strong>
-        <p>Zadaci generirani iz ritma održavanja i kašnjenja mjerenja.</p>
+        <strong>${escapeHtml(t("tasks.auto"))}</strong>
+        <p>${escapeHtml(t("tasks.autoCopy"))}</p>
       </div>
       ${autoMarkup}
     `;
@@ -3132,11 +3201,11 @@
       ? openTasks.map((task) => `
           <div class="task-item">
             <strong>${escapeHtml(task.title)}</strong>
-            <p>${escapeHtml(task.meta)} · ${escapeHtml(task.text)}</p>
-            <span class="task-badge">${task.dueDate ? `Rok ${escapeHtml(formatDate(task.dueDate))}` : "Bez roka"}</span>
+            <p>${escapeHtml(task.meta)} ? ${escapeHtml(task.text)}</p>
+            <span class="task-badge">${task.dueDate ? `${t("tasks.due")} ${escapeHtml(formatDate(task.dueDate))}` : t("tasks.noDue")}</span>
           </div>
         `).join("")
-      : `<div class="empty-state">Još nema ručno dodanih zadataka. Otvori Zadaci i dodaj prvi podsjetnik.</div>`;
+      : `<div class="empty-state">${escapeHtml(t("tasks.homeEmpty"))}</div>`;
   }
   function renderPremiumOverviewFixed() {
     const staleItems = getStaleItems();
@@ -3155,30 +3224,30 @@
     alertStrip.classList.remove("visible");
 
     summaryStrip.innerHTML = [
-      { label: "Stanje", value: `${analysis.score}` },
-      { label: "Unosi", value: String(measurements.length) },
-      { label: "Kasni", value: String(staleItems.length) },
-      { label: "Temp", value: liveTemperature?.temperature !== undefined ? `${liveTemperature.temperature}${liveTemperature.unit || "°C"}` : "Ručni unos" }
+      { label: t("dashboard.status"), value: `${analysis.score}` },
+      { label: t("dashboard.entries"), value: String(measurements.length) },
+      { label: t("dashboard.late"), value: String(staleItems.length) },
+      { label: "Temp", value: liveTemperature?.temperature !== undefined ? `${liveTemperature.temperature}${liveTemperature.unit || "\u00b0C"}` : t("dashboard.manualEntry") }
     ].map((item) => `
       <div class="summary-box">
-        <span>${item.label}</span>
+        <span>${escapeHtml(item.label)}</span>
         <strong>${escapeHtml(item.value)}</strong>
       </div>
     `).join("");
 
-    dashboardTag.textContent = `Ažurirano ${formatDate(lastMeasurement)}`;
+    dashboardTag.textContent = `${t("dashboard.updated")} ${formatDate(lastMeasurement)}`;
 
     if (staleItems.length > 0) {
       alertStrip.classList.add("visible");
-      alertStrip.innerHTML = `<strong>Treba pažnju</strong>${escapeHtml(staleItems.map((item) => `${item.param} (${item.freshnessDays} dana)`).join(", "))} čekaju novo mjerenje dulje od preporučenog ritma.`;
-      setHeroStatusText(`${staleItems.length} parametra čekaju novo mjerenje.`);
+      alertStrip.innerHTML = `<strong>${escapeHtml(t("home.needsAttention"))}</strong>${escapeHtml(staleItems.map((item) => `${item.param} (${item.freshnessDays} dana)`).join(", "))} ${escapeHtml(t("dashboard.staleSuffix"))}`;
+      setHeroStatusText(ti("dashboard.staleHero", { count: staleItems.length }));
     } else {
       alertStrip.classList.remove("visible");
       alertStrip.innerHTML = "";
       setHeroStatusText(
         outOfRange.length > 0
-          ? `${outOfRange.length} parametra su izvan raspona.`
-          : "Sustav izgleda stabilno i spreman je za brzi pregled."
+          ? ti("dashboard.outOfRangeHero", { count: outOfRange.length })
+          : t("dashboard.stableHero")
       );
     }
   }
@@ -3240,8 +3309,8 @@
     getStaleItems().forEach((item) => {
       items.push({
         variant: "warning",
-        title: item.param + " treba novo mjerenje",
-        text: "Zadnje mjerenje je prije " + item.daysSince + " dana (" + formatDate(item.date) + "). Preporu\u010deni ritam je svakih " + item.freshnessDays + " dana."
+        title: ti("warnings.staleTitle", { param: item.param }),
+        text: ti("warnings.staleText", { days: item.daysSince, date: formatDate(item.date), freshness: item.freshnessDays })
       });
     });
 
@@ -3266,19 +3335,18 @@
       const rangeText = !Number.isNaN(min) && !Number.isNaN(max)
         ? min + " - " + max + unit
         : !Number.isNaN(min)
-          ? "iznad " + min + unit
-          : "ispod " + max + unit;
+          ? t("warnings.rangeAbove") + " " + min + unit
+          : t("warnings.rangeBelow") + " " + max + unit;
 
       items.push({
         variant: "danger",
-        title: param + " je " + (isLow ? "prenizak" : "previsok"),
-        text: "Zadnja vrijednost je " + latest.value + unit + ", mjereno " + formatDate(latest.date) + ". Ciljani raspon je " + rangeText + "."
+        title: param + " " + t(isLow ? "warnings.low" : "warnings.high"),
+        text: ti("warnings.rangeText", { value: latest.value, unit, date: formatDate(latest.date), range: rangeText })
       });
     });
 
     return items;
   }
-
   function showStaleWarning() {
     const title = document.getElementById("stale-warning-title");
     const copy = document.getElementById("stale-warning-copy");
@@ -3291,12 +3359,12 @@
     const analysis = getHealthAnalysis();
 
     if (title) {
-      title.textContent = warningItems.length ? "Upozorenja" : "Nema aktivnih upozorenja";
+      title.textContent = warningItems.length ? t("warnings.title") : t("warnings.noneTitle");
     }
     if (copy) {
       copy.textContent = warningItems.length
-        ? "Ovo su stvari koje trenutno tra\u017ee pa\u017enju:"
-        : "Klik je radio, samo trenutno nema ni\u010dega kriti\u010dnog za prikaz.";
+        ? t("warnings.copy")
+        : t("warnings.noneCopy");
     }
 
     list.innerHTML = warningItems.length
@@ -3306,7 +3374,7 @@
             "<p>" + escapeHtml(item.text) + "</p>" +
           "</div>"
         ).join("")
-      : "<div class=\"empty-state\">Ocjena stanja je " + analysis.score + "/100 (" + escapeHtml(analysis.label) + "). Ako \u017eeli\u0161 dodatnu sigurnost, provjeri trend temperature, saliniteta i KH.</div>";
+      : "<div class=\"empty-state\">" + escapeHtml(ti("warnings.empty", { score: analysis.score, label: analysis.label })) + "</div>";
 
     openPopup("stale-warning-popup");
   }
@@ -3604,7 +3672,7 @@
     const sorted = getSortedMeasurements("desc");
 
     if (sorted.length === 0) {
-      container.innerHTML = "<em>Nema mjerenja.</em>";
+      container.innerHTML = `<em>${escapeHtml(t("measurement.empty"))}</em>`;
       openPopup("measurements-popup");
       return;
     }
@@ -3618,8 +3686,8 @@
       return `
         <div class="measurement-card">
           <div class="card-actions">
-            <button class="icon-action edit-action" type="button" title="Uredi mjerenje" aria-label="Uredi mjerenje" onclick="editMeasurement(${actualIndex})">&#9998;</button>
-            <button class="icon-action delete-action" type="button" title="Obriši mjerenje" aria-label="Obriši mjerenje" onclick="deleteMeasurement(${actualIndex})">&#128465;</button>
+            <button class="icon-action edit-action" type="button" title="${escapeHtml(t("measurement.editTitle"))}" aria-label="${escapeHtml(t("measurement.editTitle"))}" onclick="editMeasurement(${actualIndex})">&#9998;</button>
+            <button class="icon-action delete-action" type="button" title="${escapeHtml(t("measurement.deleteTitle"))}" aria-label="${escapeHtml(t("measurement.deleteTitle"))}" onclick="deleteMeasurement(${actualIndex})">&#128465;</button>
           </div>
           <strong>${escapeHtml(formatDate(measurement.date))}</strong><br>
           ${values}
@@ -3628,7 +3696,6 @@
 
     openPopup("measurements-popup");
   }
-
   function deleteMeasurement(index) {
     measurements.splice(index, 1);
     if (editingMeasurementIndex === index) {
@@ -3647,27 +3714,26 @@
     const container = document.getElementById("notes-container");
 
     if (list.length === 0) {
-      container.innerHTML = "<em>Nema bilje?ki.</em>";
+      container.innerHTML = `<em>${escapeHtml(t("notes.empty"))}</em>`;
       return;
     }
 
     container.innerHTML = list.map((note) => {
       const actualIndex = notes.indexOf(note);
       const photoMarkup = note.image
-        ? `<img class="note-photo" src="${note.image}" alt="Fotka uz bilje\u0161ku">`
+        ? `<img class="note-photo" src="${note.image}" alt="${escapeHtml(t("logbook.photoAlt"))}">`
         : "";
       return `
         <div class="note-card">
           <div class="card-actions">
-            <button class="icon-action edit-action" type="button" title="Uredi bilješku" aria-label="Uredi bilješku" onclick="editNote(${actualIndex})">&#9998;</button>
-            <button class="icon-action delete-action" type="button" title="Obriši bilješku" aria-label="Obriši bilješku" onclick="deleteNote(${actualIndex})">&#128465;</button>
+            <button class="icon-action edit-action" type="button" title="${escapeHtml(t("notes.editTitle"))}" aria-label="${escapeHtml(t("notes.editTitle"))}" onclick="editNote(${actualIndex})">&#9998;</button>
+            <button class="icon-action delete-action" type="button" title="${escapeHtml(t("notes.deleteTitle"))}" aria-label="${escapeHtml(t("notes.deleteTitle"))}" onclick="deleteNote(${actualIndex})">&#128465;</button>
           </div>
-          <strong>${escapeHtml(formatDate(note.date))}</strong><br>${escapeHtml(note.text || "Bez teksta")}
+          <strong>${escapeHtml(formatDate(note.date))}</strong><br>${escapeHtml(note.text || t("notes.noText"))}
           ${photoMarkup}
         </div>`;
     }).join("");
   }
-
   function showNotes() {
     renderNotesList([...notes].reverse());
   }
@@ -3732,14 +3798,20 @@
   function openSettings() {
     const popupContent = document.getElementById("settings-popup").querySelector(".popup-content");
     popupContent.innerHTML = `
-      <h3>Postavke parametara</h3>
-      <h4>Profil tanka</h4>
-      <input id="tankNameInput" type="text" placeholder="Naziv tanka">
+      <h3 data-i18n="settings.title">Postavke parametara</h3>
+      <h4 data-i18n="settings.language">Jezik</h4>
+      <label for="languageSelect" data-i18n="settings.appLanguage">Jezik aplikacije:</label>
+      <select id="languageSelect">
+        <option value="hr" data-i18n="lang.hr">Hrvatski</option>
+        <option value="en" data-i18n="lang.en">English</option>
+      </select>
+      <h4 data-i18n="settings.profile">Profil tanka</h4>
+      <input id="tankNameInput" type="text" data-i18n-placeholder="settings.tankNamePlaceholder" placeholder="Naziv tanka">
       <input id="tankImageInput" type="file" accept="image/*" onchange="previewTankImage(event)">
       <div id="tankImagePreview" style="margin:10px 0 6px;"></div>
-      <div class="helper-text" id="tankImageStatus">Odaberi sliku iz galerije pa spremi postavke.</div>
-      <p class="helper-text">Po želji dodaj sliku tanka. Sprema se lokalno u aplikaciji.</p>
-      <label for="tankType">Tip akvarija:</label>
+      <div class="helper-text" id="tankImageStatus" data-i18n="settings.tankImageStatus">Odaberi sliku iz galerije pa spremi postavke.</div>
+      <p class="helper-text" data-i18n="settings.tankImageHelp">Po \u017eelji dodaj sliku tanka. Sprema se lokalno u aplikaciji.</p>
+      <label for="tankType" data-i18n="settings.tankType">Tip akvarija:</label>
       <select id="tankType" onchange="applyTankType()">
         <option value="custom">Custom</option>
         <option value="softy">Softy tank</option>
@@ -3749,24 +3821,24 @@
       <table>
         <thead>
           <tr>
-            <th>Parametar</th>
+            <th data-i18n="settings.parameter">Parametar</th>
             <th>Min</th>
             <th>Max</th>
           </tr>
         </thead>
         <tbody id="settings-table"></tbody>
       </table>
-      <h4>Elitech temperatura</h4>
-      <label><input id="elitechEnabled" type="checkbox"> Uključi Elitech dohvat</label>
+      <h4 data-i18n="settings.elitechTitle">Elitech temperatura</h4>
+      <label><input id="elitechEnabled" type="checkbox"> <span data-i18n="settings.elitechEnabled">Uklju\u010di Elitech dohvat</span></label>
       <input id="elitechProxyUrl" type="text" placeholder="https://tvoj-proxy.example.com/api/elitech-temperature">
-      <p class="helper-text">Upiši adresu svog Elitech proxy endpointa. Temperatura će se prikazati na postojećoj Temp kartici.</p>
+      <p class="helper-text" data-i18n="settings.elitechHelp">Upi\u0161i adresu svog Elitech proxy endpointa. Temperatura \u0107e se prikazati na postoje\u0107oj Temp kartici.</p>
       <div class="popup-actions">
-        <button class="close-btn secondary-btn" onclick="testElitechConnection()">Testiraj Elitech vezu</button>
+        <button class="close-btn secondary-btn" data-i18n="action.testElitech" onclick="testElitechConnection()">Testiraj Elitech vezu</button>
       </div>
-      <div class="elitech-status" id="elitech-status">Elitech nije konfiguriran.</div>
+      <div class="elitech-status" id="elitech-status" data-i18n="settings.elitechNotConfigured">Elitech nije konfiguriran.</div>
       <div class="popup-actions">
-        <button class="close-btn" onclick="saveSettings()">Spremi postavke</button>
-        <button class="close-btn" onclick="closePopup('settings-popup')">Zatvori</button>
+        <button class="close-btn" data-i18n="action.saveSettings" onclick="saveSettings()">Spremi postavke</button>
+        <button class="close-btn" data-i18n="action.close" onclick="closePopup('settings-popup')">Zatvori</button>
       </div>
     `;
     const refreshedTbody = document.getElementById("settings-table");
@@ -3784,6 +3856,7 @@
             <td><input type="number" step="any" id="max-${param}" value="${escapeHtml(maxValue)}"></td>
           </tr>`;
     }).join("");
+    document.getElementById("languageSelect").value = activeLanguage;
     document.getElementById("tankNameInput").value = tankProfile.name;
     updateTankImagePreview(tankProfile.image);
     document.getElementById("tankType").value = settings.tankProfile?.type || "custom";
@@ -3791,9 +3864,11 @@
     document.getElementById("elitechProxyUrl").value = elitechConfig.proxyUrl;
     setElitechStatus(
       elitechConfig.enabled && elitechConfig.proxyUrl
-        ? `Proxy spreman: ${elitechConfig.proxyUrl}`
-        : "Elitech nije konfiguriran."
+        ? `${t("settings.elitechProxyReady")} ${elitechConfig.proxyUrl}`
+        : t("settings.elitechNotConfigured")
     );
+
+    applyTranslations(popupContent);
 
     openPopup("settings-popup");
   }
@@ -3836,12 +3911,19 @@
     });
 
     settings = nextSettings;
+    const languageSelect = document.getElementById("languageSelect");
+    if (languageSelect && languageSelect.value !== activeLanguage) {
+      activeLanguage = ["hr", "en"].includes(languageSelect.value) ? languageSelect.value : "hr";
+      localStorage.setItem("language", activeLanguage);
+    }
     const imageInput = document.getElementById("tankImageInput");
     if (imageInput?.files?.[0]) {
       settings.tankProfile.image = await readFileAsDataUrl(imageInput.files[0]);
     }
 
     persistSettings();
+    applyTranslations();
+    updateThemeToggleLabel();
     renderDashboard();
     closePopup("settings-popup");
   }
@@ -3854,7 +3936,7 @@
     fetchElitechTemperature()
       .then(() => renderDashboard())
       .catch(() => {
-        setElitechStatus("Elitech trenutno nije dostupan.");
+        setElitechStatus(t("settings.elitechUnavailable"));
       });
   }
   </script>
