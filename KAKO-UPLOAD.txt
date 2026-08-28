@@ -1,0 +1,18 @@
+Blue Essence — upload na GitHub (bez gita)
+
+1. Otvori: https://github.com/zarkosasko-dot/Blue-essence
+2. Stisni Add file → Upload files
+3. Ubaci SVE datoteke iz raspakirane mape:
+   index.html, assets (cijela mapa), icon.png, icon-192.png, icon-512.png,
+   manifest.json, manifest.webmanifest, service-worker.js, sw.js,
+   apple-touch-icon.png, favicon.svg, .nojekyll, 404.html
+   Datoteke moraju pasti U KORIJEN repozitorija (pored starog index.html),
+   ne u novu podmapu.
+4. Dolje: Commit changes
+5. Pričekaj ~1 minutu, zatim otvori:
+   https://zarkosasko-dot.github.io/Blue-essence/
+6. Zatvori staru Blue Essence ikonu i otvori je ponovo (1–2 puta)
+   da Chrome povuče novu verziju.
+
+Mjerenja ostaju. Elitech live temperatura na GitHubu treba vlastiti proxy;
+parametri, zadaci, dnevnik i JSON backup rade.

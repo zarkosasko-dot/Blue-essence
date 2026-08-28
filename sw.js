@@ -1,4 +1,4 @@
-/* Blue Essence — network-first so GitHub Pages updates actually appear. */
+/* Blue Essence — network-first SW so Chrome treats the app as installable. */
 const CACHE = "blue-essence-v16";
 
 self.addEventListener("install", (event) => {
