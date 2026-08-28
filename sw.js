@@ -1,29 +1,33 @@
-/* Blue Essence — network-first SW so Chrome treats the app as installable. */
-const CACHE = "blue-essence-v16";
+/* Blue Essence — only cache same-origin. Never intercept iCold / captcha. */
+const CACHE = "blue-essence-v18";
 
-self.addEventListener("install", (event) => {
+self.addEventListener("install", () => {
   self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))),
-    ).then(() => self.clients.claim()),
+    caches
+      .keys()
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim()),
   );
 });
 
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
+  const request = event.request;
+  if (request.method !== "GET") return;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
   event.respondWith(
-    fetch(event.request)
+    fetch(request)
       .then((response) => {
-        const copy = response.clone();
-        if (response.ok && event.request.url.startsWith(self.location.origin)) {
-          caches.open(CACHE).then((cache) => cache.put(event.request, copy)).catch(() => {});
+        if (response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => {});
         }
         return response;
       })
-      .catch(() => caches.match(event.request).then((cached) => cached || Promise.reject())),
+      .catch(() => caches.match(request).then((cached) => cached || Promise.reject(request))),
   );
 });
